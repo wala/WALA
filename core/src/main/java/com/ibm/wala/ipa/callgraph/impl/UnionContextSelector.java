@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -37,12 +39,8 @@ public class UnionContextSelector implements ContextSelector {
   private final ContextSelector B;
 
   public UnionContextSelector(final ContextSelector A, final ContextSelector B) {
-    if (A == null) {
-      throw new IllegalArgumentException("The ContextSelector given as A may not be null");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("The ContextSelector given as B may not be null");
-    }
+    checkArgument(A != null, "The ContextSelector given as A may not be null");
+    checkArgument(B != null, "The ContextSelector given as B may not be null");
     this.A = A;
     this.B = B;
   }

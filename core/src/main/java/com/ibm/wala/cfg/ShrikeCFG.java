@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cfg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.BytecodeLanguage;
 import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.IClass;
@@ -59,9 +61,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock>
 
   private ShrikeCFG(IBytecodeMethod<IInstruction> method) throws IllegalArgumentException {
     super(method);
-    if (method == null) {
-      throw new IllegalArgumentException("method cannot be null");
-    }
+    checkArgument(method != null, "method cannot be null");
     this.method = method;
     this.hashBase = method.hashCode() * 9967;
     makeBasicBlocks();

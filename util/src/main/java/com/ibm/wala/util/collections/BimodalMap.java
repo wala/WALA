@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.UnimplementedError;
 import java.util.Collection;
 import java.util.Collections;
@@ -103,9 +105,7 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
 
   @Override
   public void putAll(Map<? extends K, ? extends V> t) throws UnsupportedOperationException {
-    if (t == null) {
-      throw new IllegalArgumentException("null t");
-    }
+    checkArgument(t != null, "null t");
     if (backingStore == null) {
       int size = t.size();
       if (size > cutOff) {

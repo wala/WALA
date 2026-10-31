@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.UnimplementedError;
 import java.io.Serial;
 import java.lang.reflect.Method;
@@ -58,9 +60,7 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
 
   @Override
   public void putAll(Map<? extends K, ? extends V> arg0) {
-    if (arg0 == null) {
-      throw new IllegalArgumentException("arg0 is null");
-    }
+    checkArgument(arg0 != null, "arg0 is null");
     for (Map.Entry<? extends K, ? extends V> E : arg0.entrySet()) {
       put(E.getKey(), E.getValue());
     }

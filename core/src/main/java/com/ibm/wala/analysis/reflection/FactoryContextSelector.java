@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.reflection;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticMethod;
@@ -30,9 +32,7 @@ class FactoryContextSelector implements ContextSelector {
   @Override
   public Context getCalleeTarget(
       CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
-    if (callee == null) {
-      throw new IllegalArgumentException("callee is null");
-    }
+    checkArgument(callee != null, "callee is null");
     if (callee.isWalaSynthetic()) {
       SyntheticMethod s = (SyntheticMethod) callee;
       if (s.isFactoryMethod()) {

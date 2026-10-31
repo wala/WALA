@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
@@ -37,17 +39,13 @@ public abstract class Entrypoint implements BytecodeConstants {
    * @param method the method to be called for this entrypoint
    */
   protected Entrypoint(IMethod method) {
-    if (method == null) {
-      throw new IllegalArgumentException("method is null");
-    }
+    checkArgument(method != null, "method is null");
     this.method = method;
     assert method.getDeclaringClass() != null : "null declaring class";
   }
 
   protected Entrypoint(MethodReference method, IClassHierarchy cha) {
-    if (cha == null) {
-      throw new IllegalArgumentException("cha is null");
-    }
+    checkArgument(cha != null, "cha is null");
     IMethod m = cha.resolveMethod(method);
     if (m == null) {
       Assertions.UNREACHABLE("could not resolve " + method);

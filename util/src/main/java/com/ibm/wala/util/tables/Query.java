@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.tables;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashSetFactory;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,9 +30,7 @@ public class Query {
   @NullUnmarked
   public static <T> Collection<Map<String, T>> selectStarWhereEquals(
       Table<T> t, String column, T value) throws IllegalArgumentException {
-    if (t == null) {
-      throw new IllegalArgumentException("t == null");
-    }
+    checkArgument(t != null, "t == null");
     Collection<Map<String, T>> result = new ArrayList<>();
     for (int i = 0; i < t.getNumberOfRows(); i++) {
       Map<String, T> p = t.row2Map(i);
@@ -55,9 +55,7 @@ public class Query {
   /** SELECT attribute FROM t where P(column) */
   public static <T> Collection<Map<String, T>> selectStarWhere(
       Table<T> t, String column, Predicate<T> P) {
-    if (t == null) {
-      throw new IllegalArgumentException("t == null");
-    }
+    checkArgument(t != null, "t == null");
     Collection<Map<String, T>> c = new ArrayList<>();
     for (int i = 0; i < t.getNumberOfRows(); i++) {
       Map<String, T> p = t.row2Map(i);

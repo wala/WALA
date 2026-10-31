@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
 import java.util.Objects;
 
@@ -68,9 +70,7 @@ public class AssignBarLabel implements IFlowLabelWithFilter {
 
   @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
-    if (v == null) {
-      throw new IllegalArgumentException("v == null");
-    }
+    checkArgument(v != null, "v == null");
     v.visitAssignBar(this, dst);
   }
 

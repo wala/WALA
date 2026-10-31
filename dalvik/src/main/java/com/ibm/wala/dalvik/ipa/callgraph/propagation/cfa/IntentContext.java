@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
@@ -76,9 +78,7 @@ public class IntentContext implements Context {
    */
   @Override
   public ContextItem get(ContextKey name) {
-    if (name == null) {
-      throw new IllegalArgumentException("name is null");
-    }
+    checkArgument(name != null, "name is null");
     if (name.equals(INTENT_KEY)) {
       return intent;
     } else if (this.parent != null) {

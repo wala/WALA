@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.IMethod;
@@ -34,9 +36,7 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
 
   public ControlFlowGraph<?, ?> makeCFG(IMethod method, @SuppressWarnings("unused") Context c)
       throws IllegalArgumentException {
-    if (method == null) {
-      throw new IllegalArgumentException("method cannot be null");
-    }
+    checkArgument(method != null, "method cannot be null");
     if (method.isWalaSynthetic()) {
       return syntheticFactory.makeCFG((SyntheticMethod) method);
     } else if (method instanceof IBytecodeMethod) {
@@ -50,9 +50,7 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
 
   @Override
   public IR makeIR(IMethod method, Context c, SSAOptions options) throws IllegalArgumentException {
-    if (method == null) {
-      throw new IllegalArgumentException("method cannot be null");
-    }
+    checkArgument(method != null, "method cannot be null");
     if (method.isWalaSynthetic()) {
       return syntheticFactory.makeIR((SyntheticMethod) method, c, options);
     } else if (method instanceof IBytecodeMethod) {
@@ -70,9 +68,7 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
    */
   @Override
   public boolean contextIsIrrelevant(IMethod method) {
-    if (method == null) {
-      throw new IllegalArgumentException("null method");
-    }
+    checkArgument(method != null, "null method");
     if (method.isWalaSynthetic()) {
       return syntheticFactory.contextIsIrrelevant((SyntheticMethod) method);
     } else if (method instanceof ShrikeCTMethod) {

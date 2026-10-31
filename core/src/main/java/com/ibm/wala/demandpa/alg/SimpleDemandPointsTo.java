@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.alg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.demandpa.flowgraph.SimpleDemandPointerFlowGraph;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -76,9 +78,7 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
   public Collection<InstanceKey> getPointsTo(PointerKey pk)
       throws IllegalArgumentException, UnimplementedError {
 
-    if (pk == null) {
-      throw new IllegalArgumentException("pk == null");
-    }
+    checkArgument(pk != null, "pk == null");
     assert pk instanceof LocalPointerKey : "we only handle locals";
     LocalPointerKey lpk = (LocalPointerKey) pk;
     // Create an (initially empty) dependence graph

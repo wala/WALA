@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import java.io.Serial;
@@ -53,9 +55,7 @@ public class SparseIntSet implements IntSet {
    * elsewhere.
    */
   protected SparseIntSet(int[] backingArray) {
-    if (backingArray == null) {
-      throw new IllegalArgumentException("backingArray is null");
-    }
+    checkArgument(backingArray != null, "backingArray is null");
     elements = backingArray;
     this.size = backingArray.length;
   }
@@ -82,9 +82,7 @@ public class SparseIntSet implements IntSet {
   }
 
   public SparseIntSet(IntSet S) throws IllegalArgumentException {
-    if (S == null) {
-      throw new IllegalArgumentException("S == null");
-    }
+    checkArgument(S != null, "S == null");
     if (S instanceof SparseIntSet sparseIntSet) {
       cloneState(sparseIntSet);
     } else {
@@ -156,9 +154,7 @@ public class SparseIntSet implements IntSet {
 
   @Override
   public boolean sameValue(IntSet that) throws IllegalArgumentException, UnimplementedError {
-    if (that == null) {
-      throw new IllegalArgumentException("that == null");
-    }
+    checkArgument(that != null, "that == null");
     if (that instanceof SparseIntSet sparseIntSet) {
       return sameValueInternal(sparseIntSet);
     } else if (that instanceof BimodalMutableIntSet) {
@@ -218,12 +214,8 @@ public class SparseIntSet implements IntSet {
   }
 
   public static int[] diffInternal(SparseIntSet A, SparseIntSet B) {
-    if (A == null) {
-      throw new IllegalArgumentException("A is null");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("B is null");
-    }
+    checkArgument(A != null, "A is null");
+    checkArgument(B != null, "B is null");
     if (A.isEmpty()) {
       return new int[0];
     } else if (B.isEmpty()) {
@@ -294,9 +286,7 @@ public class SparseIntSet implements IntSet {
    * @throws IllegalArgumentException if str is null
    */
   public static int[] parseIntArray(String str) {
-    if (str == null) {
-      throw new IllegalArgumentException("str is null");
-    }
+    checkArgument(str != null, "str is null");
     int len = str.length();
     if (len == 0 || str.charAt(0) != '{' || str.charAt(len - 1) != '}') {
       throw new IllegalArgumentException(str);
@@ -338,9 +328,7 @@ public class SparseIntSet implements IntSet {
 
   @Override
   public IntSet intersection(IntSet that) {
-    if (that == null) {
-      throw new IllegalArgumentException("that == null");
-    }
+    checkArgument(that != null, "that == null");
     if (that instanceof SparseIntSet sparseIntSet) {
       MutableSparseIntSet temp = MutableSparseIntSet.make(this);
       temp.intersectWith(sparseIntSet);
@@ -409,9 +397,7 @@ public class SparseIntSet implements IntSet {
 
   @Override
   public void foreach(IntSetAction action) {
-    if (action == null) {
-      throw new IllegalArgumentException("null action");
-    }
+    checkArgument(action != null, "null action");
     for (int i = 0; i < size; i++) action.act(elements[i]);
   }
 
@@ -420,9 +406,7 @@ public class SparseIntSet implements IntSet {
    */
   @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
-    if (action == null) {
-      throw new IllegalArgumentException("null action");
-    }
+    checkArgument(action != null, "null action");
     for (int i = 0; i < size; i++) {
       if (!X.contains(elements[i])) {
         action.act(elements[i]);
@@ -436,9 +420,7 @@ public class SparseIntSet implements IntSet {
    */
   public static SparseIntSet add(SparseIntSet s, int j) {
 
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     if (s.elements == null) {
       return SparseIntSet.singleton(j);
     }
@@ -465,9 +447,7 @@ public class SparseIntSet implements IntSet {
 
   @Override
   public boolean isSubset(@Nullable IntSet that) {
-    if (that == null) {
-      throw new IllegalArgumentException("null that");
-    }
+    checkArgument(that != null, "null that");
     if (that instanceof SparseIntSet sparseIntSet) {
       return isSubsetInternal(sparseIntSet);
     } else if (that instanceof BitVectorIntSet bitVectorIntSet) {
@@ -509,9 +489,7 @@ public class SparseIntSet implements IntSet {
   }
 
   public boolean containsAny(SparseIntSet set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     int i = 0;
     for (int j = 0; j < set.size; j++) {
       int x = set.elements[j];

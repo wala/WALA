@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.viz;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.CFGSanitizer;
 import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -61,9 +63,7 @@ public class PDFViewUtil {
       NodeDecorator<ISSABasicBlock> annotations)
       throws WalaException {
 
-    if (ir == null) {
-      throw new IllegalArgumentException("ir is null");
-    }
+    checkArgument(ir != null, "ir is null");
 
     NodeDecorator<ISSABasicBlock> labels = makeIRDecorator(ir);
     if (annotations != null) {
@@ -78,9 +78,7 @@ public class PDFViewUtil {
   }
 
   public static NodeDecorator<ISSABasicBlock> makeIRDecorator(IR ir) {
-    if (ir == null) {
-      throw new IllegalArgumentException("ir is null");
-    }
+    checkArgument(ir != null, "ir is null");
     final HashMap<ISSABasicBlock, String> labelMap = HashMapFactory.make();
     for (ISSABasicBlock issaBasicBlock : ir.getControlFlowGraph()) {
       SSACFG.BasicBlock bb = (SSACFG.BasicBlock) issaBasicBlock;
@@ -152,12 +150,8 @@ public class PDFViewUtil {
   /** Launch a process to view a PDF file */
   public static Process launchPDFView(String pdfFile, String gvExe) throws WalaException {
     // set up a viewer for the ps file.
-    if (gvExe == null) {
-      throw new IllegalArgumentException("null gvExe");
-    }
-    if (pdfFile == null) {
-      throw new IllegalArgumentException("null psFile");
-    }
+    checkArgument(gvExe != null, "null gvExe");
+    checkArgument(pdfFile != null, "null psFile");
     final PDFViewLauncher gv = new PDFViewLauncher();
     gv.setGvExe(gvExe);
     gv.setPDFFile(pdfFile);

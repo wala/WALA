@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -58,9 +60,7 @@ public class AnalysisCache implements IAnalysisCacheView {
 
   @Override
   public IR getIR(IMethod method, Context context) {
-    if (method == null) {
-      throw new IllegalArgumentException("method is null");
-    }
+    checkArgument(method != null, "method is null");
     return ssaCache.findOrCreateIR(method, context, ssaOptions);
   }
 
@@ -71,9 +71,7 @@ public class AnalysisCache implements IAnalysisCacheView {
 
   @Override
   public DefUse getDefUse(IR ir) {
-    if (ir == null) {
-      throw new IllegalArgumentException("ir is null");
-    }
+    checkArgument(ir != null, "ir is null");
     return ssaCache.findOrCreateDU(ir, Everywhere.EVERYWHERE);
   }
 

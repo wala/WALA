@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.types.MethodReference;
@@ -87,9 +89,7 @@ public class CallGraphStats {
   }
 
   public static CGStats getCGStats(CallGraph cg) {
-    if (cg == null) {
-      throw new IllegalArgumentException("cg is null");
-    }
+    checkArgument(cg != null, "cg is null");
     Set<CGNode> reachableNodes =
         DFS.getReachableNodes(cg, Collections.singleton(cg.getFakeRootNode()));
     int nNodes = 0;
@@ -113,9 +113,7 @@ public class CallGraphStats {
    * @throws IllegalArgumentException if cg is null
    */
   public static int countBytecodeBytes(CallGraph cg) {
-    if (cg == null) {
-      throw new IllegalArgumentException("cg is null");
-    }
+    checkArgument(cg != null, "cg is null");
     int ret = 0;
     HashSet<IMethod> counted = HashSetFactory.make();
     for (CGNode node : cg) {
@@ -139,9 +137,7 @@ public class CallGraphStats {
    * @throws IllegalArgumentException if cg is null
    */
   public static Set<MethodReference> collectMethods(CallGraph cg) {
-    if (cg == null) {
-      throw new IllegalArgumentException("cg is null");
-    }
+    checkArgument(cg != null, "cg is null");
     HashSet<MethodReference> result = HashSetFactory.make();
     for (CGNode N : cg) {
       result.add(N.getMethod().getReference());

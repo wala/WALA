@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -65,9 +67,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
    * @param c {@code Collection<IClass>}
    */
   private static MutableMapping<InstanceKey> makeInstanceKeys(Collection<IClass> c) {
-    if (c == null) {
-      throw new IllegalArgumentException("null c");
-    }
+    checkArgument(c != null, "null c");
     MutableMapping<InstanceKey> result = MutableMapping.make();
     for (IClass klass : c) {
       if (!klass.isAbstract() && !klass.isInterface()) {
@@ -84,9 +84,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
 
   @Override
   public OrdinalSet<InstanceKey> getPointsToSet(PointerKey key) throws IllegalArgumentException {
-    if (key == null) {
-      throw new IllegalArgumentException("key == null");
-    }
+    checkArgument(key != null, "key == null");
     IClass type = inferType(key);
     if (type == null) {
       return OrdinalSet.empty();

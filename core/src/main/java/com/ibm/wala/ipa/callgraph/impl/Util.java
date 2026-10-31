@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.JavaLanguage;
@@ -84,9 +86,7 @@ public class Util {
    * @throws IllegalArgumentException if options is null
    */
   public static void addDefaultSelectors(AnalysisOptions options, IClassHierarchy cha) {
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     options.setSelector(
         new LambdaMethodTargetSelector(new ClassHierarchyMethodTargetSelector(cha)));
     options.setSelector(new ClassHierarchyClassTargetSelector(cha));
@@ -125,15 +125,9 @@ public class Util {
   public static void addBypassLogic(
       AnalysisOptions options, ClassLoader cl, String xmlFile, IClassHierarchy cha)
       throws IllegalArgumentException {
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
-    if (cl == null) {
-      throw new IllegalArgumentException("cl is null");
-    }
-    if (cha == null) {
-      throw new IllegalArgumentException("cha cannot be null");
-    }
+    checkArgument(options != null, "options is null");
+    checkArgument(cl != null, "cl is null");
+    checkArgument(cha != null, "cha cannot be null");
 
     try (final InputStream s = cl.getResourceAsStream(xmlFile)) {
       XMLMethodSummaryReader summary = new XMLMethodSummaryReader(s, cha.getScope());
@@ -163,15 +157,9 @@ public class Util {
   public static void addBypassLogic(
       AnalysisOptions options, ClassLoader cl, XMLMethodSummaryReader summary, IClassHierarchy cha)
       throws IllegalArgumentException {
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
-    if (cl == null) {
-      throw new IllegalArgumentException("cl is null");
-    }
-    if (cha == null) {
-      throw new IllegalArgumentException("cha cannot be null");
-    }
+    checkArgument(options != null, "options is null");
+    checkArgument(cl != null, "cl is null");
+    checkArgument(cha != null, "cha cannot be null");
 
     MethodTargetSelector ms =
         new BypassMethodTargetSelector(
@@ -204,12 +192,8 @@ public class Util {
    */
   public static void addSummaryClassShells(
       SummaryClassShellLoader loader, XMLMethodSummaryReader summary) {
-    if (loader == null) {
-      throw new IllegalArgumentException("loader is null");
-    }
-    if (summary == null) {
-      throw new IllegalArgumentException("summary is null");
-    }
+    checkArgument(loader != null, "loader is null");
+    checkArgument(summary != null, "summary is null");
     // Group method summaries by declaring class, so each shell can expose its own methods.
     Map<TypeReference, List<MethodSummary>> methodsByClass = HashMapFactory.make();
     for (MethodSummary method : summary.getSummaries().values()) {
@@ -252,9 +236,7 @@ public class Util {
 
   public static Iterable<Entrypoint> makeMainEntrypoints(
       ClassLoaderReference clr, IClassHierarchy cha) {
-    if (cha == null) {
-      throw new IllegalArgumentException("cha is null");
-    }
+    checkArgument(cha != null, "cha is null");
     final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
     final HashSet<Entrypoint> result = HashSetFactory.make();
     for (IClass klass : cha) {
@@ -310,9 +292,7 @@ public class Util {
    */
   public static Iterable<Entrypoint> makeMainEntrypoints(
       final IClassHierarchy cha, final String[] classNames) {
-    if (cha == null) {
-      throw new IllegalArgumentException("cha is null");
-    }
+    checkArgument(cha != null, "cha is null");
     return makeMainEntrypoints(cha.getScope().getApplicationLoader(), cha, classNames);
   }
 
@@ -327,12 +307,8 @@ public class Util {
       final ClassLoaderReference loaderRef, final IClassHierarchy cha, final String[] classNames)
       throws IllegalArgumentException {
 
-    if (classNames == null) {
-      throw new IllegalArgumentException("classNames == null");
-    }
-    if (classNames.length == 0) {
-      throw new IllegalArgumentException("classNames.length == 0");
-    }
+    checkArgument(classNames != null, "classNames == null");
+    checkArgument(classNames.length != 0, "classNames.length == 0");
     if (classNames[0] == null && 0 < classNames.length) {
       throw new IllegalArgumentException("(0 < classNames.length) and (classNames[0] == null)");
     }
@@ -377,9 +353,7 @@ public class Util {
 
   /** create a set holding the contents of an {@link Iterator} */
   public static <T> Set<T> setify(Iterator<? extends T> x) {
-    if (x == null) {
-      throw new IllegalArgumentException("Null x");
-    }
+    checkArgument(x != null, "Null x");
     Set<T> y = HashSetFactory.make();
     x.forEachRemaining(y::add);
     return y;
@@ -390,12 +364,8 @@ public class Util {
    * @throws IllegalArgumentException if supG is null
    */
   public static <T> void checkGraphSubset(Graph<T> supG, Graph<T> subG) {
-    if (supG == null) {
-      throw new IllegalArgumentException("supG is null");
-    }
-    if (subG == null) {
-      throw new IllegalArgumentException("subG is null");
-    }
+    checkArgument(supG != null, "supG is null");
+    checkArgument(subG != null, "subG is null");
     Set<T> nodeDiff = setify(subG.iterator());
     nodeDiff.removeAll(setify(supG.iterator()));
     if (!nodeDiff.isEmpty()) {
@@ -536,9 +506,7 @@ public class Util {
       ContextSelector customSelector,
       SSAContextInterpreter customInterpreter) {
 
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
 
@@ -617,9 +585,7 @@ public class Util {
       ContextSelector customSelector,
       SSAContextInterpreter customInterpreter) {
 
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
 
@@ -702,9 +668,7 @@ public class Util {
       ContextSelector customSelector,
       SSAContextInterpreter customInterpreter) {
 
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
 
@@ -750,9 +714,7 @@ public class Util {
   public static SSAPropagationCallGraphBuilder makeZeroContainerCFABuilder(
       AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
 
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
@@ -816,9 +778,7 @@ public class Util {
       ContextSelector appSelector,
       SSAContextInterpreter appInterpreter) {
 
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
 
@@ -859,9 +819,7 @@ public class Util {
    */
   public static SSAPropagationCallGraphBuilder makeNCFABuilder(
       int n, Language l, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
@@ -907,9 +865,7 @@ public class Util {
    */
   public static SSAPropagationCallGraphBuilder makeNObjBuilder(
       int n, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
@@ -952,9 +908,7 @@ public class Util {
    */
   public static SSAPropagationCallGraphBuilder makeVanillaNObjBuilder(
       int n, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
@@ -985,9 +939,7 @@ public class Util {
    */
   public static SSAPropagationCallGraphBuilder makeVanillaNCFABuilder(
       int n, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
@@ -1034,9 +986,7 @@ public class Util {
   public static SSAPropagationCallGraphBuilder makeVanillaZeroOneContainerCFABuilder(
       AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
 
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;

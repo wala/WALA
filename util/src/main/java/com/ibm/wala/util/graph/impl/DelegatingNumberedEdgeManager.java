@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -28,9 +30,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
   private final DelegatingNumberedNodeManager<T> nodeManager;
 
   public DelegatingNumberedEdgeManager(DelegatingNumberedNodeManager<T> nodeManager) {
-    if (nodeManager == null) {
-      throw new IllegalArgumentException("nodeManager is null");
-    }
+    checkArgument(nodeManager != null, "nodeManager is null");
     this.nodeManager = nodeManager;
   }
 
@@ -62,9 +62,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
 
   @Override
   public Iterator<T> getPredNodes(@Nullable T N) throws IllegalArgumentException {
-    if (N == null) {
-      throw new IllegalArgumentException("N cannot be null");
-    }
+    checkArgument(N != null, "N cannot be null");
     IntSet pred = N.getPredNumbers();
     Iterator<T> empty = EmptyIterator.instance();
     return (pred == null) ? empty : new IntSetNodeIterator(pred.intIterator());
@@ -72,18 +70,14 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
 
   @Override
   public IntSet getPredNodeNumbers(@Nullable T node) {
-    if (node == null) {
-      throw new IllegalArgumentException("N cannot be null");
-    }
+    checkArgument(node != null, "N cannot be null");
     IntSet pred = node.getPredNumbers();
     return (pred == null) ? new SparseIntSet() : pred;
   }
 
   @Override
   public int getPredNodeCount(T N) throws IllegalArgumentException {
-    if (N == null) {
-      throw new IllegalArgumentException("N cannot be null");
-    }
+    checkArgument(N != null, "N cannot be null");
     IntSet s = N.getPredNumbers();
     if (s == null) {
       return 0;
@@ -94,9 +88,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
 
   @Override
   public Iterator<T> getSuccNodes(@Nullable T N) {
-    if (N == null) {
-      throw new IllegalArgumentException("N cannot be null");
-    }
+    checkArgument(N != null, "N cannot be null");
     IntSet succ = N.getSuccNumbers();
     Iterator<T> empty = EmptyIterator.instance();
     return (succ == null) ? empty : new IntSetNodeIterator(succ.intIterator());
@@ -104,9 +96,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
 
   @Override
   public int getSuccNodeCount(T N) {
-    if (N == null) {
-      throw new IllegalArgumentException("N is null");
-    }
+    checkArgument(N != null, "N is null");
     IntSet s = N.getSuccNumbers();
     return s == null ? 0 : s.size();
   }
@@ -127,9 +117,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
 
   @Override
   public void removeAllIncidentEdges(T node) throws UnimplementedError {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     node.removeAllIncidentEdges();
   }
 
@@ -138,9 +126,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
    */
   @Override
   public void removeIncomingEdges(T node) throws UnimplementedError {
-    if (node == null) {
-      throw new IllegalArgumentException("node cannot be null");
-    }
+    checkArgument(node != null, "node cannot be null");
     node.removeIncomingEdges();
   }
 
@@ -149,25 +135,19 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
    */
   @Override
   public void removeOutgoingEdges(T node) throws UnimplementedError {
-    if (node == null) {
-      throw new IllegalArgumentException("node cannot be null");
-    }
+    checkArgument(node != null, "node cannot be null");
     node.removeOutgoingEdges();
   }
 
   @Override
   public boolean hasEdge(@Nullable T src, @Nullable T dst) throws IllegalArgumentException {
-    if (dst == null) {
-      throw new IllegalArgumentException("dst == null");
-    }
+    checkArgument(dst != null, "dst == null");
     return getSuccNodeNumbers(src).contains(dst.getGraphNodeId());
   }
 
   @Override
   public IntSet getSuccNodeNumbers(@Nullable T node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node cannot be null");
-    }
+    checkArgument(node != null, "node cannot be null");
     IntSet succ = node.getSuccNumbers();
     return (succ == null) ? new SparseIntSet() : succ;
   }

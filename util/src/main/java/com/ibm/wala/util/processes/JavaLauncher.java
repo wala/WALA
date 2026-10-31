@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.processes;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.io.File;
@@ -50,9 +52,7 @@ public class JavaLauncher extends Launcher {
       boolean captureOutput,
       boolean captureErr,
       Logger logger) {
-    if (mainClass == null) {
-      throw new IllegalArgumentException("null mainClass");
-    }
+    checkArgument(mainClass != null, "null mainClass");
     return new JavaLauncher(
         programArgs,
         mainClass,

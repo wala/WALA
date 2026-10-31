@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
@@ -90,9 +92,7 @@ public abstract class IR implements IRView {
       SymbolTable symbolTable,
       SSACFG cfg,
       SSAOptions options) {
-    if (method == null) {
-      throw new IllegalArgumentException("method is null");
-    }
+    checkArgument(method != null, "method is null");
     this.method = method;
     this.instructions = instructions;
     this.symbolTable = symbolTable;
@@ -527,9 +527,7 @@ public abstract class IR implements IRView {
    * call site from bytecode.
    */
   public SSAAbstractInvokeInstruction[] getCalls(CallSiteReference site) {
-    if (site == null) {
-      throw new IllegalArgumentException("site is null");
-    }
+    checkArgument(site != null, "site is null");
     IntSet s = callSiteMapping.getRelated(site.getProgramCounter());
     if (s == null) {
       throw new IllegalArgumentException("no calls at site's pc");
@@ -551,9 +549,7 @@ public abstract class IR implements IRView {
    * call site from bytecode.
    */
   public IntSet getCallInstructionIndices(CallSiteReference site) {
-    if (site == null) {
-      throw new IllegalArgumentException("site is null");
-    }
+    checkArgument(site != null, "site is null");
     return callSiteMapping.getRelated(site.getProgramCounter());
   }
 
@@ -632,9 +628,7 @@ public abstract class IR implements IRView {
    */
   @Override
   public ISSABasicBlock[] getBasicBlocksForCall(final CallSiteReference site) {
-    if (site == null) {
-      throw new IllegalArgumentException("site is null");
-    }
+    checkArgument(site != null, "site is null");
     final IntSet s = callSiteMapping.getRelated(site.getProgramCounter());
     if (s == null) {
       throw new IllegalArgumentException("invalid site: " + site);
@@ -716,9 +710,7 @@ public abstract class IR implements IRView {
 
   /** Return the {@link ISSABasicBlock} corresponding to a particular catch instruction */
   public ISSABasicBlock getBasicBlockForCatch(SSAGetCaughtExceptionInstruction instruction) {
-    if (instruction == null) {
-      throw new IllegalArgumentException("instruction is null");
-    }
+    checkArgument(instruction != null, "instruction is null");
     int bb = instruction.getBasicBlockNumber();
     return cfg.getBasicBlock(bb);
   }

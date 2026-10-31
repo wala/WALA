@@ -11,6 +11,7 @@
 
 package com.ibm.wala.core.tests.callGraph;
 
+import static com.google.common.base.Preconditions.checkState;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.analysis.reflection.java7.MethodHandles;
@@ -62,9 +63,7 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
     private static class FailsOnce {
       FailsOnce(boolean fail) {
         Runtime.execution(FailsOnce.class.getName(), "<init>(Z)V", Runtime.NULL_TAG);
-        if (fail) {
-          throw new IllegalStateException();
-        }
+        checkState(!fail);
         Runtime.termination(FailsOnce.class.getName(), "<init>(Z)V", Runtime.NULL_TAG, false);
       }
     }

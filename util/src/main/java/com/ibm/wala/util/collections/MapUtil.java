@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import java.util.ArrayList;
@@ -81,9 +83,7 @@ public class MapUtil {
    *     keys (optional)
    */
   public static <K, V> V findOrCreateValue(Map<K, V> M, K key, Factory<V> factory) {
-    if (M == null) {
-      throw new IllegalArgumentException("M is null");
-    }
+    checkArgument(M != null, "M is null");
     return M.computeIfAbsent(key, missing -> factory.make());
   }
 
@@ -106,9 +106,7 @@ public class MapUtil {
    * @throws IllegalArgumentException if m is null
    */
   public static <K, V> Map<V, Set<K>> inverseMap(Map<K, Set<V>> m) {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     Map<V, Set<K>> result = HashMapFactory.make(m.size());
     m.forEach((key, values) -> values.forEach(value -> findOrCreateSet(result, value).add(key)));
     return result;
@@ -122,9 +120,7 @@ public class MapUtil {
    * @throws IllegalArgumentException if m is not one-to-one
    */
   public static <K, V> Map<V, K> invertOneToOneMap(Map<K, V> m) {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     Map<V, K> result = HashMapFactory.make(m.size());
     m.forEach(
         (key, value) ->
@@ -138,9 +134,7 @@ public class MapUtil {
   }
 
   public static <K, V> Map<Set<K>, V> groupKeysByValue(Map<K, V> m) {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     Map<V, Set<K>> valueToKeys = HashMapFactory.make();
     m.forEach((key, value) -> findOrCreateSet(valueToKeys, value).add(key));
     return invertOneToOneMap(valueToKeys);

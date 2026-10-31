@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ssa.analysis;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ssa.IR;
@@ -88,9 +90,7 @@ public class ExplodedControlFlowGraph
   }
 
   public static ExplodedControlFlowGraph make(IR ir) {
-    if (ir == null) {
-      throw new IllegalArgumentException("ir == null");
-    }
+    checkArgument(ir != null, "ir == null");
     return new ExplodedControlFlowGraph(ir);
   }
 
@@ -432,9 +432,7 @@ public class ExplodedControlFlowGraph
 
   @Override
   public int getNumber(IExplodedBasicBlock n) throws IllegalArgumentException {
-    if (n == null) {
-      throw new IllegalArgumentException("n == null");
-    }
+    checkArgument(n != null, "n == null");
     return n.getNumber();
   }
 

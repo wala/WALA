@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedNull;
 
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -52,9 +53,7 @@ public class MutableMapping<T extends @Nullable Object>
    */
   @SuppressWarnings("unchecked")
   public MutableMapping(final Object[] array) {
-    if (array == null) {
-      throw new IllegalArgumentException("array is null");
-    }
+    checkArgument(array != null, "array is null");
     this.array = new Object[2 * array.length];
     for (int i = 0; i < array.length; i++) {
       this.array[i] = array[i];

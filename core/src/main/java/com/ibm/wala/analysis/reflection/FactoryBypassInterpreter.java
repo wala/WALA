@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.reflection;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
@@ -82,9 +84,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   @Override
   public IR getIR(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
@@ -122,18 +122,14 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
    */
   @Override
   public int getNumberOfStatements(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     return m.allInstructions.size();
   }
 
   @Override
   public boolean understands(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     if (node.getMethod().isWalaSynthetic()) {
       SyntheticMethod s = (SyntheticMethod) node.getMethod();
       if (s.isFactoryMethod()) {
@@ -145,9 +141,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     HashSet<NewSiteReference> result = HashSetFactory.make(5);
     for (SSAInstruction ssaInstruction : m.getAllocationStatements()) {
@@ -158,9 +152,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   }
 
   public Iterator<SSAInstruction> getInvokeStatements(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     return m.getInvokeStatements().iterator();
   }
@@ -214,21 +206,15 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
    */
   @Override
   public boolean recordFactoryType(CGNode node, IClass klass) {
-    if (klass == null) {
-      throw new IllegalArgumentException("klass is null");
-    }
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(klass != null, "klass is null");
+    checkArgument(node != null, "node is null");
     return recordType(
         node.getMethod().getClassHierarchy(), node.getContext(), klass.getReference());
   }
 
   @Override
   public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
       return CodeScanner.getFieldsRead(m).iterator();
@@ -240,9 +226,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   @Override
   public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
       return CodeScanner.getFieldsWritten(m).iterator();
@@ -265,9 +249,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   }
 
   public Set<TypeReference> getCaughtExceptions(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
       return CodeScanner.getCaughtExceptions(m);
@@ -278,9 +260,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   }
 
   public boolean hasObjectArrayLoad(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
       return CodeScanner.hasObjectArrayLoad(m);
@@ -291,9 +271,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   }
 
   public boolean hasObjectArrayStore(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
       return CodeScanner.hasObjectArrayStore(m);
@@ -304,9 +282,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   }
 
   public Iterator<TypeReference> iterateCastTypes(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
       return CodeScanner.iterateCastTypes(m);
@@ -327,9 +303,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   @Override
   public DefUse getDU(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     // SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     return cache.getDefUse(getIR(node));
   }

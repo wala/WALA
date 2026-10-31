@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -37,9 +39,7 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
 
   @Override
   public IR getIR(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     // Note: since this is context-insensitive, we cache an IR based on the
     // EVERYWHERE context
     return getAnalysisCache().getIR(node.getMethod(), Everywhere.EVERYWHERE);
@@ -73,9 +73,7 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
 
   @Override
   public DefUse getDU(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     // Note: since this is context-insensitive, we cache an IR based on the
     // EVERYWHERE context
     return getAnalysisCache()

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types.generics;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
@@ -30,12 +32,8 @@ public class MethodTypeSignature extends Signature {
   }
 
   public static MethodTypeSignature make(String genericsSignature) throws IllegalArgumentException {
-    if (genericsSignature == null) {
-      throw new IllegalArgumentException("genericsSignature is null");
-    }
-    if (genericsSignature.isEmpty()) {
-      throw new IllegalArgumentException();
-    }
+    checkArgument(genericsSignature != null, "genericsSignature is null");
+    checkArgument(!genericsSignature.isEmpty());
     return new MethodTypeSignature(genericsSignature);
   }
 

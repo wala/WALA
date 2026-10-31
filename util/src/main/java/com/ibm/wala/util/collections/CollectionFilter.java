@@ -11,6 +11,8 @@
 
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Collection;
 import java.util.function.Predicate;
 
@@ -20,9 +22,7 @@ public class CollectionFilter<T> implements Predicate<T> {
   private final Collection<? extends T> S;
 
   public CollectionFilter(Collection<? extends T> S) {
-    if (S == null) {
-      throw new IllegalArgumentException("null S");
-    }
+    checkArgument(S != null, "null S");
     this.S = S;
   }
 

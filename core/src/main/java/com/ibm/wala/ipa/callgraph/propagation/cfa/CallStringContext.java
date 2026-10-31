@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
@@ -18,9 +20,7 @@ public class CallStringContext implements Context {
   private final CallString cs;
 
   public CallStringContext(CallString cs) {
-    if (cs == null) {
-      throw new IllegalArgumentException("null cs");
-    }
+    checkArgument(cs != null, "null cs");
     this.cs = cs;
   }
 

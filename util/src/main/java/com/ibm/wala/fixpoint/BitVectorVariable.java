@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.fixpoint;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
@@ -23,9 +25,7 @@ public final class BitVectorVariable extends AbstractVariable<BitVectorVariable>
 
   @Override
   public void copyState(@Nullable BitVectorVariable other) {
-    if (other == null) {
-      throw new IllegalArgumentException("null other");
-    }
+    checkArgument(other != null, "null other");
     if (V == null) {
       if (other.V != null) {
         V = new MutableSharedBitVectorIntSet(other.V);
@@ -41,9 +41,7 @@ public final class BitVectorVariable extends AbstractVariable<BitVectorVariable>
 
   /** Add all the bits in B to this bit vector */
   public void addAll(BitVector B) {
-    if (B == null) {
-      throw new IllegalArgumentException("null B");
-    }
+    checkArgument(B != null, "null B");
     if (V == null) {
       V = new MutableSharedBitVectorIntSet(new BitVectorIntSet(B));
     } else {
@@ -53,9 +51,7 @@ public final class BitVectorVariable extends AbstractVariable<BitVectorVariable>
 
   /** Add all the bits from other to this bit vector */
   public void addAll(BitVectorVariable other) {
-    if (other == null) {
-      throw new IllegalArgumentException("null other");
-    }
+    checkArgument(other != null, "null other");
     if (V == null) {
       copyState(other);
     } else {
@@ -67,9 +63,7 @@ public final class BitVectorVariable extends AbstractVariable<BitVectorVariable>
 
   /** Does this variable have the same value as another? */
   public boolean sameValue(BitVectorVariable other) {
-    if (other == null) {
-      throw new IllegalArgumentException("null other");
-    }
+    checkArgument(other != null, "null other");
     if (V == null) {
       return (other.V == null);
     } else {

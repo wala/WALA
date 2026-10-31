@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.summaries;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticMethod;
@@ -151,9 +153,7 @@ public class MethodBypass {
    * @throws IllegalArgumentException if target is null
    */
   public SyntheticMethod getBypass(IMethod target) {
-    if (target == null) {
-      throw new IllegalArgumentException("target is null");
-    }
+    checkArgument(target != null, "target is null");
     return getBypass(target.getReference());
   }
 
@@ -196,9 +196,7 @@ public class MethodBypass {
    * @throws IllegalArgumentException if klass is null
    */
   public boolean isAllocatable(IClass klass) {
-    if (klass == null) {
-      throw new IllegalArgumentException("klass is null");
-    }
+    checkArgument(klass != null, "klass is null");
     if (!klass.isAbstract() && !klass.isInterface()) {
       return true;
     } else {

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -33,9 +35,7 @@ public class ClassHierarchyClassTargetSelector implements ClassTargetSelector {
 
   @Override
   public IClass getAllocatedTarget(CGNode caller, NewSiteReference site) {
-    if (site == null) {
-      throw new IllegalArgumentException("site is null");
-    }
+    checkArgument(site != null, "site is null");
     IClass klass = cha.lookupClass(site.getDeclaredType());
     if (klass == null) {
       return null;

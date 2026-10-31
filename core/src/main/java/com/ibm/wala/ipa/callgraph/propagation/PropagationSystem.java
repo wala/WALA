@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.util.ref.ReferenceCleanser;
@@ -101,9 +103,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   @SuppressWarnings({"StaticAssignmentInConstructor", "unused"})
   public PropagationSystem(
       CallGraph cg, PointerKeyFactory pointerKeyFactory, InstanceKeyFactory instanceKeyFactory) {
-    if (cg == null) {
-      throw new IllegalArgumentException("null cg");
-    }
+    checkArgument(cg != null, "null cg");
     this.cg = cg;
     this.pointerKeyFactory = pointerKeyFactory;
     this.instanceKeyFactory = instanceKeyFactory;
@@ -175,9 +175,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    * @throws IllegalArgumentException if klass is null
    */
   public IntSet getInstanceKeysForClass(IClass klass) {
-    if (klass == null) {
-      throw new IllegalArgumentException("klass is null");
-    }
+    checkArgument(klass != null, "klass is null");
     assert klass != klass.getClassHierarchy().getRootClass();
     return class2InstanceKey.get(klass);
   }
@@ -215,9 +213,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   /** record that a particular points-to-set is represented implicitly. */
   public void recordImplicitPointsToSet(PointerKey key) {
-    if (key == null) {
-      throw new IllegalArgumentException("null key");
-    }
+    checkArgument(key != null, "null key");
     if (key instanceof LocalPointerKey lpk) {
       if (lpk.isParameter()) {
         System.err.println("------------------ ERROR:");
@@ -239,9 +235,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    */
   public PointsToSetVariable findOrCreatePointsToSet(PointerKey key) {
 
-    if (key == null) {
-      throw new IllegalArgumentException("null key");
-    }
+    checkArgument(key != null, "null key");
 
     if (pointsToMap.isImplicit(key)) {
       if (DEBUG) {
@@ -308,15 +302,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    */
   public boolean newConstraint(
       PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
-    if (lhs == null) {
-      throw new IllegalArgumentException("null lhs");
-    }
-    if (op == null) {
-      throw new IllegalArgumentException("op null");
-    }
-    if (rhs == null) {
-      throw new IllegalArgumentException("rhs null");
-    }
+    checkArgument(lhs != null, "null lhs");
+    checkArgument(op != null, "op null");
+    checkArgument(rhs != null, "rhs null");
     if (DEBUG) {
       System.err.println("Add constraint A: " + lhs + ' ' + op + ' ' + rhs);
     }
@@ -344,15 +332,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   public boolean newConstraint(
       PointerKey lhs, AbstractOperator<PointsToSetVariable> op, PointerKey rhs) {
-    if (lhs == null) {
-      throw new IllegalArgumentException("lhs null");
-    }
-    if (op == null) {
-      throw new IllegalArgumentException("op null");
-    }
-    if (rhs == null) {
-      throw new IllegalArgumentException("rhs null");
-    }
+    checkArgument(lhs != null, "lhs null");
+    checkArgument(op != null, "op null");
+    checkArgument(rhs != null, "rhs null");
     if (DEBUG) {
       System.err.println("Add constraint A: " + lhs + ' ' + op + ' ' + rhs);
     }
@@ -365,18 +347,10 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   public boolean newConstraint(
       PointerKey lhs, AbstractOperator<PointsToSetVariable> op, PointerKey rhs1, PointerKey rhs2) {
-    if (lhs == null) {
-      throw new IllegalArgumentException("null lhs");
-    }
-    if (op == null) {
-      throw new IllegalArgumentException("null op");
-    }
-    if (rhs1 == null) {
-      throw new IllegalArgumentException("null rhs1");
-    }
-    if (rhs2 == null) {
-      throw new IllegalArgumentException("null rhs2");
-    }
+    checkArgument(lhs != null, "null lhs");
+    checkArgument(op != null, "null op");
+    checkArgument(rhs1 != null, "null rhs1");
+    checkArgument(rhs2 != null, "null rhs2");
     if (DEBUG) {
       System.err.println("Add constraint A: " + lhs + ' ' + op + ' ' + rhs1 + ", " + rhs2);
     }
@@ -544,9 +518,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   public void newSideEffect(UnaryOperator<PointsToSetVariable> op, PointerKey arg0) {
-    if (arg0 == null) {
-      throw new IllegalArgumentException("null arg0");
-    }
+    checkArgument(arg0 != null, "null arg0");
     if (DEBUG) {
       System.err.println("add constraint D: " + op + ' ' + arg0);
     }
@@ -556,9 +528,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   public void newSideEffect(AbstractOperator<PointsToSetVariable> op, PointerKey[] arg0) {
-    if (arg0 == null) {
-      throw new IllegalArgumentException("null arg0");
-    }
+    checkArgument(arg0 != null, "null arg0");
     if (DEBUG) {
       System.err.println("add constraint D: " + op + ' ' + Arrays.toString(arg0));
     }
@@ -742,9 +712,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    * @throws IllegalArgumentException if s is null
    */
   public void unify(IntSet s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     // cache the variables represented
     HashSet<PointsToSetVariable> cache = HashSetFactory.make(s.size());
     for (IntIterator it = s.intIterator(); it.hasNext(); ) {

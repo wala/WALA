@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CodeScanner;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -40,9 +42,7 @@ public abstract class ContextInsensitiveRTAInterpreter
 
   @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     try {
       return CodeScanner.getNewSites(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {
@@ -53,9 +53,7 @@ public abstract class ContextInsensitiveRTAInterpreter
 
   @Override
   public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     try {
       return CodeScanner.getFieldsRead(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {
@@ -66,9 +64,7 @@ public abstract class ContextInsensitiveRTAInterpreter
 
   @Override
   public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     try {
       return CodeScanner.getFieldsWritten(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {

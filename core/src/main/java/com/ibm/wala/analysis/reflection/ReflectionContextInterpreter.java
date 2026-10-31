@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.reflection;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -34,9 +36,7 @@ public class ReflectionContextInterpreter {
   public static SSAContextInterpreter createReflectionContextInterpreter(
       IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView iAnalysisCacheView) {
 
-    if (options == null) {
-      throw new IllegalArgumentException("null options");
-    }
+    checkArgument(options != null, "null options");
 
     // start with a dummy interpreter that understands nothing
     SSAContextInterpreter result =

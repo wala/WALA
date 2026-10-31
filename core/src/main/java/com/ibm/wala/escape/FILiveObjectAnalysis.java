@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.escape;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -62,9 +64,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   @Override
   public boolean mayBeLive(CGNode allocMethod, int allocPC, CGNode m, int instructionIndex)
       throws IllegalArgumentException, WalaException {
-    if (allocMethod == null) {
-      throw new IllegalArgumentException("allocMethod == null");
-    }
+    checkArgument(allocMethod != null, "allocMethod == null");
     NewSiteReference site = TrivialMethodEscape.findAlloc(allocMethod, allocPC);
     InstanceKey ik = heapGraph.getHeapModel().getInstanceKeyForAllocation(allocMethod, site);
     return mayBeLive(ik, m, instructionIndex);
@@ -170,9 +170,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
 
   @Override
   public boolean mayBeLive(InstanceKey ik, CGNode m, IntSet instructionIndices) {
-    if (instructionIndices == null) {
-      throw new IllegalArgumentException("instructionIndices is null");
-    }
+    checkArgument(instructionIndices != null, "instructionIndices is null");
     // TODO this sucks
     for (IntIterator it = instructionIndices.intIterator(); it.hasNext(); ) {
       int i = it.next();

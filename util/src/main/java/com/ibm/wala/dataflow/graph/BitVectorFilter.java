@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.intset.BitVector;
@@ -24,9 +26,7 @@ public class BitVectorFilter extends UnaryOperator<BitVectorVariable> {
   private final BitVectorIntSet mask;
 
   public BitVectorFilter(BitVector mask) {
-    if (mask == null) {
-      throw new IllegalArgumentException("null mask");
-    }
+    checkArgument(mask != null, "null mask");
     this.mask = new BitVectorIntSet(mask);
   }
 
@@ -34,9 +34,7 @@ public class BitVectorFilter extends UnaryOperator<BitVectorVariable> {
   @NullUnmarked
   public byte evaluate(@Nullable BitVectorVariable lhs, BitVectorVariable rhs)
       throws IllegalArgumentException {
-    if (rhs == null) {
-      throw new IllegalArgumentException("rhs == null");
-    }
+    checkArgument(rhs != null, "rhs == null");
     BitVectorVariable U = new BitVectorVariable();
     U.copyState(lhs);
 

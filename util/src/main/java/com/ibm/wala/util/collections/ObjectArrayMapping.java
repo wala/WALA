@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
@@ -31,9 +33,7 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
   private final HashMap<T, Integer> map = HashMapFactory.make();
 
   public ObjectArrayMapping(final T[] array) {
-    if (array == null) {
-      throw new IllegalArgumentException("null array");
-    }
+    checkArgument(array != null, "null array");
     this.array = array;
     for (int i = 0; i < array.length; i++) {
       map.put(array[i], i);

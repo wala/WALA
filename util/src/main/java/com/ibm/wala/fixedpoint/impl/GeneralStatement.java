@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.fixedpoint.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.FixedPointConstants;
@@ -78,9 +80,7 @@ public abstract class GeneralStatement<T extends IVariable<T>>
    */
   @NullUnmarked
   public GeneralStatement(T lhs, AbstractOperator<T> operator) {
-    if (operator == null) {
-      throw new IllegalArgumentException("null operator");
-    }
+    checkArgument(operator != null, "null operator");
     this.operator = operator;
     this.lhs = lhs;
     this.rhs = null;
@@ -96,9 +96,7 @@ public abstract class GeneralStatement<T extends IVariable<T>>
    * @param op2 the second operand on the rhs
    */
   public GeneralStatement(T lhs, AbstractOperator<T> operator, T op1, T op2) {
-    if (operator == null) {
-      throw new IllegalArgumentException("null operator");
-    }
+    checkArgument(operator != null, "null operator");
     this.operator = operator;
     this.lhs = lhs;
     rhs = makeRHS(2);
@@ -117,9 +115,7 @@ public abstract class GeneralStatement<T extends IVariable<T>>
    * @param op3 the third operand on the rhs
    */
   public GeneralStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, T op3) {
-    if (operator == null) {
-      throw new IllegalArgumentException("null operator");
-    }
+    checkArgument(operator != null, "null operator");
     this.operator = operator;
     rhs = makeRHS(3);
     this.lhs = lhs;
@@ -138,12 +134,8 @@ public abstract class GeneralStatement<T extends IVariable<T>>
    * @throws IllegalArgumentException if rhs is null
    */
   public GeneralStatement(T lhs, AbstractOperator<T> operator, T[] rhs) {
-    if (operator == null) {
-      throw new IllegalArgumentException("null operator");
-    }
-    if (rhs == null) {
-      throw new IllegalArgumentException("rhs is null");
-    }
+    checkArgument(operator != null, "null operator");
+    checkArgument(rhs != null, "rhs is null");
     this.operator = operator;
     this.lhs = lhs;
     this.rhs = rhs.clone();

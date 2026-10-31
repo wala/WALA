@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.slicer;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.dataflow.IFDS.BackwardsSupergraph;
 import com.ibm.wala.dataflow.IFDS.IMergeFunction;
 import com.ibm.wala.dataflow.IFDS.IPartiallyBalancedFlowFunctions;
@@ -223,9 +225,7 @@ public class Slicer {
    */
   protected static Collection<Statement> computeSlice(
       SDG<?> sdg, Collection<Statement> ss, boolean backward) throws CancelException {
-    if (sdg == null) {
-      throw new IllegalArgumentException("sdg cannot be null");
-    }
+    checkArgument(sdg != null, "sdg cannot be null");
     return new Slicer().slice(sdg, ss, backward);
   }
 
@@ -254,9 +254,7 @@ public class Slicer {
   public Collection<Statement> slice(
       SDG<?> sdg, Collection<Statement> roots, boolean backward, IProgressMonitor monitor)
       throws CancelException {
-    if (sdg == null) {
-      throw new IllegalArgumentException("sdg cannot be null");
-    }
+    checkArgument(sdg != null, "sdg cannot be null");
 
     SliceProblem p = makeSliceProblem(roots, sdg, backward);
 

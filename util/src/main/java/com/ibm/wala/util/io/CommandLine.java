@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.io;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Properties;
 import org.jspecify.annotations.Nullable;
 
@@ -24,9 +26,7 @@ public class CommandLine {
    * @throws IllegalArgumentException if args == null
    */
   public static Properties parse(String[] args) throws IllegalArgumentException {
-    if (args == null) {
-      throw new IllegalArgumentException("args == null");
-    }
+    checkArgument(args != null, "args == null");
     Properties result = new Properties();
     for (int i = 0; i < args.length; i++) {
       if (args[i] == null) {

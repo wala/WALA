@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.util.collections.HashSetFactory;
 import java.util.Iterator;
@@ -22,12 +24,8 @@ public class ComposedEntrypoints implements Iterable<Entrypoint> {
   private final Set<Entrypoint> entrypoints = HashSetFactory.make();
 
   public ComposedEntrypoints(Iterable<Entrypoint> A, Iterable<Entrypoint> B) {
-    if (A == null) {
-      throw new IllegalArgumentException("A is null");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("B is null");
-    }
+    checkArgument(A != null, "A is null");
+    checkArgument(B != null, "B is null");
     for (Entrypoint entrypoint : A) {
       entrypoints.add(entrypoint);
     }

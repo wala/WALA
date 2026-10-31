@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /** A key which represents a set corresponding to a call graph node. */
@@ -17,9 +19,7 @@ public abstract class NodeKey extends AbstractLocalPointerKey {
   private final CGNode node;
 
   protected NodeKey(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("null node");
-    }
+    checkArgument(node != null, "null node");
     this.node = node;
   }
 

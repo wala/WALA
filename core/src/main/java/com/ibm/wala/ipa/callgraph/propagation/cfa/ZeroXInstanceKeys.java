@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -128,9 +130,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
       IClassHierarchy cha,
       RTAContextInterpreter contextInterpreter,
       int policy) {
-    if (options == null) {
-      throw new IllegalArgumentException("null options");
-    }
+    checkArgument(options != null, "null options");
     this.policy = policy;
     if (disambiguateConstants()) {
       // this is an ugly hack. TODO: clean it all up.
@@ -172,9 +172,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
 
   @Override
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
-    if (allocation == null) {
-      throw new IllegalArgumentException("allocation is null");
-    }
+    checkArgument(allocation != null, "allocation is null");
     TypeReference t = allocation.getDeclaredType();
     IClass C = cha.lookupClass(t);
 
@@ -241,9 +239,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
 
   @Override
   public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
-    if (type == null) {
-      throw new IllegalArgumentException("null type");
-    }
+    checkArgument(type != null, "null type");
     if (disambiguateConstants() || isReflectiveType(type)) {
       return new ConstantKey<>(S, getClassHierarchy().lookupClass(type));
     } else {
@@ -283,9 +279,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   }
 
   public static boolean isStringish(IClass C) {
-    if (C == null) {
-      throw new IllegalArgumentException("C is null");
-    }
+    checkArgument(C != null, "C is null");
     return C.getReference().equals(TypeReference.JavaLangString)
         || C.getReference().equals(JavaLangStringBuffer)
         || C.getReference().equals(JavaLangStringBuilder)
@@ -293,9 +287,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   }
 
   public static boolean isThrowable(IClass c) {
-    if (c == null) {
-      throw new IllegalArgumentException("null c");
-    }
+    checkArgument(c != null, "null c");
     return c.getClassHierarchy()
         .isSubclassOf(
             c,
@@ -303,9 +295,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   }
 
   public static boolean isStackTraceElement(IClass c) {
-    if (c == null) {
-      throw new IllegalArgumentException("C is null");
-    }
+    checkArgument(c != null, "C is null");
     return c.getReference().equals(TypeReference.JavaLangStackTraceElement);
   }
 

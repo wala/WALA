@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.ImmutableByteArray;
@@ -37,9 +39,7 @@ public final class Descriptor {
    * @return the canonical representative for this descriptor value
    */
   public static synchronized Descriptor findOrCreate(TypeName[] parameters, TypeName returnType) {
-    if (returnType == null) {
-      throw new IllegalArgumentException("null returnType");
-    }
+    checkArgument(returnType != null, "null returnType");
     if (parameters != null && parameters.length == 0) {
       parameters = null;
     }

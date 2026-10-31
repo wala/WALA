@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.IFDS;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
@@ -42,9 +44,7 @@ public class VectorGenFlowFunction implements IReversibleFlowFunction {
    * @return an instance of a flow function which gens these facts
    */
   public static VectorGenFlowFunction make(IntSet gen) {
-    if (gen == null) {
-      throw new IllegalArgumentException("null gen");
-    }
+    checkArgument(gen != null, "null gen");
     return new VectorGenFlowFunction(gen);
   }
 

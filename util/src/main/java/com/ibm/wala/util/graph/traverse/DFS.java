@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -41,9 +43,7 @@ public class DFS {
    */
   public static <T> Collection<T> getReachableNodes(
       final Graph<T> G, Collection<? extends T> C, final Predicate<? super T> filter) {
-    if (C == null) {
-      throw new IllegalArgumentException("C is null");
-    }
+    checkArgument(C != null, "C is null");
     Iterator<T> dfs =
         new SlowDFSFinishTimeIterator<>(G, C.iterator()) {
 
@@ -63,9 +63,7 @@ public class DFS {
    * @throws IllegalArgumentException if C is null
    */
   public static <T> Set<T> getReachableNodes(Graph<T> G, Collection<? extends T> C) {
-    if (C == null) {
-      throw new IllegalArgumentException("C is null");
-    }
+    checkArgument(C != null, "C is null");
     HashSet<T> result = HashSetFactory.make();
     iterateFinishTime(G, C.iterator()).forEachRemaining(result::add);
     return result;
@@ -79,9 +77,7 @@ public class DFS {
    * @throws IllegalArgumentException if G == null
    */
   public static <T> Set<T> getReachableNodes(Graph<T> G) throws IllegalArgumentException {
-    if (G == null) {
-      throw new IllegalArgumentException("G == null");
-    }
+    checkArgument(G != null, "G == null");
     HashSet<T> result = HashSetFactory.make();
     iterateFinishTime(G).forEachRemaining(result::add);
     return result;
@@ -144,9 +140,7 @@ public class DFS {
    */
   public static <T> Iterator<T> iterateDiscoverTime(Graph<T> G, Iterator<T> roots)
       throws IllegalArgumentException {
-    if (roots == null) {
-      throw new IllegalArgumentException("roots == null");
-    }
+    checkArgument(roots != null, "roots == null");
     if (G instanceof NumberedGraph<T> ts) {
       return new NumberedDFSDiscoverTimeIterator<>(ts, roots);
     } else {
@@ -159,9 +153,7 @@ public class DFS {
    * @return iterator of nodes of G in order of DFS discover time
    */
   public static <T> DFSDiscoverTimeIterator<T> iterateDiscoverTime(Graph<T> G, T N) {
-    if (G == null) {
-      throw new IllegalArgumentException("G == null");
-    }
+    checkArgument(G != null, "G == null");
     if (G instanceof NumberedGraph<T> ts) {
       return new NumberedDFSDiscoverTimeIterator<>(ts, N);
     } else {
@@ -176,9 +168,7 @@ public class DFS {
    */
   public static <T> DFSFinishTimeIterator<T> iterateFinishTime(Graph<T> G)
       throws IllegalArgumentException {
-    if (G == null) {
-      throw new IllegalArgumentException("G == null");
-    }
+    checkArgument(G != null, "G == null");
     if (G instanceof NumberedGraph<T> ts) {
       return new NumberedDFSFinishTimeIterator<>(ts);
     } else {
@@ -193,9 +183,7 @@ public class DFS {
    */
   public static <T> DFSFinishTimeIterator<T> iterateFinishTime(
       Graph<T> G, @Nullable Iterator<? extends T> ie) {
-    if (ie == null) {
-      throw new IllegalArgumentException("null ie");
-    }
+    checkArgument(ie != null, "null ie");
     if (G instanceof NumberedGraph<T> ts) {
       return new NumberedDFSFinishTimeIterator<>(ts, ie);
     } else {

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Arrays;
 import java.util.TreeSet;
 
@@ -21,9 +23,7 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
    */
   @Override
   public MutableLongSet make(long[] set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set is null");
-    }
+    checkArgument(set != null, "set is null");
     if (set.length == 0) {
       return new MutableSparseLongSet();
     } else {
@@ -50,9 +50,7 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
 
   @Override
   public MutableLongSet makeCopy(LongSet x) throws IllegalArgumentException {
-    if (x == null) {
-      throw new IllegalArgumentException("x == null");
-    }
+    checkArgument(x != null, "x == null");
     return MutableSparseLongSet.make(x);
   }
 

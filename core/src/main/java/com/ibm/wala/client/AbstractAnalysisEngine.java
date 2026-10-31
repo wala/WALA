@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.client;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.pointers.BasicHeapGraph;
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -200,9 +202,7 @@ public abstract class AbstractAnalysisEngine<
 
   @Override
   public void setJ2SELibraries(JarFile[] libs) {
-    if (libs == null) {
-      throw new IllegalArgumentException("libs is null");
-    }
+    checkArgument(libs != null, "libs is null");
     this.j2seLibs = new Module[libs.length];
     for (int i = 0; i < libs.length; i++) {
       j2seLibs[i] = new JarFileModule(libs[i]);
@@ -211,9 +211,7 @@ public abstract class AbstractAnalysisEngine<
 
   @Override
   public void setJ2SELibraries(Module[] libs) {
-    if (libs == null) {
-      throw new IllegalArgumentException("libs is null");
-    }
+    checkArgument(libs != null, "libs is null");
     this.j2seLibs = libs.clone();
   }
 

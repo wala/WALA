@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.reflection.CloneInterpreter;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
@@ -168,9 +170,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    */
   public static InstanceKey getInstanceKeyForPEI(
       CGNode node, ProgramCounter x, TypeReference type, InstanceKeyFactory ikFactory) {
-    if (ikFactory == null) {
-      throw new IllegalArgumentException("ikFactory is null");
-    }
+    checkArgument(ikFactory != null, "ikFactory is null");
     return ikFactory.getInstanceKeyForPEI(node, x, type);
   }
 
@@ -451,12 +451,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    */
   public PointerKey getUniqueCatchKey(SSAAbstractInvokeInstruction call, IRView ir, CGNode node)
       throws IllegalArgumentException {
-    if (call == null) {
-      throw new IllegalArgumentException("call == null");
-    }
-    if (ir == null) {
-      throw new IllegalArgumentException("ir == null");
-    }
+    checkArgument(call != null, "call == null");
+    checkArgument(ir != null, "ir == null");
     ISSABasicBlock[] bb = ir.getBasicBlocksForCall(call.getCallSite());
     assert bb.length == 1;
     SSACFG.BasicBlock cb =
@@ -475,9 +471,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @throws IllegalArgumentException if ir is null
    */
   public static List<ProgramCounter> getIncomingPEIs(IRView ir, ISSABasicBlock bb) {
-    if (ir == null) {
-      throw new IllegalArgumentException("ir is null");
-    }
+    checkArgument(ir != null, "ir is null");
     if (DEBUG) {
       System.err.println("getIncomingPEIs " + bb);
     }
@@ -2038,9 +2032,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   public boolean hasNoInterestingUses(CGNode node, int vn, DefUse du) {
 
-    if (du == null) {
-      throw new IllegalArgumentException("du is null");
-    }
+    checkArgument(du != null, "du is null");
     if (vn <= 0) {
       throw new IllegalArgumentException("v is invalid: " + vn);
     }
@@ -2396,12 +2388,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   public static Set<IClass> getCaughtExceptionTypes(
       SSAGetCaughtExceptionInstruction instruction, IRView ir) {
-    if (ir == null) {
-      throw new IllegalArgumentException("ir is null");
-    }
-    if (instruction == null) {
-      throw new IllegalArgumentException("instruction is null");
-    }
+    checkArgument(ir != null, "ir is null");
+    checkArgument(instruction != null, "instruction is null");
     Iterator<TypeReference> exceptionTypes =
         ir.getControlFlowGraph()
             .getNode(instruction.getBasicBlockNumber())

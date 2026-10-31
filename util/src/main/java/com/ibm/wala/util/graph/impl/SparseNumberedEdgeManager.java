@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.graph.NumberedNodeManager;
@@ -52,12 +54,8 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   public SparseNumberedEdgeManager(
       NumberedNodeManager<T> nodeManager, int normalCase, byte delegateImpl)
       throws IllegalArgumentException {
-    if (nodeManager == null) {
-      throw new IllegalArgumentException("null nodeManager");
-    }
-    if (normalCase < 0) {
-      throw new IllegalArgumentException("normalCase < 0");
-    }
+    checkArgument(nodeManager != null, "null nodeManager");
+    checkArgument(normalCase >= 0, "normalCase < 0");
     this.nodeManager = nodeManager;
     if (normalCase == 0) {
       successors = new BasicNaturalRelation(defaultImpl, delegateImpl);

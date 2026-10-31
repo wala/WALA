@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.types;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.ibm.wala.types.TypeName.ArrayMask;
 import static com.ibm.wala.types.TypeName.ElementBits;
 import static com.ibm.wala.types.TypeName.PrimitiveMask;
@@ -438,9 +439,7 @@ public final class TypeReference implements Serializable {
   public static synchronized TypeReference findOrCreate(
       ClassLoaderReference cl, TypeName typeName) {
 
-    if (cl == null) {
-      throw new IllegalArgumentException("null cl");
-    }
+    checkArgument(cl != null, "null cl");
     TypeReference p = primitiveMap.get(typeName);
     if (p != null) {
       return p;
@@ -484,9 +483,7 @@ public final class TypeReference implements Serializable {
    * @param cl the classloader (defining/initiating depending on usage)
    */
   public static synchronized TypeReference find(ClassLoaderReference cl, TypeName typeName) {
-    if (cl == null) {
-      throw new IllegalArgumentException("null cl");
-    }
+    checkArgument(cl != null, "null cl");
     TypeReference p = primitiveMap.get(typeName);
     if (p != null) {
       return p;
@@ -507,9 +504,7 @@ public final class TypeReference implements Serializable {
   }
 
   public static TypeReference findOrCreateArrayOf(TypeReference t) {
-    if (t == null) {
-      throw new IllegalArgumentException("t is null");
-    }
+    checkArgument(t != null, "t is null");
     TypeName name = t.getName();
     if (t.isPrimitiveType()) {
       return findOrCreate(ClassLoaderReference.Primordial, name.getArrayTypeForElementType());
@@ -519,9 +514,7 @@ public final class TypeReference implements Serializable {
   }
 
   public static TypeReference findOrCreateReferenceTo(TypeReference t) {
-    if (t == null) {
-      throw new IllegalArgumentException("t is null");
-    }
+    checkArgument(t != null, "t is null");
     TypeName name = t.getName();
     if (t.isPrimitiveType()) {
       return findOrCreate(ClassLoaderReference.Primordial, name.getReferenceTypeForElementType());
@@ -531,9 +524,7 @@ public final class TypeReference implements Serializable {
   }
 
   public static TypeReference findOrCreatePointerTo(TypeReference t) {
-    if (t == null) {
-      throw new IllegalArgumentException("t is null");
-    }
+    checkArgument(t != null, "t is null");
     TypeName name = t.getName();
     if (t.isPrimitiveType()) {
       return findOrCreate(ClassLoaderReference.Primordial, name.getPointerTypeForElementType());

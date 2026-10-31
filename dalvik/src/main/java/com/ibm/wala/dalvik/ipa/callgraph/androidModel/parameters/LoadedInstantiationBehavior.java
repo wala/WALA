@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.core.util.strings.Atom;
@@ -132,9 +134,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
       final TypeName asParameterTo,
       final MethodReference inCall,
       final String withName) {
-    if (type == null) {
-      throw new IllegalArgumentException("type may not be null");
-    }
+    checkArgument(type != null, "type may not be null");
 
     final BehaviorKey<TypeName> typeK = BehaviorKey.mk(type);
     BehviourValue typeV = behaviours.get(typeK);
@@ -225,9 +225,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
       final TypeName asParameterTo,
       final MethodReference inCall,
       final String withName) {
-    if (type == null) {
-      throw new IllegalArgumentException("type may not be null");
-    }
+    checkArgument(type != null, "type may not be null");
 
     final BehaviorKey<TypeName> typeK = BehaviorKey.mk(type);
     if (!behaviours.containsKey(typeK)) {

@@ -42,6 +42,8 @@
 */
 package com.ibm.wala.core.util.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.errorprone.annotations.FormatMethod;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -173,16 +175,9 @@ public class ParameterAccessor {
         final int descriptorOffset) {
       super(number, type, mRef, new ParameterKey(type.getName(), number + descriptorOffset, name));
 
-      if (mRef == null) {
-        throw new IllegalArgumentException("MethodReference (mRef) of a Parameter may not be null");
-      }
-      if (basedOn == null) {
-        throw new IllegalArgumentException("Argument basedOn of a Parameter may not be null");
-      }
-      if (disp == null) {
-        throw new IllegalArgumentException(
-            "ParameterDisposition (disp) of a Parameter may not be null");
-      }
+      checkArgument(mRef != null, "MethodReference (mRef) of a Parameter may not be null");
+      checkArgument(basedOn != null, "Argument basedOn of a Parameter may not be null");
+      checkArgument(disp != null, "ParameterDisposition (disp) of a Parameter may not be null");
       // If type was null the call to super failed
       if ((number < 1) && (basedOn == BasedOn.METHOD_REFERENCE)) {
         throw new IllegalArgumentException(
@@ -322,9 +317,7 @@ public class ParameterAccessor {
    * @param mRef The method to read the parameters from.
    */
   public ParameterAccessor(final MethodReference mRef, final IClassHierarchy cha) {
-    if (mRef == null) {
-      throw new IllegalArgumentException("Can't read the arguments from null.");
-    }
+    checkArgument(mRef != null, "Can't read the arguments from null.");
 
     this.mRef = mRef;
     this.method = null;
@@ -423,9 +416,7 @@ public class ParameterAccessor {
    * @param mRef The method to read the parameters from.
    */
   public ParameterAccessor(final MethodReference mRef, final boolean hasImplicitThis) {
-    if (mRef == null) {
-      throw new IllegalArgumentException("Can't read the arguments from null.");
-    }
+    checkArgument(mRef != null, "Can't read the arguments from null.");
 
     this.mRef = mRef;
     this.method = null;
@@ -451,9 +442,7 @@ public class ParameterAccessor {
    * @param method The method to read the parameters from.
    */
   public ParameterAccessor(final IMethod method) {
-    if (method == null) {
-      throw new IllegalArgumentException("Can't read the arguments from null.");
-    }
+    checkArgument(method != null, "Can't read the arguments from null.");
 
     // Don't make a mRef but keep the IMethod!
     this.mRef = null;
@@ -528,10 +517,9 @@ public class ParameterAccessor {
    * @throws ArrayIndexOutOfBoundsException if no is not within bounds [1 to numberOfParameters]
    */
   public int getParameterNo(final int no) {
-    if (no == 0) {
-      throw new IllegalArgumentException(
-          "Parameter numbers start with 1. Use getThis() to access a potential implicit this.");
-    }
+    checkArgument(
+        no != 0,
+        "Parameter numbers start with 1. Use getThis() to access a potential implicit this.");
     if ((no < 0) || (no > this.numberOfParameters)) {
       throw new ArrayIndexOutOfBoundsException(
           "The given number (%d) was not within bounds (1 to %d) when accessing a parameter of %s"
@@ -550,9 +538,7 @@ public class ParameterAccessor {
    * @return SSA-Value to access the parameters contents.
    */
   public int getParameterNo(final Parameter param) {
-    if (param == null) {
-      throw new IllegalArgumentException("Parameter may not be null");
-    }
+    checkArgument(param != null, "Parameter may not be null");
 
     return param.getNumber();
   }
@@ -842,12 +828,9 @@ public class ParameterAccessor {
    * @throws IllegalArgumentException if searching for void or null
    */
   public Parameter firstOf(final TypeName tName) {
-    if (tName == null) {
-      throw new IllegalArgumentException("Search-name may not be null");
-    }
-    if (tName.equals(TypeReference.VoidName)) {
-      throw new IllegalArgumentException("You are searching for 'void' as a parameter.");
-    }
+    checkArgument(tName != null, "Search-name may not be null");
+    checkArgument(
+        !tName.equals(TypeReference.VoidName), "You are searching for 'void' as a parameter.");
 
     final List<Parameter> all = all();
 
@@ -870,12 +853,8 @@ public class ParameterAccessor {
    * @throws IllegalArgumentException if searching for void or null
    */
   public Parameter firstOf(final TypeReference tRef) {
-    if (tRef == null) {
-      throw new IllegalArgumentException("Search-name may not be null");
-    }
-    if (tRef.equals(TypeReference.Void)) {
-      throw new IllegalArgumentException("You are searching for 'void' as a parameter.");
-    }
+    checkArgument(tRef != null, "Search-name may not be null");
+    checkArgument(!tRef.equals(TypeReference.Void), "You are searching for 'void' as a parameter.");
 
     final List<Parameter> all = all();
 
@@ -900,16 +879,11 @@ public class ParameterAccessor {
    * @throws IllegalArgumentException if searching for void or null
    */
   public List<Parameter> allExtend(final TypeName tName, final IClassHierarchy cha) {
-    if (tName == null) {
-      throw new IllegalArgumentException("Search-name may not be null");
-    }
-    if (tName.equals(TypeReference.VoidName)) {
-      throw new IllegalArgumentException("You are searching for 'void' as a parameter.");
-    }
-    if (cha == null) {
-      throw new IllegalArgumentException(
-          "Can't search ClassHierarchy without having a ClassHierarchy (is null)");
-    }
+    checkArgument(tName != null, "Search-name may not be null");
+    checkArgument(
+        !tName.equals(TypeReference.VoidName), "You are searching for 'void' as a parameter.");
+    checkArgument(
+        cha != null, "Can't search ClassHierarchy without having a ClassHierarchy (is null)");
 
     final List<Parameter> all = all();
     final List<Parameter> allExtends = new ArrayList<>();
@@ -966,16 +940,10 @@ public class ParameterAccessor {
    * @throws IllegalArgumentException if searching for void or null
    */
   public List<Parameter> allExtend(final TypeReference tRef, final IClassHierarchy cha) {
-    if (tRef == null) {
-      throw new IllegalArgumentException("Search TypeReference may not be null");
-    }
-    if (tRef.equals(TypeReference.Void)) {
-      throw new IllegalArgumentException("You are searching for 'void' as a parameter.");
-    }
-    if (cha == null) {
-      throw new IllegalArgumentException(
-          "Can't search ClassHierarchy without having a ClassHierarchy (is null)");
-    }
+    checkArgument(tRef != null, "Search TypeReference may not be null");
+    checkArgument(!tRef.equals(TypeReference.Void), "You are searching for 'void' as a parameter.");
+    checkArgument(
+        cha != null, "Can't search ClassHierarchy without having a ClassHierarchy (is null)");
 
     // ****
     // Implementation starts here
@@ -1016,16 +984,11 @@ public class ParameterAccessor {
    * @throws IllegalArgumentException if searching for void or null
    */
   public Parameter firstExtends(final TypeName tName, final IClassHierarchy cha) {
-    if (tName == null) {
-      throw new IllegalArgumentException("Search-name may not be null");
-    }
-    if (tName.equals(TypeReference.VoidName)) {
-      throw new IllegalArgumentException("You are searching for 'void' as a parameter.");
-    }
-    if (cha == null) {
-      throw new IllegalArgumentException(
-          "Can't search ClassHierarchy without having a ClassHierarchy (is null)");
-    }
+    checkArgument(tName != null, "Search-name may not be null");
+    checkArgument(
+        !tName.equals(TypeReference.VoidName), "You are searching for 'void' as a parameter.");
+    checkArgument(
+        cha != null, "Can't search ClassHierarchy without having a ClassHierarchy (is null)");
 
     final List<Parameter> all = all();
     IClass searchType = null;
@@ -1082,16 +1045,10 @@ public class ParameterAccessor {
    * @throws IllegalArgumentException if searching for void or null
    */
   public Parameter firstExtends(final TypeReference tRef, final IClassHierarchy cha) {
-    if (tRef == null) {
-      throw new IllegalArgumentException("Search TypeReference may not be null");
-    }
-    if (tRef.equals(TypeReference.Void)) {
-      throw new IllegalArgumentException("You are searching for 'void' as a parameter.");
-    }
-    if (cha == null) {
-      throw new IllegalArgumentException(
-          "Can't search ClassHierarchy without having a ClassHierarchy (is null)");
-    }
+    checkArgument(tRef != null, "Search TypeReference may not be null");
+    checkArgument(!tRef.equals(TypeReference.Void), "You are searching for 'void' as a parameter.");
+    checkArgument(
+        cha != null, "Can't search ClassHierarchy without having a ClassHierarchy (is null)");
 
     // ****
     // Implementation starts here
@@ -1174,16 +1131,11 @@ public class ParameterAccessor {
       final List<? extends SSAValue> args,
       final ParameterAccessor target,
       final IClassHierarchy cha) {
-    if (args == null) {
-      throw new IllegalArgumentException("args is null");
-    }
-    if (target == null) {
-      throw new IllegalArgumentException("ParameterAccessor for the target is null");
-    }
-    if (target.hasImplicitThis()) {
-      throw new IllegalArgumentException(
-          "You used forInvokeStatic on a method that has an implicit this pointer");
-    }
+    checkArgument(args != null, "args is null");
+    checkArgument(target != null, "ParameterAccessor for the target is null");
+    checkArgument(
+        !target.hasImplicitThis(),
+        "You used forInvokeStatic on a method that has an implicit this pointer");
     if (target.getNumberOfParameters() != args.size()) {
       throw new IllegalArgumentException(
           "Number of arguments mismatch: %d given on a method that needs %d arguments. Arguments given were %s for a static call to %s"
@@ -1234,9 +1186,7 @@ public class ParameterAccessor {
    * @throws IllegalArgumentException if the value of self is to small in the current method
    */
   public int[] forInvokeVirtual(final int self, final List<? extends SSAValue> args) {
-    if (args == null) {
-      throw new IllegalArgumentException("args is null");
-    }
+    checkArgument(args != null, "args is null");
     if ((this.base == BasedOn.METHOD_REFERENCE) && (self < 1)) {
       throw new IllegalArgumentException(
           "The first SSA-Value of a MethodReference is 1. The given this (self) is " + self);
@@ -1281,22 +1231,17 @@ public class ParameterAccessor {
       final List<? extends SSAValue> args,
       final ParameterAccessor target,
       final IClassHierarchy cha) {
-    if (args == null) {
-      throw new IllegalArgumentException("args is null");
-    }
+    checkArgument(args != null, "args is null");
     if ((this.base == BasedOn.METHOD_REFERENCE) && (self < 1)) {
       throw new IllegalArgumentException(
           "The first SSA-Value of a MethodReference is 1. The given this (self) is " + self);
     } else if (self < 0) {
       throw new IllegalArgumentException("self = " + self + " < 0");
     }
-    if (target == null) {
-      throw new IllegalArgumentException("ParameterAccessor for the target is null");
-    }
-    if (!target.hasImplicitThis()) {
-      throw new IllegalArgumentException(
-          "You used forInvokeVirtual on a method that has no implicit this pointer");
-    }
+    checkArgument(target != null, "ParameterAccessor for the target is null");
+    checkArgument(
+        target.hasImplicitThis(),
+        "You used forInvokeVirtual on a method that has no implicit this pointer");
     if (target.getNumberOfParameters() != args.size() + 1) { // TODO: Verify
       throw new IllegalArgumentException(
           "Number of arguments mismatch: %d given on a method that needs %d arguments. Arguments given were %s for a static call to %s"
@@ -1366,9 +1311,7 @@ public class ParameterAccessor {
       final IClassHierarchy cha,
       IInstantiator instantiator,
       Object... instantiatorArgs) {
-    if (callee == null) {
-      throw new IllegalArgumentException("Cannot connect through to null-callee");
-    }
+    checkArgument(callee != null, "Cannot connect through to null-callee");
     if (overrides == null) {
       overrides = Collections.emptySet();
     }
@@ -1548,9 +1491,7 @@ public class ParameterAccessor {
   /** Does "to x := from" hold?. */
   public static boolean isAssignable(
       final TypeReference from, final TypeReference to, final IClassHierarchy cha) {
-    if (cha == null) {
-      throw new IllegalArgumentException("ClassHierarchy may not be null");
-    }
+    checkArgument(cha != null, "ClassHierarchy may not be null");
 
     if (from.getName().equals(to.getName())) return true;
 
@@ -1620,9 +1561,7 @@ public class ParameterAccessor {
   public static boolean isSubclassOf(
       final TypeReference sub, final TypeReference superC, final IClassHierarchy cha)
       throws ClassLookupException {
-    if (cha == null) {
-      throw new IllegalArgumentException("ClassHierarchy may not be null");
-    }
+    checkArgument(cha != null, "ClassHierarchy may not be null");
 
     if (sub.getName().equals(superC.getName())) return true;
 

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.exceptionanalysis;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -60,10 +62,9 @@ public class CGIntraproceduralExceptionAnalysis {
    * @return IntraproceduralExceptionAnalysis for given node.
    */
   public IntraproceduralExceptionAnalysis getAnalysis(CGNode node) {
-    if (!callGraph.containsNode(node)) {
-      throw new IllegalArgumentException(
-          "The given CG node has to be part " + "of the call graph given during construction.");
-    }
+    checkArgument(
+        callGraph.containsNode(node),
+        "The given CG node has to be part " + "of the call graph given during construction.");
 
     IntraproceduralExceptionAnalysis result = analysis.get(node);
     if (result == null) {

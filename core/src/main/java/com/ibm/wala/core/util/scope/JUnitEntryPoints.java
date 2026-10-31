@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.util.scope;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
@@ -65,9 +67,7 @@ public class JUnitEntryPoints {
    */
   public static Iterable<Entrypoint> make(IClassHierarchy cha) {
 
-    if (cha == null) {
-      throw new IllegalArgumentException("cha is null");
-    }
+    checkArgument(cha != null, "cha is null");
 
     final HashSet<Entrypoint> result = HashSetFactory.make();
     for (IClass klass : cha) {
@@ -148,9 +148,7 @@ public class JUnitEntryPoints {
       String targetPackageName,
       String targetSimpleClassName,
       String targetMethodName) {
-    if (cha == null) {
-      throw new IllegalArgumentException("cha is null");
-    }
+    checkArgument(cha != null, "cha is null");
     // assume test methods don't have parameters
     final Atom targetPackageAtom = Atom.findOrCreateAsciiAtom(targetPackageName);
     final Atom targetSimpleClassAtom = Atom.findOrCreateAsciiAtom(targetSimpleClassName);
@@ -193,9 +191,7 @@ public class JUnitEntryPoints {
    * @apiNote Applicable only to JUnit3.
    */
   public static boolean isJUnitTestCase(IClass klass) {
-    if (klass == null) {
-      throw new IllegalArgumentException("klass is null");
-    }
+    checkArgument(klass != null, "klass is null");
     final Atom junitPackage = Atom.findOrCreateAsciiAtom("junit/framework");
     final Atom junitClass = Atom.findOrCreateAsciiAtom("TestCase");
     final Atom junitSuite = Atom.findOrCreateAsciiAtom("TestSuite");
@@ -222,9 +218,7 @@ public class JUnitEntryPoints {
    * @apiNote Only handles JUnit3.
    */
   public static boolean isJUnitMethod(IMethod m) {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     if (!isJUnitTestCase(m.getDeclaringClass())) {
       return false;
     }

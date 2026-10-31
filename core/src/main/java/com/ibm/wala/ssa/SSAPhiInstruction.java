@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import java.util.Arrays;
@@ -39,14 +41,10 @@ public class SSAPhiInstruction extends SSAInstruction {
 
   public SSAPhiInstruction(int iindex, int result, int[] params) throws IllegalArgumentException {
     super(iindex);
-    if (params == null) {
-      throw new IllegalArgumentException("params is null");
-    }
+    checkArgument(params != null, "params is null");
     this.result = result;
     this.params = params;
-    if (params.length == 0) {
-      throw new IllegalArgumentException("can't have phi with no params");
-    }
+    checkArgument(params.length != 0, "can't have phi with no params");
     for (int p : params) {
       if (p == 0) {
         throw new IllegalArgumentException(
@@ -79,9 +77,7 @@ public class SSAPhiInstruction extends SSAInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    if (v == null) {
-      throw new IllegalArgumentException("v is null");
-    }
+    checkArgument(v != null, "v is null");
     v.visitPhi(this);
   }
 

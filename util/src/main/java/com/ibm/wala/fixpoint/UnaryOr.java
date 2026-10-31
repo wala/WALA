@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.fixpoint;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.jspecify.annotations.Nullable;
 
 /** Operator U(n) = U(n) | U(j) */
@@ -26,9 +28,7 @@ public final class UnaryOr extends UnaryOperator<BooleanVariable> {
   @Override
   public byte evaluate(@Nullable BooleanVariable lhs, BooleanVariable rhs)
       throws IllegalArgumentException {
-    if (lhs == null) {
-      throw new IllegalArgumentException("lhs == null");
-    }
+    checkArgument(lhs != null, "lhs == null");
 
     boolean old = lhs.getValue();
     lhs.or(rhs);

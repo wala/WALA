@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.core.util.strings.ImmutableByteArray;
@@ -53,9 +55,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   public ShrikeClass(ShrikeClassReaderHandle reader, IClassLoader loader, IClassHierarchy cha)
       throws InvalidClassFileException {
     super(loader, cha);
-    if (reader == null) {
-      throw new IllegalArgumentException("reader is null");
-    }
+    checkArgument(reader != null, "reader is null");
     this.reader = reader;
     computeTypeReference();
     this.hashCode = 2161 * getReference().hashCode();

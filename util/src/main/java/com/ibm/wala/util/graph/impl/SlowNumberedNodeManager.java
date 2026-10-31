@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableMapping;
@@ -34,9 +36,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
 
   @Override
   public T getNode(int number) {
-    if (number < 0) {
-      throw new IllegalArgumentException("number must be >= 0");
-    }
+    checkArgument(number >= 0, "number must be >= 0");
     return map.getMappedObject(number);
   }
 
@@ -62,9 +62,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
 
   @Override
   public void addNode(T n) {
-    if (n == null) {
-      throw new IllegalArgumentException("n is null");
-    }
+    checkArgument(n != null, "n is null");
     map.add(n);
   }
 

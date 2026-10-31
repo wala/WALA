@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.cha;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClassLoader;
 
 /** Statistics about a class hierarchy. */
@@ -17,9 +19,7 @@ public class ClassHierarchyStats {
 
   /** Dump stats about the class hierarchy to stdout. */
   public static void printStats(IClassHierarchy cha) throws IllegalArgumentException {
-    if (cha == null) {
-      throw new IllegalArgumentException("cha cannot be null");
-    }
+    checkArgument(cha != null, "cha cannot be null");
     IClassLoader[] loaders = cha.getLoaders();
     for (IClassLoader loader : loaders) {
       System.out.println("loader: " + loader);

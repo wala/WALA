@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.Serial;
 import java.util.Arrays;
 import org.jspecify.annotations.Nullable;
@@ -48,9 +50,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    * @throws IllegalArgumentException if s is null
    */
   public BitVector(BitVector s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     bits = new int[s.bits.length];
     copyBits(s);
   }
@@ -126,9 +126,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    */
   @Override
   public final void and(BitVector set) {
-    if (set == null) {
-      throw new IllegalArgumentException("null set");
-    }
+    checkArgument(set != null, "null set");
     if (this == set) {
       return;
     }
@@ -144,12 +142,8 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /** Return a new bit string as the AND of two others. */
   public static BitVector and(BitVector b1, BitVector b2) {
-    if (b1 == null) {
-      throw new IllegalArgumentException("null b1");
-    }
-    if (b2 == null) {
-      throw new IllegalArgumentException("null b2");
-    }
+    checkArgument(b1 != null, "null b1");
+    checkArgument(b2 != null, "null b2");
     BitVector b = new BitVector(b1);
     b.and(b2);
     return b;
@@ -162,9 +156,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    */
   @Override
   public final void or(BitVector set) {
-    if (set == null) {
-      throw new IllegalArgumentException("null set");
-    }
+    checkArgument(set != null, "null set");
     if (this == set) { // should help alias analysis
       return;
     }
@@ -190,9 +182,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    * @throws IllegalArgumentException if set is null
    */
   public final int orWithDelta(BitVector set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set is null");
-    }
+    checkArgument(set != null, "set is null");
     int delta = 0;
 
     ensureCapacity(set);
@@ -214,12 +204,8 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /** Return a new FixedSizeBitVector as the OR of two others */
   public static BitVector or(BitVector b1, BitVector b2) {
-    if (b1 == null) {
-      throw new IllegalArgumentException("null b1");
-    }
-    if (b2 == null) {
-      throw new IllegalArgumentException("null b2");
-    }
+    checkArgument(b1 != null, "null b1");
+    checkArgument(b2 != null, "null b2");
     BitVector b = new BitVector(b1);
     b.or(b2);
     return b;
@@ -227,12 +213,8 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   /** Return a new FixedSizeBitVector as the XOR of two others */
   public static BitVector xor(BitVector b1, BitVector b2) {
-    if (b1 == null) {
-      throw new IllegalArgumentException("null b1");
-    }
-    if (b2 == null) {
-      throw new IllegalArgumentException("null b2");
-    }
+    checkArgument(b1 != null, "null b1");
+    checkArgument(b2 != null, "null b2");
     BitVector b = new BitVector(b1);
     b.xor(b2);
     return b;
@@ -246,9 +228,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    */
   @Override
   public final void xor(BitVector set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set is null");
-    }
+    checkArgument(set != null, "set is null");
     ensureCapacity(set);
     int n = Math.min(bits.length, set.bits.length);
     for (int i = n - 1; i >= 0; ) {
@@ -265,9 +245,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    */
   @Override
   public final boolean intersectionEmpty(BitVector other) {
-    if (other == null) {
-      throw new IllegalArgumentException("other is null");
-    }
+    checkArgument(other != null, "other is null");
     int n = Math.min(bits.length, other.bits.length);
     for (int i = n - 1; i >= 0; ) {
       if ((bits[i] & other.bits[i]) != 0) {
@@ -295,9 +273,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    */
   @Override
   public final boolean sameBits(BitVector B) {
-    if (B == null) {
-      throw new IllegalArgumentException("null B");
-    }
+    checkArgument(B != null, "null B");
     if (this == B) { // should help alias analysis
       return true;
     }
@@ -325,9 +301,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    */
   @Override
   public boolean isSubset(BitVector other) {
-    if (other == null) {
-      throw new IllegalArgumentException("null other");
-    }
+    checkArgument(other != null, "null other");
     if (this == other) { // should help alias analysis
       return true;
     }
@@ -347,9 +321,7 @@ public class BitVector extends BitVectorBase<BitVector> {
 
   @Override
   public void andNot(BitVector vector) {
-    if (vector == null) {
-      throw new IllegalArgumentException("null vector");
-    }
+    checkArgument(vector != null, "null vector");
     for (int ai = 0, bi = 0; ai < bits.length && bi < vector.bits.length; ai++, bi++) {
       bits[ai] &= ~vector.bits[bi];
     }

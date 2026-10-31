@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.intset.SimpleIntVector;
 import java.io.Serial;
 import org.jspecify.annotations.Nullable;
@@ -33,9 +35,7 @@ public class Path extends SimpleIntVector {
   }
 
   public static Path prepend(int x, Path p) {
-    if (p == null) {
-      throw new IllegalArgumentException("null p");
-    }
+    checkArgument(p != null, "null p");
     Path result = new Path(0, p.size + 1);
     result.set(0, x);
     for (int i = 0; i < p.size; i++) {

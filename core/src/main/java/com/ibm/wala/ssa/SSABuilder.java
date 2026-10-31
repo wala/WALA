@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.cfg.ShrikeCFG;
@@ -72,9 +74,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       boolean buildLocalMap,
       SSAPiNodePolicy piNodePolicy)
       throws IllegalArgumentException {
-    if (scfg == null) {
-      throw new IllegalArgumentException("scfg == null");
-    }
+    checkArgument(scfg != null, "scfg == null");
     return new SSABuilder(
         method, cfg, scfg, instructions, symbolTable, buildLocalMap, piNodePolicy);
   }

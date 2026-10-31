@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
@@ -25,9 +27,7 @@ public class NumberedNodeIterator<T> implements Iterator<T> {
    * @throws IllegalArgumentException if s is null
    */
   public NumberedNodeIterator(IntSet s, NumberedNodeManager<T> nodeManager) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     this.numbers = s.intIterator();
     this.nodeManager = nodeManager;
   }

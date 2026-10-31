@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.ContextItem;
@@ -20,9 +22,7 @@ public class CallString implements ContextItem {
   private final IMethod[] methods;
 
   public CallString(CallSiteReference site, IMethod method) {
-    if (site == null) {
-      throw new IllegalArgumentException("null site");
-    }
+    checkArgument(site != null, "null site");
     this.sites = new CallSiteReference[] {site};
     this.methods = new IMethod[] {method};
   }

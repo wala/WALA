@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -26,9 +28,7 @@ public class ReverseIterator<T> implements Iterator<T> {
    * @throws IllegalArgumentException if other == null
    */
   private ReverseIterator(Iterator<T> other) throws IllegalArgumentException {
-    if (other == null) {
-      throw new IllegalArgumentException("other == null");
-    }
+    checkArgument(other != null, "other == null");
     other.forEachRemaining(list::add);
     nextIndex = list.size() - 1;
   }

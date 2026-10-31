@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.ipa.summaries;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.ibm.wala.types.TypeName.ArrayMask;
 import static com.ibm.wala.types.TypeName.ElementBits;
 import static com.ibm.wala.types.TypeName.PrimitiveMask;
@@ -202,12 +203,8 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
   private static final String V_TRUE = "true";
 
   public XMLMethodSummaryReader(InputStream xmlFile, AnalysisScope scope) {
-    if (xmlFile == null) {
-      throw new IllegalArgumentException("null xmlFile");
-    }
-    if (scope == null) {
-      throw new IllegalArgumentException("null scope");
-    }
+    checkArgument(xmlFile != null, "null xmlFile");
+    checkArgument(scope != null, "null scope");
     this.scope = scope;
     try {
       readXML(xmlFile);

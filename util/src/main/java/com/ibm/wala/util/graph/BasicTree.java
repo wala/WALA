@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.SimpleVector;
 import org.jspecify.annotations.Nullable;
 
@@ -24,9 +26,7 @@ public class BasicTree<T> {
   }
 
   public static <T> BasicTree<T> make(T value) {
-    if (value == null) {
-      throw new IllegalArgumentException("null value");
-    }
+    checkArgument(value != null, "null value");
     return new BasicTree<>(value);
   }
 

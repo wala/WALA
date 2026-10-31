@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.NumberedGraph;
 import java.io.Serial;
@@ -40,9 +42,7 @@ public class NumberedDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIter
    */
   @SuppressWarnings("unchecked")
   public NumberedDFSDiscoverTimeIterator(NumberedGraph<T> G, T N) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     this.G = G;
     pendingChildren = new Iterator[G.getMaxNumber() + 1];
     init(G, new NonNullSingletonIterator<>(N));
@@ -60,12 +60,8 @@ public class NumberedDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIter
   @SuppressWarnings("unchecked")
   public NumberedDFSDiscoverTimeIterator(NumberedGraph<T> G, @Nullable Iterator<? extends T> nodes)
       throws IllegalArgumentException {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
-    if (nodes == null) {
-      throw new IllegalArgumentException("nodes == null");
-    }
+    checkArgument(G != null, "G is null");
+    checkArgument(nodes != null, "nodes == null");
 
     this.G = G;
     pendingChildren = new Iterator[G.getMaxNumber() + 1];

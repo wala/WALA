@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.IFDS;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
@@ -22,9 +24,7 @@ public class VectorKillFlowFunction implements IReversibleFlowFunction {
    * @param kill the intset of facts which are killed by this flow function
    */
   private VectorKillFlowFunction(IntSet kill) {
-    if (kill == null) {
-      throw new IllegalArgumentException("null kill");
-    }
+    checkArgument(kill != null, "null kill");
     this.kill = kill;
   }
 

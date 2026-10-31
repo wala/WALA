@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -30,9 +32,7 @@ public class CallerSiteContextPair extends CallerSiteContext {
    */
   public CallerSiteContextPair(CGNode caller, CallSiteReference callSite, Context baseContext) {
     super(caller, callSite);
-    if (caller == null) {
-      throw new IllegalArgumentException("null caller");
-    }
+    checkArgument(caller != null, "null caller");
     this.baseContext = baseContext;
     // avoid recursive contexts for now.
     assert !(baseContext instanceof CallerContextPair);
@@ -40,9 +40,7 @@ public class CallerSiteContextPair extends CallerSiteContext {
 
   @Override
   public ContextItem get(ContextKey name) {
-    if (name == null) {
-      throw new IllegalArgumentException("name is null");
-    }
+    checkArgument(name != null, "name is null");
     if (name.equals(ContextKey.CALLER) || name.equals(ContextKey.CALLSITE)) {
       return super.get(name);
     } else {

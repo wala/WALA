@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -54,9 +56,7 @@ public class FakeRootMethod extends AbstractRootMethod {
    * @throws IllegalArgumentException if m is null
    */
   public boolean isFakeRootMethod(MemberReference m) {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     return m.equals(getReference());
   }
 
@@ -65,9 +65,7 @@ public class FakeRootMethod extends AbstractRootMethod {
    * @throws IllegalArgumentException if block is null
    */
   public static boolean isFromFakeRoot(IBasicBlock<?> block) {
-    if (block == null) {
-      throw new IllegalArgumentException("block is null");
-    }
+    checkArgument(block != null, "block is null");
     IMethod m = block.getMethod();
     return m instanceof FakeRootMethod fakeRootMethod
         && fakeRootMethod.isFakeRootMethod(m.getReference());

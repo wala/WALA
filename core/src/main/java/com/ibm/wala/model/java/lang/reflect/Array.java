@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.model.java.lang.reflect;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /** A synthetic model of java.lang.reflect.Array native methods */
 public class Array {
 
@@ -17,9 +19,7 @@ public class Array {
   public static Object get(Object array, int index)
       throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
 
-    if (!array.getClass().isArray()) {
-      throw new IllegalArgumentException();
-    }
+    checkArgument(array.getClass().isArray());
 
     if (array instanceof Object[] A) {
       return A[index];

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.slicer;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
@@ -40,9 +42,7 @@ public class HeapExclusions {
    * @throws IllegalArgumentException if s is null
    */
   public Set<PointerKey> filter(Collection<PointerKey> s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     HashSet<PointerKey> result = HashSetFactory.make();
     for (PointerKey p : s) {
       if (p instanceof AbstractFieldPointerKey f) {

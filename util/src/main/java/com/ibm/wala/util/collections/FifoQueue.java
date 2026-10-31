@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Iterator;
@@ -49,9 +51,7 @@ public class FifoQueue<T> {
    * @throws IllegalArgumentException if collection is null
    */
   public FifoQueue(Collection<T> collection) {
-    if (collection == null) {
-      throw new IllegalArgumentException("collection is null");
-    }
+    checkArgument(collection != null, "collection is null");
     push(collection.iterator());
   }
 
@@ -117,9 +117,7 @@ public class FifoQueue<T> {
    * @throws IllegalArgumentException if elements == null
    */
   public void push(Iterator<? extends T> elements) throws IllegalArgumentException {
-    if (elements == null) {
-      throw new IllegalArgumentException("elements == null");
-    }
+    checkArgument(elements != null, "elements == null");
     while (elements.hasNext()) {
       T element = elements.next();
       // if element is not in inQueue, then add() returns true.

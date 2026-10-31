@@ -39,6 +39,8 @@
  */
 package org.scandroid.model;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -429,9 +431,7 @@ public class AppModelMethod {
   }
 
   public SSAAbstractInvokeInstruction addInvocation(int[] params, CallSiteReference site) {
-    if (site == null) {
-      throw new IllegalArgumentException("site is null");
-    }
+    checkArgument(site != null, "site is null");
     CallSiteReference newSite =
         CallSiteReference.make(
             methodSummary.getNumberOfStatements(),

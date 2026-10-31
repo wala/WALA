@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.fixpoint.IntSetVariable;
@@ -47,9 +49,7 @@ public final class PointsToSetVariable extends IntSetVariable<PointsToSetVariabl
   private PointerKey pointerKey;
 
   public PointsToSetVariable(PointerKey key) {
-    if (key == null) {
-      throw new IllegalArgumentException("null key");
-    }
+    checkArgument(key != null, "null key");
     this.pointerKey = key;
   }
 

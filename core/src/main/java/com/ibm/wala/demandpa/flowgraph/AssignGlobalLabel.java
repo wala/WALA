@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class AssignGlobalLabel implements IFlowLabel {
   private static final AssignGlobalLabel theInstance = new AssignGlobalLabel();
 
@@ -48,9 +50,7 @@ public class AssignGlobalLabel implements IFlowLabel {
 
   @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
-    if (v == null) {
-      throw new IllegalArgumentException("v == null");
-    }
+    checkArgument(v != null, "v == null");
     v.visitAssignGlobal(this, dst);
   }
 

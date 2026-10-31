@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
@@ -54,12 +56,8 @@ public class BFSPathFinder<T> {
    * @param G the graph whose nodes to enumerate
    */
   public BFSPathFinder(Graph<T> G, T N, Predicate<T> f) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
-    if (f == null) {
-      throw new IllegalArgumentException("null f");
-    }
+    checkArgument(G != null, "G is null");
+    checkArgument(f != null, "null f");
     this.G = G;
     this.roots = new NonNullSingletonIterator<>(N);
     this.filter = f;
@@ -72,9 +70,7 @@ public class BFSPathFinder<T> {
    * @throws IllegalArgumentException if G is null
    */
   public BFSPathFinder(Graph<T> G, T src, final T target) throws IllegalArgumentException {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     this.G = G;
     this.roots = new NonNullSingletonIterator<>(src);
     if (!G.containsNode(src)) {
@@ -89,9 +85,7 @@ public class BFSPathFinder<T> {
    * @param G the graph whose nodes to enumerate
    */
   public BFSPathFinder(Graph<T> G, T src, Iterator<T> targets) {
-    if (targets == null) {
-      throw new IllegalArgumentException("targets is null");
-    }
+    checkArgument(targets != null, "targets is null");
     final Set<T> ts = HashSetFactory.make();
     targets.forEachRemaining(ts::add);
 
@@ -107,12 +101,8 @@ public class BFSPathFinder<T> {
    * @param G the graph whose nodes to enumerate
    */
   public BFSPathFinder(Graph<T> G, Iterator<T> sources, final T target) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
-    if (sources == null) {
-      throw new IllegalArgumentException("sources is null");
-    }
+    checkArgument(G != null, "G is null");
+    checkArgument(sources != null, "sources is null");
     this.G = G;
     this.roots = sources;
     this.filter = target::equals;
@@ -128,9 +118,7 @@ public class BFSPathFinder<T> {
     this.G = G;
     this.roots = nodes;
     this.filter = f;
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     if (roots == null) {
       throw new IllegalArgumentException("roots is null");
     }

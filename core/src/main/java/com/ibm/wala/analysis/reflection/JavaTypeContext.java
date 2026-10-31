@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.reflection;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.classLoader.IClass;
@@ -26,9 +28,7 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleClassFilt
 public record JavaTypeContext(TypeAbstraction type) implements Context {
 
   public JavaTypeContext {
-    if (type == null) {
-      throw new IllegalArgumentException("null type");
-    }
+    checkArgument(type != null, "null type");
   }
 
   @Override

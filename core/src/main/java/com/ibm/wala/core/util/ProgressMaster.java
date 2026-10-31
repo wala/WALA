@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
 /**
@@ -22,9 +24,7 @@ public class ProgressMaster {
 
   public static IProgressMonitor make(
       IProgressMonitor monitor, int msPerWorkItem, boolean checkMemory) {
-    if (monitor == null) {
-      throw new IllegalArgumentException("null monitor");
-    }
+    checkArgument(monitor != null, "null monitor");
     return new ProgressMasterImpl(monitor, msPerWorkItem, checkMemory);
   }
 }

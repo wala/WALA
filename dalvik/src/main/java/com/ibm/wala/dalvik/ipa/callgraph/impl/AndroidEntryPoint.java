@@ -40,6 +40,7 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
 import com.ibm.wala.classLoader.IMethod;
@@ -93,9 +94,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
 
   public AndroidEntryPoint(ExecutionOrder o, IMethod method, IClassHierarchy cha) {
     super(method, cha);
-    if (o == null) {
-      throw new IllegalArgumentException("The execution order may not be null.");
-    }
+    checkArgument(o != null, "The execution order may not be null.");
     this.order = o;
     this.superType = AndroidComponent.from(method, cha);
   }

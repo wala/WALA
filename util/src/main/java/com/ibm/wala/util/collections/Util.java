@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
@@ -67,9 +69,7 @@ public class Util {
    * @throws IllegalArgumentException if thrown == null
    */
   public static String str(Throwable thrown) throws IllegalArgumentException {
-    if (thrown == null) {
-      throw new IllegalArgumentException("thrown == null");
-    }
+    checkArgument(thrown != null, "thrown == null");
     // create a memory buffer to which to dump the trace
     ByteArrayOutputStream traceDump = new ByteArrayOutputStream();
     try (final PrintWriter w =
@@ -96,9 +96,7 @@ public class Util {
    */
   public static <T> boolean forSome(Collection<T> c, Predicate<T> p)
       throws IllegalArgumentException {
-    if (c == null) {
-      throw new IllegalArgumentException("c == null");
-    }
+    checkArgument(c != null, "c == null");
     for (T t : c) {
       if (p.test(t)) {
         return true;
@@ -116,9 +114,7 @@ public class Util {
    */
   public static <T> @Nullable T find(Collection<T> c, Predicate<T> p)
       throws IllegalArgumentException {
-    if (c == null) {
-      throw new IllegalArgumentException("c == null");
-    }
+    checkArgument(c != null, "c == null");
     for (T obj : c) {
       if (p.test(obj)) return obj;
     }
@@ -148,9 +144,7 @@ public class Util {
    */
   public static <T> void doForAll(Collection<T> c, ObjectVisitor<T> v)
       throws IllegalArgumentException {
-    if (c == null) {
-      throw new IllegalArgumentException("c == null");
-    }
+    checkArgument(c != null, "c == null");
     for (T t : c) v.visit(t);
   }
 
@@ -164,9 +158,7 @@ public class Util {
    */
   public static <T, U> List<U> map(List<T> srcList, Function<T, U> f)
       throws IllegalArgumentException {
-    if (srcList == null) {
-      throw new IllegalArgumentException("srcList == null");
-    }
+    checkArgument(srcList != null, "srcList == null");
     ArrayList<U> result = new ArrayList<>();
     for (T t : srcList) {
       result.add(f.apply(t));
@@ -184,9 +176,7 @@ public class Util {
    */
   public static <T, U> Set<U> mapToSet(Collection<T> srcSet, Function<T, U> f)
       throws IllegalArgumentException {
-    if (srcSet == null) {
-      throw new IllegalArgumentException("srcSet == null");
-    }
+    checkArgument(srcSet != null, "srcSet == null");
     HashSet<U> result = HashSetFactory.make();
     for (T t : srcSet) {
       result.add(f.apply(t));
@@ -198,9 +188,7 @@ public class Util {
    * Grow an int[] -- i.e. allocate a new array of the given size, with the initial segment equal to this int[].
    */
   public static int[] realloc(int[] data, int newSize) throws IllegalArgumentException {
-    if (data == null) {
-      throw new IllegalArgumentException("data == null");
-    }
+    checkArgument(data != null, "data == null");
     if (data.length < newSize) {
       return Arrays.copyOf(data, newSize);
     } else return data;
@@ -216,9 +204,7 @@ public class Util {
    */
   @SuppressWarnings("removal")
   public static String objectFieldsToString(Object obj) throws IllegalArgumentException {
-    if (obj == null) {
-      throw new IllegalArgumentException("obj == null");
-    }
+    checkArgument(obj != null, "obj == null");
     // Temporarily disable the security manager
     SecurityManager oldsecurity = System.getSecurityManager();
     System.setSecurityManager(
@@ -296,9 +282,7 @@ public class Util {
    * @throws IllegalArgumentException if typeStr == null
    */
   public static String topLevelTypeString(String typeStr) throws IllegalArgumentException {
-    if (typeStr == null) {
-      throw new IllegalArgumentException("typeStr == null");
-    }
+    checkArgument(typeStr != null, "typeStr == null");
     int dollarIndex = typeStr.indexOf('$');
     return dollarIndex == -1 ? typeStr : typeStr.substring(0, dollarIndex);
   }

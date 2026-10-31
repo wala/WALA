@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.util.ssa.ParameterAccessor;
@@ -106,34 +108,18 @@ public class AndroidStartComponentTool {
       final Parameter self,
       final StartInfo info) {
 
-    if (cha == null) {
-      throw new IllegalArgumentException("cha may not be null");
-    }
-    if (asMethod == null) {
-      throw new IllegalArgumentException("asMethod may not be null");
-    }
-    if (flags == null) {
-      throw new IllegalArgumentException("Flags may not be null");
-    }
+    checkArgument(cha != null, "cha may not be null");
+    checkArgument(asMethod != null, "asMethod may not be null");
+    checkArgument(flags != null, "Flags may not be null");
     if ((caller == null) && !flags.contains(StarterFlags.CONTEXT_FREE)) {
       throw new IllegalArgumentException(
           "Caller may not be null if StarterFlags.CONTEXT_FREE is not set. Flags: " + flags);
     }
-    if (instructionFactory == null) {
-      throw new IllegalArgumentException("The instructionFactory may not be null");
-    }
-    if (acc == null) {
-      throw new IllegalArgumentException("acc may not be null");
-    }
-    if (pm == null) {
-      throw new IllegalArgumentException("pm may not be null");
-    }
-    if (redirect == null) {
-      throw new IllegalArgumentException("self may not be null");
-    }
-    if (info == null) {
-      throw new IllegalArgumentException("info may not be null");
-    }
+    checkArgument(instructionFactory != null, "The instructionFactory may not be null");
+    checkArgument(acc != null, "acc may not be null");
+    checkArgument(pm != null, "pm may not be null");
+    checkArgument(redirect != null, "self may not be null");
+    checkArgument(info != null, "info may not be null");
     // if ((callerNd == null) && (! flags.contains(StarterFlags.CONTEXT_FREE))) {
     //    throw new IllegalArgumentException("CallerNd may not be null if StarterFlags.CONTEXT_FREE
     // is not set. Flags: " + flags);
@@ -485,9 +471,7 @@ public class AndroidStartComponentTool {
 
   /** Call Activity.setIntent. */
   public void setIntent(SSAValue intent, List<? extends SSAValue> allActivities) {
-    if (intent == null) {
-      throw new IllegalArgumentException("Null-Intent");
-    }
+    checkArgument(intent != null, "Null-Intent");
 
     // TODO: Use Phi?
     for (SSAValue activity : allActivities) {

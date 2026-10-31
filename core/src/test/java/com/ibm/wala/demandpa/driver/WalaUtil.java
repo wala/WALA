@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.driver;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.properties.WalaProperties;
@@ -57,12 +59,8 @@ public class WalaUtil {
 
   public static void dumpAllIR(CallGraph cg, String benchName, Properties p)
       throws IllegalArgumentException {
-    if (cg == null) {
-      throw new IllegalArgumentException("cg == null");
-    }
-    if (p == null) {
-      throw new IllegalArgumentException("p == null");
-    }
+    checkArgument(cg != null, "cg == null");
+    checkArgument(p != null, "p == null");
     System.err.print("dumping ir...");
     String irFile =
         p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + benchName + "-ir.txt";

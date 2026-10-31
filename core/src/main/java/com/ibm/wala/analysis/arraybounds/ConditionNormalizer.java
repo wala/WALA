@@ -1,5 +1,7 @@
 package com.ibm.wala.analysis.arraybounds;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction.Operator;
 import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
 
@@ -28,17 +30,13 @@ public class ConditionNormalizer {
   public ConditionNormalizer(SSAConditionalBranchInstruction cnd, int lhs, boolean branchIsTaken) {
     this.lhs = lhs;
 
-    if (cnd.getNumberOfUses() != 2) {
-      throw new IllegalArgumentException("Condition uses not exactly two variables.");
-    }
+    checkArgument(cnd.getNumberOfUses() == 2, "Condition uses not exactly two variables.");
 
     this.op = (Operator) cnd.getOperator();
     for (int i = 0; i < cnd.getNumberOfUses(); i++) {
       final int var = cnd.getUse(i);
       if ((var != lhs)) {
-        if (cnd.getUse((i + 1) % 2) != lhs) {
-          throw new IllegalArgumentException("Lhs not contained in condition.");
-        }
+        checkArgument(cnd.getUse((i + 1) % 2) == lhs, "Lhs not contained in condition.");
 
         if (i == 0) {
           // make sure the other is lhs

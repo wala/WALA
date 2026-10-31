@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
@@ -88,12 +90,8 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
       byte instancePolicy)
       throws IllegalArgumentException {
 
-    if (xmlFiles == null) {
-      throw new IllegalArgumentException("xmlFiles == null");
-    }
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(xmlFiles != null, "xmlFiles == null");
+    checkArgument(options != null, "options is null");
     Util.addDefaultSelectors(options, cha);
     for (String xmlFile : xmlFiles) {
       Util.addBypassLogic(options, cl, xmlFile, cha);
@@ -111,9 +109,7 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
       SSAContextInterpreter appContextInterpreter,
       int instancePolicy)
       throws IllegalArgumentException {
-    if (options == null) {
-      throw new IllegalArgumentException("options == null");
-    }
+    checkArgument(options != null, "options == null");
     return new ZeroXCFABuilder(
         l, cha, options, cache, appContextSelector, appContextInterpreter, instancePolicy);
   }

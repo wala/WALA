@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.JavaLanguage;
@@ -74,9 +76,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     this.pointerKeys = pointerKeys;
     this.iKeyFactory = iKeyFactory;
     this.pointsToMap = pointsToMap;
-    if (iKeyFactory == null) {
-      throw new IllegalArgumentException("null iKeyFactory");
-    }
+    checkArgument(iKeyFactory != null, "null iKeyFactory");
     H = makeHeapModel();
   }
 

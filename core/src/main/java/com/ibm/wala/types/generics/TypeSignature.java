@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types.generics;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.ArrayList;
@@ -34,12 +36,8 @@ public abstract class TypeSignature extends Signature {
   }
 
   public static TypeSignature make(String s) throws IllegalArgumentException {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
-    if (s.isEmpty()) {
-      throw new IllegalArgumentException("illegal empty string s");
-    }
+    checkArgument(s != null, "s is null");
+    checkArgument(!s.isEmpty(), "illegal empty string s");
     return switch (s.charAt(0)) {
       case TypeReference.VoidTypeCode -> BaseType.VOID;
       case TypeReference.BooleanTypeCode -> BaseType.BOOLEAN;

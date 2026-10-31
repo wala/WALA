@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IField;
 
 /** An pointer key which represents a unique set for a field associated with a set of instances. */
@@ -20,12 +22,8 @@ public class InstanceFieldKey extends AbstractFieldPointerKey {
   public InstanceFieldKey(InstanceKey instance, IField field) {
 
     super(instance);
-    if (field == null) {
-      throw new IllegalArgumentException("field is null");
-    }
-    if (instance == null) {
-      throw new IllegalArgumentException("instance is null");
-    }
+    checkArgument(field != null, "field is null");
+    checkArgument(instance != null, "instance is null");
     this.field = field;
   }
 

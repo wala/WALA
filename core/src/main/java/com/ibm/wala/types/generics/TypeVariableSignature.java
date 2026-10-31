@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types.generics;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.debug.Assertions;
@@ -23,18 +25,12 @@ public class TypeVariableSignature extends TypeSignature {
 
   private TypeVariableSignature(String s) throws IllegalArgumentException {
     super(s);
-    if (s.isEmpty()) {
-      throw new IllegalArgumentException();
-    }
-    if (s.charAt(s.length() - 1) != ';') {
-      throw new IllegalArgumentException(s);
-    }
+    checkArgument(!s.isEmpty());
+    checkArgument(s.charAt(s.length() - 1) == ';', s);
   }
 
   public static TypeVariableSignature make(String s) throws IllegalArgumentException {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     return new TypeVariableSignature(s);
   }
 
@@ -67,9 +63,7 @@ public class TypeVariableSignature extends TypeSignature {
    */
   public static int getTypeVariablePosition(TypeVariableSignature v, ShrikeClass klass)
       throws IllegalArgumentException {
-    if (klass == null) {
-      throw new IllegalArgumentException("klass cannot be null");
-    }
+    checkArgument(klass != null, "klass cannot be null");
 
     try {
       ClassSignature sig = klass.getClassSignature();

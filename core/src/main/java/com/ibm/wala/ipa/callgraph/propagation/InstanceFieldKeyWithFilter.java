@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -23,12 +25,8 @@ public class InstanceFieldKeyWithFilter extends InstanceFieldKey implements Filt
   public InstanceFieldKeyWithFilter(IClassHierarchy cha, InstanceKey instance, IField field) {
 
     super(instance, field);
-    if (field == null) {
-      throw new IllegalArgumentException("field is null");
-    }
-    if (cha == null) {
-      throw new IllegalArgumentException("cha is null");
-    }
+    checkArgument(field != null, "field is null");
+    checkArgument(cha != null, "cha is null");
     IClass fieldType = cha.lookupClass(field.getFieldTypeReference());
     if (fieldType == null) {
       // TODO: assertions.unreachable()

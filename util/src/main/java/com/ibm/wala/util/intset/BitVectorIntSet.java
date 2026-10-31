@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import java.io.Serial;
@@ -35,17 +37,13 @@ public final class BitVectorIntSet implements MutableIntSet {
   public BitVectorIntSet() {}
 
   public BitVectorIntSet(BitVector v) {
-    if (v == null) {
-      throw new IllegalArgumentException("null v");
-    }
+    checkArgument(v != null, "null v");
     bitVector.or(v);
     populationCount = UNDEFINED;
   }
 
   public BitVectorIntSet(@Nullable IntSet S) throws IllegalArgumentException {
-    if (S == null) {
-      throw new IllegalArgumentException("S == null");
-    }
+    checkArgument(S != null, "S == null");
     copySet(S);
   }
 
@@ -57,9 +55,7 @@ public final class BitVectorIntSet implements MutableIntSet {
 
   @Override
   public void copySet(IntSet set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (set instanceof BitVectorIntSet S) {
       bitVector = new BitVector(S.bitVector);
       populationCount = S.populationCount;
@@ -111,9 +107,7 @@ public final class BitVectorIntSet implements MutableIntSet {
    * @throws IllegalArgumentException if set == null
    */
   public void addAllOblivious(IntSet set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (set instanceof BitVectorIntSet bitVectorIntSet) {
       BitVector B = bitVectorIntSet.bitVector;
       bitVector.or(B);
@@ -214,9 +208,7 @@ public final class BitVectorIntSet implements MutableIntSet {
 
   @Override
   public void foreach(IntSetAction action) {
-    if (action == null) {
-      throw new IllegalArgumentException("null action");
-    }
+    checkArgument(action != null, "null action");
     int nextBit = bitVector.nextSetBit(0);
     populationCount =
         (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
@@ -322,9 +314,7 @@ public final class BitVectorIntSet implements MutableIntSet {
   @Override
   public boolean sameValue(@Nullable IntSet that)
       throws IllegalArgumentException, UnimplementedError {
-    if (that == null) {
-      throw new IllegalArgumentException("that == null");
-    }
+    checkArgument(that != null, "that == null");
     if (that instanceof BitVectorIntSet b) {
       return bitVector.sameBits(b.bitVector);
     } else if (that instanceof BimodalMutableIntSet) {
@@ -393,9 +383,7 @@ public final class BitVectorIntSet implements MutableIntSet {
    * @throws IllegalArgumentException if set is null
    */
   public boolean removeAll(BitVectorIntSet set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set is null");
-    }
+    checkArgument(set != null, "set is null");
     int oldSize = size();
     bitVector.andNot(set.bitVector);
     populationCount = UNDEFINED;
@@ -404,9 +392,7 @@ public final class BitVectorIntSet implements MutableIntSet {
 
   @Override
   public boolean containsAny(IntSet set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (set instanceof BitVectorIntSet b) {
       return !bitVector.intersectionEmpty(b.bitVector);
     } else {
@@ -422,18 +408,14 @@ public final class BitVectorIntSet implements MutableIntSet {
 
   @Override
   public boolean addAllInIntersection(IntSet other, IntSet filter) throws IllegalArgumentException {
-    if (other == null) {
-      throw new IllegalArgumentException("other == null");
-    }
+    checkArgument(other != null, "other == null");
     BitVectorIntSet o = new BitVectorIntSet(other);
     o.intersectWith(filter);
     return addAll(o);
   }
 
   public boolean containsAll(BitVectorIntSet other) {
-    if (other == null) {
-      throw new IllegalArgumentException("other is null");
-    }
+    checkArgument(other != null, "other is null");
     return other.isSubset(this);
   }
 }

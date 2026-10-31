@@ -12,6 +12,8 @@
 
 package org.scandroid.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -71,17 +73,13 @@ public class DexDotUtil extends DotUtil {
       String outputFile,
       String dotExe)
       throws WalaException {
-    if (g == null) {
-      throw new IllegalArgumentException("g is null");
-    }
+    checkArgument(g != null, "g is null");
     File f = DexDotUtil.writeDotFile(g, labels, title, dotFile);
     spawnDot(dotExe, outputFile, f);
   }
 
   public static void spawnDot(String dotExe, String outputFile, File dotFile) throws WalaException {
-    if (dotFile == null) {
-      throw new IllegalArgumentException("dotFile is null");
-    }
+    checkArgument(dotFile != null, "dotFile is null");
     String[] cmdarray = {
       dotExe, outputTypeCmdLineParam(), "-o", outputFile, "-v", dotFile.getAbsolutePath()
     };
@@ -104,9 +102,7 @@ public class DexDotUtil extends DotUtil {
   public static <T> File writeDotFile(
       Graph<T> g, NodeDecorator<T> labels, String title, String dotfile) throws WalaException {
 
-    if (g == null) {
-      throw new IllegalArgumentException("g is null");
-    }
+    checkArgument(g != null, "g is null");
     StringBuilder dotStringBuffer = dotOutput(g, labels, title);
 
     // retrieve the filename parameter to this component, a String

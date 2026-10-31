@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ide;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.ide.util.EclipseProjectPath;
 import com.ibm.wala.ide.util.JavaEclipseProjectPath;
@@ -65,9 +67,7 @@ public abstract class AbstractJavaAnalysisAction
   public static AnalysisScope computeScope(
       final IStructuredSelection selection, final EclipseProjectPath.AnalysisScopeType scopeType)
       throws IOException {
-    if (selection == null) {
-      throw new IllegalArgumentException("null selection");
-    }
+    checkArgument(selection != null, "null selection");
     final Collection<EclipseProjectPath<?, ?>> projectPaths = new ArrayList<>();
     Job job =
         new Job("Compute project paths") {

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import org.jspecify.annotations.NullUnmarked;
@@ -159,9 +161,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
 
   @Override
   public void intersectWith(LongSet set) {
-    if (set == null) {
-      throw new IllegalArgumentException("null set");
-    }
+    checkArgument(set != null, "null set");
     if (set instanceof SparseLongSet sparseLongSet) {
       intersectWith(sparseLongSet);
     } else {
@@ -174,9 +174,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
 
   @NullUnmarked
   public void intersectWith(SparseLongSet that) {
-    if (that == null) {
-      throw new IllegalArgumentException("null set");
-    }
+    checkArgument(that != null, "null set");
     if (this.isEmpty()) {
       return;
     } else if (that.isEmpty()) {
@@ -262,9 +260,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
    * @return true iff this set changes
    */
   public boolean addAll(SparseLongSet that) {
-    if (that == null) {
-      throw new IllegalArgumentException("null that");
-    }
+    checkArgument(that != null, "null that");
     if (this.isEmpty()) {
       copySet(that);
       return !that.isEmpty();

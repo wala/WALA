@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -50,33 +52,25 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
 
   @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     return getNodeInterpreter(node).iterateNewSites(node);
   }
 
   @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     return getNodeInterpreter(node).iterateCallSites(node);
   }
 
   @Override
   public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     return getNodeInterpreter(node).iterateFieldsRead(node);
   }
 
   @Override
   public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     return getNodeInterpreter(node).iterateFieldsWritten(node);
   }
 

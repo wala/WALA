@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.CompoundIntIterator;
 import com.ibm.wala.util.collections.EmptyIntIterator;
 import com.ibm.wala.util.debug.Assertions;
@@ -42,9 +44,7 @@ public final class MutableSharedBitVectorIntSet implements MutableIntSet {
    * @throws IllegalArgumentException if set is null
    */
   public MutableSharedBitVectorIntSet(MutableSharedBitVectorIntSet set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set is null");
-    }
+    checkArgument(set != null, "set is null");
     if (set.privatePart != null) {
       this.privatePart = MutableSparseIntSet.make(set.privatePart);
     }
@@ -55,9 +55,7 @@ public final class MutableSharedBitVectorIntSet implements MutableIntSet {
    * @throws IllegalArgumentException if s is null
    */
   public MutableSharedBitVectorIntSet(SparseIntSet s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     if (s.isEmpty()) {
       return;
     }
@@ -73,9 +71,7 @@ public final class MutableSharedBitVectorIntSet implements MutableIntSet {
    * @throws IllegalArgumentException if s is null
    */
   public MutableSharedBitVectorIntSet(BitVectorIntSet s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     copyValue(s);
 
     if (PARANOID) {
@@ -157,9 +153,7 @@ public final class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   @Override
   public IntSet intersection(IntSet that) {
-    if (that == null) {
-      throw new IllegalArgumentException("null that");
-    }
+    checkArgument(that != null, "null that");
     if (that instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
       return intersection(mutableSharedBitVectorIntSet);
     } else if (that instanceof BitVectorIntSet bitVectorIntSet) {
@@ -297,9 +291,7 @@ public final class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   @Override
   public boolean sameValue(IntSet that) throws IllegalArgumentException, UnimplementedError {
-    if (that == null) {
-      throw new IllegalArgumentException("that == null");
-    }
+    checkArgument(that != null, "that == null");
     if (that instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
       return sameValue(mutableSharedBitVectorIntSet);
     } else if (that instanceof SparseIntSet sparseIntSet) {
@@ -423,9 +415,7 @@ public final class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   @Override
   public boolean isSubset(IntSet that) {
-    if (that == null) {
-      throw new IllegalArgumentException("null that");
-    }
+    checkArgument(that != null, "null that");
     if (that instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
       return isSubset(mutableSharedBitVectorIntSet);
     } else {
@@ -552,9 +542,7 @@ public final class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   @Override
   public boolean addAll(IntSet set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (set instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
       boolean result = addAll(mutableSharedBitVectorIntSet);
       if (PARANOID) {
@@ -855,12 +843,8 @@ public final class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   public static boolean sameSharedPart(
       MutableSharedBitVectorIntSet a, MutableSharedBitVectorIntSet b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
-    if (a == null) {
-      throw new IllegalArgumentException("a is null");
-    }
+    checkArgument(b != null, "b is null");
+    checkArgument(a != null, "a is null");
     return a.sharedPart == b.sharedPart;
   }
 

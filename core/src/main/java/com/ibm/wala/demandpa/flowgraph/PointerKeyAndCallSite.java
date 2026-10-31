@@ -37,18 +37,16 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
 public record PointerKeyAndCallSite(PointerKey key, CallSiteReference callSiteRef) {
 
   public PointerKeyAndCallSite {
-    if (key == null) {
-      throw new IllegalArgumentException("null key");
-    }
-    if (callSiteRef == null) {
-      throw new IllegalArgumentException("null callSiteRef");
-    }
+    checkArgument(key != null, "null key");
+    checkArgument(callSiteRef != null, "null callSiteRef");
   }
 
   /**

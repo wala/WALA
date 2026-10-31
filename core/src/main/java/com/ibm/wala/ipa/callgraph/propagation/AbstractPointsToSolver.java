@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
@@ -25,9 +27,7 @@ public abstract class AbstractPointsToSolver implements IPointsToSolver {
   private final ReflectionHandler reflectionHandler;
 
   public AbstractPointsToSolver(PropagationSystem system, PropagationCallGraphBuilder builder) {
-    if (system == null) {
-      throw new IllegalArgumentException("null system");
-    }
+    checkArgument(system != null, "null system");
     this.system = system;
     this.builder = builder;
     this.reflectionHandler = new ReflectionHandler(builder);

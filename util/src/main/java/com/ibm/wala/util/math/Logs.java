@@ -40,6 +40,8 @@
  */
 package com.ibm.wala.util.math;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.Bits;
 
@@ -61,9 +63,7 @@ public class Logs {
    * @param x where x == 2^n for some integer n
    */
   public static int log2(int x) throws IllegalArgumentException {
-    if (!isPowerOf2(x)) {
-      throw new IllegalArgumentException();
-    }
+    checkArgument(isPowerOf2(x));
     int test = 1;
     for (int i = 0; i < 31; i++) {
       if (test == x) {

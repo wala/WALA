@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -29,9 +31,7 @@ public class OneLevelSiteContextSelector implements ContextSelector {
    *     without one level of calling context.
    */
   public OneLevelSiteContextSelector(ContextSelector baseSelector) {
-    if (baseSelector == null) {
-      throw new IllegalArgumentException("null baseSelector");
-    }
+    checkArgument(baseSelector != null, "null baseSelector");
     this.baseSelector = baseSelector;
   }
 

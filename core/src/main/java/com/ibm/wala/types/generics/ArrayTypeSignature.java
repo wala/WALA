@@ -10,16 +10,14 @@
  */
 package com.ibm.wala.types.generics;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class ArrayTypeSignature extends TypeSignature {
 
   ArrayTypeSignature(String s) throws IllegalArgumentException {
     super(s);
-    if (s.isEmpty()) {
-      throw new IllegalArgumentException();
-    }
-    if (s.charAt(0) != '[') {
-      throw new IllegalArgumentException();
-    }
+    checkArgument(!s.isEmpty());
+    checkArgument(s.charAt(0) == '[');
   }
 
   @Override
@@ -33,9 +31,7 @@ public class ArrayTypeSignature extends TypeSignature {
   }
 
   public static ArrayTypeSignature make(String s) throws IllegalArgumentException {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     return new ArrayTypeSignature(s);
   }
 

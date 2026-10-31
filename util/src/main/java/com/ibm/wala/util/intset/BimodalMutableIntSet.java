@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import java.io.Serial;
@@ -27,9 +29,7 @@ public final class BimodalMutableIntSet implements MutableIntSet {
 
   @Override
   public void copySet(IntSet set) {
-    if (set == null) {
-      throw new IllegalArgumentException("null set");
-    }
+    checkArgument(set != null, "null set");
     if (set instanceof BimodalMutableIntSet bimodalMutableIntSet) {
       impl = IntSetUtil.makeMutableCopy(bimodalMutableIntSet.impl);
     } else if (sameRepresentation(impl, set)) {
@@ -134,9 +134,7 @@ public final class BimodalMutableIntSet implements MutableIntSet {
 
   @Override
   public void intersectWith(IntSet set) throws UnimplementedError {
-    if (set == null) {
-      throw new IllegalArgumentException("null set");
-    }
+    checkArgument(set != null, "null set");
     if (set instanceof BimodalMutableIntSet that) {
       impl.intersectWith(that.impl);
     } else {
@@ -202,9 +200,7 @@ public final class BimodalMutableIntSet implements MutableIntSet {
 
   public static BimodalMutableIntSet makeCopy(IntSet B)
       throws UnimplementedError, IllegalArgumentException {
-    if (B == null) {
-      throw new IllegalArgumentException("B == null");
-    }
+    checkArgument(B != null, "B == null");
     if (B instanceof BimodalMutableIntSet that) {
       BimodalMutableIntSet result = new BimodalMutableIntSet();
       result.impl = IntSetUtil.makeMutableCopy(that.impl);
@@ -239,9 +235,7 @@ public final class BimodalMutableIntSet implements MutableIntSet {
    * @throws IllegalArgumentException if x is null
    */
   public BimodalMutableIntSet(BimodalMutableIntSet x) {
-    if (x == null) {
-      throw new IllegalArgumentException("x is null");
-    }
+    checkArgument(x != null, "x is null");
     impl = IntSetUtil.makeMutableCopy(x.impl);
     assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
   }
@@ -253,9 +247,7 @@ public final class BimodalMutableIntSet implements MutableIntSet {
 
   @Override
   public boolean isSubset(IntSet that) throws IllegalArgumentException {
-    if (that == null) {
-      throw new IllegalArgumentException("that == null");
-    }
+    checkArgument(that != null, "that == null");
     if (that instanceof BimodalMutableIntSet b) {
       return impl.isSubset(b.impl);
     } else {
@@ -278,9 +270,7 @@ public final class BimodalMutableIntSet implements MutableIntSet {
 
   @Override
   public boolean containsAny(IntSet that) throws IllegalArgumentException, UnimplementedError {
-    if (that == null) {
-      throw new IllegalArgumentException("that == null");
-    }
+    checkArgument(that != null, "that == null");
     if (that instanceof BimodalMutableIntSet b) {
       return impl.containsAny(b.impl);
     } else if (that instanceof SparseIntSet) {
@@ -298,9 +288,7 @@ public final class BimodalMutableIntSet implements MutableIntSet {
    * @throws IllegalArgumentException if that is null
    */
   public boolean removeAll(IntSet that) {
-    if (that == null) {
-      throw new IllegalArgumentException("that is null");
-    }
+    checkArgument(that != null, "that is null");
     boolean result = false;
     for (IntIterator it = that.intIterator(); it.hasNext(); ) {
       result |= remove(it.next());
@@ -314,9 +302,7 @@ public final class BimodalMutableIntSet implements MutableIntSet {
    * @throws IllegalArgumentException if that is null
    */
   public boolean containsAll(BimodalMutableIntSet that) {
-    if (that == null) {
-      throw new IllegalArgumentException("that is null");
-    }
+    checkArgument(that != null, "that is null");
     for (IntIterator it = that.intIterator(); it.hasNext(); ) {
       if (!contains(it.next())) {
         return false;

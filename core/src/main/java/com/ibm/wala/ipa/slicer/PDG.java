@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.slicer;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
@@ -159,9 +161,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
       ModRef<T> modRef,
       boolean ignoreAllocHeapDefs) {
 
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     this.cg = cg;
     this.node = node;
     this.heapModel = pa != null ? modRef.makeHeapModel(pa) : null;
@@ -206,9 +206,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
    */
   public Set<Statement> getCallerParamStatements(SSAAbstractInvokeInstruction call)
       throws IllegalArgumentException {
-    if (call == null) {
-      throw new IllegalArgumentException("call == null");
-    }
+    checkArgument(call != null, "call == null");
     populate();
     return callerParamStatements.get(call.getCallSite());
   }
@@ -232,9 +230,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
    */
   public Set<Statement> getCallerReturnStatements(SSAAbstractInvokeInstruction call)
       throws IllegalArgumentException {
-    if (call == null) {
-      throw new IllegalArgumentException("call == null");
-    }
+    checkArgument(call != null, "call == null");
     populate();
     return callerReturnStatements.get(call.getCallSite());
   }
@@ -772,12 +768,8 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
 
   public static synchronized Statement ssaInstruction2Statement(
       CGNode node, SSAInstruction s, Map<SSAInstruction, Integer> instructionIndices, IR ir) {
-    if (node == null) {
-      throw new IllegalArgumentException("null node");
-    }
-    if (s == null) {
-      throw new IllegalArgumentException("null s");
-    }
+    checkArgument(node != null, "null node");
+    checkArgument(s != null, "null s");
     if (s instanceof SSAPhiInstruction phi) {
       return new PhiStatement(node, phi);
     } else if (s instanceof SSAPiInstruction pi) {

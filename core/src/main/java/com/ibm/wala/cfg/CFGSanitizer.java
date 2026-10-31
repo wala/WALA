@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cfg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -40,9 +42,7 @@ public class CFGSanitizer {
   public static Graph<ISSABasicBlock> sanitize(IR ir, IClassHierarchy cha)
       throws IllegalArgumentException, WalaException {
 
-    if (ir == null) {
-      throw new IllegalArgumentException("ir cannot be null");
-    }
+    checkArgument(ir != null, "ir cannot be null");
 
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
     Graph<ISSABasicBlock> g = SlowSparseNumberedGraph.make();

@@ -48,6 +48,8 @@
  */
 package com.ibm.wala.util.graph.labeled;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.SlowNumberedNodeManager;
@@ -72,9 +74,7 @@ public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabele
   }
 
   public static <T, U> void copyInto(LabeledGraph<T, U> g, LabeledGraph<T, U> into) {
-    if (g == null) {
-      throw new IllegalArgumentException("g is null");
-    }
+    checkArgument(g != null, "g is null");
     for (T name : g) {
       into.addNode(name);
     }
@@ -97,9 +97,7 @@ public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabele
   }
 
   public SlowSparseNumberedLabeledGraph(@Nullable U defaultLabel) {
-    if (defaultLabel == null) {
-      throw new IllegalArgumentException("null default label");
-    }
+    checkArgument(defaultLabel != null, "null default label");
     nodeManager = new SlowNumberedNodeManager<>();
     edgeManager = new SparseNumberedLabeledEdgeManager<>(nodeManager, defaultLabel);
   }

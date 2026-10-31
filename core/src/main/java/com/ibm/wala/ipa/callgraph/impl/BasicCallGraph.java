@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.collect.Sets;
 import com.ibm.wala.analysis.reflection.JavaTypeContext;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
@@ -328,9 +330,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
    */
   @Override
   public boolean containsNode(CGNode N) {
-    if (N == null) {
-      throw new IllegalArgumentException("N is null");
-    }
+    checkArgument(N != null, "N is null");
     return getNode(N.getMethod(), N.getContext()) != null;
   }
 

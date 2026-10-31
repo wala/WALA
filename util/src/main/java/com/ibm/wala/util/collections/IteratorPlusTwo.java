@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.jspecify.annotations.Nullable;
@@ -22,9 +24,7 @@ public class IteratorPlusTwo<T> implements Iterator<T> {
   private @Nullable T xtra2;
 
   public IteratorPlusTwo(Iterator<T> it, T xtra1, T xtra2) {
-    if (it == null) {
-      throw new IllegalArgumentException("it null");
-    }
+    checkArgument(it != null, "it null");
     this.it = it;
     this.xtra1 = xtra1;
     this.xtra2 = xtra2;

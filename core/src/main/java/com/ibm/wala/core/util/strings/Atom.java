@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.util.strings;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -70,9 +72,7 @@ public final class Atom implements Serializable {
    * @throws IllegalArgumentException if str is null
    */
   public static Atom findOrCreateAsciiAtom(String str) {
-    if (str == null) {
-      throw new IllegalArgumentException("str is null");
-    }
+    checkArgument(str != null, "str is null");
     byte[] ascii = str.getBytes();
     return findOrCreate(ascii);
   }
@@ -88,9 +88,7 @@ public final class Atom implements Serializable {
    */
   @Deprecated(since = "1.9.0")
   public static Atom findOrCreateUtf8Atom(byte[] utf8) {
-    if (utf8 == null) {
-      throw new IllegalArgumentException("utf8 is null");
-    }
+    checkArgument(utf8 != null, "utf8 is null");
     return findOrCreate(utf8);
   }
 
@@ -102,18 +100,14 @@ public final class Atom implements Serializable {
   public static Atom findOrCreate(byte[] utf8, int off, int len)
       throws IllegalArgumentException, IllegalArgumentException {
 
-    if (utf8 == null) {
-      throw new IllegalArgumentException("utf8 == null");
-    }
+    checkArgument(utf8 != null, "utf8 == null");
     if (len < 0) {
       throw new IllegalArgumentException("len must be >= 0, " + len);
     }
     if (off < 0) {
       throw new IllegalArgumentException("off must be >= 0, " + off);
     }
-    if (utf8.length < off + len) {
-      throw new IllegalArgumentException("utf8.length < off + len");
-    }
+    checkArgument(utf8.length >= off + len, "utf8.length < off + len");
     if (off + len < 0) {
       throw new IllegalArgumentException("off + len is too big: " + off + " + " + len);
     }
@@ -125,9 +119,7 @@ public final class Atom implements Serializable {
   }
 
   public static @NonNull Atom findOrCreate(byte[] bytes) {
-    if (bytes == null) {
-      throw new IllegalArgumentException("bytes is null");
-    }
+    checkArgument(bytes != null, "bytes is null");
     AtomKey key = new AtomKey(bytes);
     Atom val = dictionary.get(key);
     if (val != null) {
@@ -139,9 +131,7 @@ public final class Atom implements Serializable {
   }
 
   public static Atom findOrCreate(ImmutableByteArray b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     return findOrCreate(b.b);
   }
 
@@ -157,9 +147,7 @@ public final class Atom implements Serializable {
    */
   @Deprecated(since = "1.9.0")
   public static Atom findOrCreate(ImmutableByteArray b, int start, int length) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     return findOrCreate(b.b, start, length);
   }
 
@@ -472,9 +460,7 @@ public final class Atom implements Serializable {
    */
   @Deprecated(since = "1.9.0")
   public static Atom concat(byte c, ImmutableByteArray b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     return concat(c, b.b);
   }
 
@@ -499,9 +485,7 @@ public final class Atom implements Serializable {
    */
   @Deprecated(since = "1.9.0")
   public static boolean isArrayDescriptor(ImmutableByteArray b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     if (b.length() == 0) {
       return false;
     }

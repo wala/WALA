@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.util.ssa.ParameterAccessor;
@@ -104,10 +106,8 @@ public class ExternalModel extends AndroidModel {
       AndroidComponent target) {
     super(cha, options, cache);
 
-    if (target == null) {
-      throw new IllegalArgumentException(
-          "The component type requested to create an ExternalModel for was null");
-    }
+    checkArgument(
+        target != null, "The component type requested to create an ExternalModel for was null");
     this.name = Atom.findOrCreateAsciiAtom("startExternal" + target);
     //        this.target = target;
 

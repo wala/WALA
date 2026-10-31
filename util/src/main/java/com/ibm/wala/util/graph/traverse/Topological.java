@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.ReverseIterator;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.GraphInverter;
@@ -26,9 +28,7 @@ public class Topological {
    */
   public static <T> Iterable<T> makeTopologicalIter(final Graph<T> graph)
       throws IllegalArgumentException {
-    if (graph == null) {
-      throw new IllegalArgumentException("graph == null");
-    }
+    checkArgument(graph != null, "graph == null");
 
     return () -> {
       // the following code ensures a topological order over SCCs.

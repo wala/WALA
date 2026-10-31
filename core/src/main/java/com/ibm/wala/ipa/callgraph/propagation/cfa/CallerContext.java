@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
@@ -24,17 +26,13 @@ public class CallerContext implements Context {
    * @param caller the node which defines this context.
    */
   public CallerContext(CGNode caller) {
-    if (caller == null) {
-      throw new IllegalArgumentException("null caller");
-    }
+    checkArgument(caller != null, "null caller");
     this.caller = caller;
   }
 
   @Override
   public ContextItem get(ContextKey name) {
-    if (name == null) {
-      throw new IllegalArgumentException("name is null");
-    }
+    checkArgument(name != null, "name is null");
     if (name.equals(ContextKey.CALLER)) {
       return caller;
     } else {

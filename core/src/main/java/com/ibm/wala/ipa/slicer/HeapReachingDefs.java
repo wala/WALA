@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.slicer;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.CancelRuntimeException;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFramework;
@@ -100,12 +102,8 @@ public class HeapReachingDefs<T extends InstanceKey> {
       HeapExclusions exclusions,
       CallGraph cg) {
 
-    if (statements == null) {
-      throw new IllegalArgumentException("statements is null");
-    }
-    if (pa == null) {
-      throw new IllegalArgumentException("pa is null");
-    }
+    checkArgument(statements != null, "statements is null");
+    checkArgument(pa != null, "pa is null");
     if (VERBOSE | DEBUG) {
       System.err.println("Reaching Defs " + node);
       System.err.println(statements.size());

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.BytecodeCFG;
 import com.ibm.wala.cfg.ControlFlowGraph;
@@ -91,9 +93,7 @@ public class SSACFG
    */
   @SuppressWarnings("unchecked")
   public SSACFG(IMethod method, AbstractCFG cfg, SSAInstruction[] instructions) {
-    if (method == null) {
-      throw new IllegalArgumentException("method is null");
-    }
+    checkArgument(method != null, "method is null");
     this.delegate = cfg;
     if (DEBUG) {
       System.err.println(("Incoming CFG for " + method + ':'));
@@ -750,9 +750,7 @@ public class SSACFG
 
   @Override
   public int getNumber(ISSABasicBlock b) throws IllegalArgumentException {
-    if (b == null) {
-      throw new IllegalArgumentException("N == null");
-    }
+    checkArgument(b != null, "N == null");
     return b.getNumber();
   }
 
@@ -783,9 +781,7 @@ public class SSACFG
 
   @Override
   public Iterator<ISSABasicBlock> getPredNodes(ISSABasicBlock b) throws IllegalArgumentException {
-    if (b == null) {
-      throw new IllegalArgumentException("b == null");
-    }
+    checkArgument(b != null, "b == null");
     IBasicBlock<IInstruction> n = delegate.getNode(b.getNumber());
     final Iterator<IBasicBlock<IInstruction>> i = delegate.getPredNodes(n);
     return new Iterator<>() {
@@ -810,18 +806,14 @@ public class SSACFG
 
   @Override
   public int getPredNodeCount(ISSABasicBlock b) throws IllegalArgumentException {
-    if (b == null) {
-      throw new IllegalArgumentException("b == null");
-    }
+    checkArgument(b != null, "b == null");
     IBasicBlock<IInstruction> n = delegate.getNode(b.getNumber());
     return delegate.getPredNodeCount(n);
   }
 
   @Override
   public Iterator<ISSABasicBlock> getSuccNodes(ISSABasicBlock b) throws IllegalArgumentException {
-    if (b == null) {
-      throw new IllegalArgumentException("b == null");
-    }
+    checkArgument(b != null, "b == null");
     IBasicBlock<IInstruction> n = delegate.getNode(b.getNumber());
     final Iterator<IBasicBlock<IInstruction>> i = delegate.getSuccNodes(n);
     return new Iterator<>() {
@@ -846,9 +838,7 @@ public class SSACFG
 
   @Override
   public int getSuccNodeCount(ISSABasicBlock b) throws IllegalArgumentException {
-    if (b == null) {
-      throw new IllegalArgumentException("b == null");
-    }
+    checkArgument(b != null, "b == null");
     IBasicBlock<IInstruction> n = delegate.getNode(b.getNumber());
     return delegate.getSuccNodeCount(n);
   }
@@ -909,9 +899,7 @@ public class SSACFG
 
   @Override
   public List<ISSABasicBlock> getExceptionalSuccessors(final ISSABasicBlock b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     final IBasicBlock<IInstruction> n = delegate.getNode(b.getNumber());
     final Collection<IBasicBlock<IInstruction>> ss = delegate.getExceptionalSuccessors(n);
     final List<ISSABasicBlock> c = new ArrayList<>(getSuccNodeCount(b));
@@ -926,9 +914,7 @@ public class SSACFG
    */
   @Override
   public Collection<ISSABasicBlock> getExceptionalPredecessors(ISSABasicBlock b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     IBasicBlock<IInstruction> n = delegate.getNode(b.getNumber());
     Function<IBasicBlock<IInstruction>, ISSABasicBlock> f =
         object -> basicBlocks[delegate.getNumber(object)];
@@ -946,9 +932,7 @@ public class SSACFG
    * @throws IllegalArgumentException if dest is null
    */
   public boolean hasExceptionalEdge(BasicBlock src, BasicBlock dest) {
-    if (dest == null) {
-      throw new IllegalArgumentException("dest is null");
-    }
+    checkArgument(dest != null, "dest is null");
     if (dest.isExitBlock()) {
       int srcNum = getNumber(src);
       return delegate.getExceptionalToExit().get(srcNum);
@@ -962,9 +946,7 @@ public class SSACFG
    * @throws IllegalArgumentException if dest is null
    */
   public boolean hasNormalEdge(BasicBlock src, BasicBlock dest) {
-    if (dest == null) {
-      throw new IllegalArgumentException("dest is null");
-    }
+    checkArgument(dest != null, "dest is null");
     if (dest.isExitBlock()) {
       int srcNum = getNumber(src);
       return delegate.getNormalToExit().get(srcNum);
@@ -974,9 +956,7 @@ public class SSACFG
 
   @Override
   public Collection<ISSABasicBlock> getNormalSuccessors(ISSABasicBlock b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     IBasicBlock<IInstruction> n = delegate.getNode(b.getNumber());
     final Collection<IBasicBlock<IInstruction>> ss = delegate.getNormalSuccessors(n);
     Collection<ISSABasicBlock> c = new ArrayList<>(getSuccNodeCount(b));
@@ -991,9 +971,7 @@ public class SSACFG
    */
   @Override
   public Collection<ISSABasicBlock> getNormalPredecessors(ISSABasicBlock b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     IBasicBlock<IInstruction> n = delegate.getNode(b.getNumber());
     final Collection<IBasicBlock<IInstruction>> ss = delegate.getNormalPredecessors(n);
     Collection<ISSABasicBlock> c = new ArrayList<>(getPredNodeCount(b));
@@ -1025,9 +1003,7 @@ public class SSACFG
 
   @Override
   public IntSet getSuccNodeNumbers(ISSABasicBlock b) throws IllegalArgumentException {
-    if (b == null) {
-      throw new IllegalArgumentException("b == null");
-    }
+    checkArgument(b != null, "b == null");
     IBasicBlock<IInstruction> n = delegate.getNode(b.getNumber());
     return delegate.getSuccNodeNumbers(n);
   }

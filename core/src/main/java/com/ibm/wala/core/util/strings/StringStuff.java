@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.util.strings;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.ibm.wala.types.TypeName.ArrayMask;
 import static com.ibm.wala.types.TypeName.ElementBits;
 import static com.ibm.wala.types.TypeName.PointerMask;
@@ -48,9 +49,7 @@ public class StringStuff {
   }
 
   public static void padWithSpaces(StringBuilder b, int length) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     if (b.length() < length) {
       b.append(" ".repeat(length - b.length()));
     }
@@ -65,9 +64,7 @@ public class StringStuff {
    */
   public static String deployment2CanonicalTypeString(
       @org.intellij.lang.annotations.Language("jvm-class-name") String dString) {
-    if (dString == null) {
-      throw new IllegalArgumentException("dString is null");
-    }
+    checkArgument(dString != null, "dString is null");
     dString = dString.replace('.', '/');
     int arrayIndex = dString.indexOf("[]");
     if (arrayIndex > -1) {
@@ -94,9 +91,7 @@ public class StringStuff {
    * @throws IllegalArgumentException if dString is null
    */
   public static String deployment2CanonicalDescriptorTypeString(String dString) {
-    if (dString == null) {
-      throw new IllegalArgumentException("dString is null");
-    }
+    checkArgument(dString != null, "dString is null");
     dString = dString.replace('.', '/');
     int arrayIndex = dString.indexOf("[]");
     if (arrayIndex > -1) {
@@ -133,9 +128,7 @@ public class StringStuff {
   public static TypeName parseForReturnTypeName(Language l, ImmutableByteArray b)
       throws IllegalArgumentException {
 
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     if (b.length() <= 2) {
       throw new IllegalArgumentException("invalid descriptor: " + b);
     }
@@ -190,9 +183,7 @@ public class StringStuff {
   public static TypeName[] parseForParameterNames(Language l, ImmutableByteArray b)
       throws IllegalArgumentException {
 
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     if (b.length() <= 2) {
       throw new IllegalArgumentException("invalid descriptor: " + b);
     }
@@ -279,9 +270,7 @@ public class StringStuff {
   public static ImmutableByteArray parseForPackage(ImmutableByteArray name, int start, int length)
       throws IllegalArgumentException {
     try {
-      if (name == null) {
-        throw new IllegalArgumentException("name == null");
-      }
+      checkArgument(name != null, "name == null");
       int lastSlash = -1;
       for (int i = start; i < start + length; i++) {
         if (name.b[i] == '/') {
@@ -309,9 +298,7 @@ public class StringStuff {
    * @throws IllegalArgumentException if name is null
    */
   public static ImmutableByteArray parseForPackage(ImmutableByteArray name) {
-    if (name == null) {
-      throw new IllegalArgumentException("name is null");
-    }
+    checkArgument(name != null, "name is null");
     return parseForPackage(name, 0, name.length());
   }
 
@@ -326,12 +313,8 @@ public class StringStuff {
    */
   public static ImmutableByteArray parseForClass(ImmutableByteArray name, int start, int length)
       throws IllegalArgumentException {
-    if (name == null) {
-      throw new IllegalArgumentException("name is null");
-    }
-    if (name.length() == 0) {
-      throw new IllegalArgumentException("invalid class name: zero length");
-    }
+    checkArgument(name != null, "name is null");
+    checkArgument(name.length() != 0, "invalid class name: zero length");
     try {
       if (parseForPackage(name, start, length) == null) {
         while (isTypeCodeChar(name, start)) {
@@ -367,9 +350,7 @@ public class StringStuff {
    */
   public static ImmutableByteArray parseForClass(ImmutableByteArray name)
       throws IllegalArgumentException {
-    if (name == null) {
-      throw new IllegalArgumentException("name is null");
-    }
+    checkArgument(name != null, "name is null");
     return parseForClass(name, 0, name.length());
   }
 
@@ -383,9 +364,7 @@ public class StringStuff {
   public static int parseForArrayDimensionality(ImmutableByteArray b, int start, int length)
       throws IllegalArgumentException {
 
-    if (b == null) {
-      throw new IllegalArgumentException("b == null");
-    }
+    checkArgument(b != null, "b == null");
     try {
       int code = 0;
       for (int i = start; i < start + length; ++i) {
@@ -418,9 +397,7 @@ public class StringStuff {
   public static ImmutableByteArray parseForInnermostArrayElementDescriptor(
       ImmutableByteArray b, int start, int length) {
 
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     try {
       int i = start;
       for (; i < start + length; ++i) {
@@ -442,9 +419,7 @@ public class StringStuff {
    * @throws IllegalArgumentException if a is null
    */
   public static ImmutableByteArray parseForInnermostArrayElementDescriptor(Atom a) {
-    if (a == null) {
-      throw new IllegalArgumentException("a is null");
-    }
+    checkArgument(a != null, "a is null");
     ImmutableByteArray b = new ImmutableByteArray(a.getValArray());
     return parseForInnermostArrayElementDescriptor(b, 0, b.length());
   }
@@ -455,9 +430,7 @@ public class StringStuff {
    */
   public static boolean classIsPrimitive(ImmutableByteArray name, int start, int length)
       throws IllegalArgumentException {
-    if (name == null) {
-      throw new IllegalArgumentException("name is null");
-    }
+    checkArgument(name != null, "name is null");
     try {
       while (length > 0 && isTypeCodeChar(name, start)) {
         start++;
@@ -484,9 +457,7 @@ public class StringStuff {
 
   public static MethodReference makeMethodReference(Language l, String methodSig)
       throws IllegalArgumentException {
-    if (methodSig == null) {
-      throw new IllegalArgumentException("methodSig is null");
-    }
+    checkArgument(methodSig != null, "methodSig is null");
     if (methodSig.lastIndexOf('.') < 0) {
       throw new IllegalArgumentException("ill-formed sig " + methodSig);
     }
@@ -509,9 +480,7 @@ public class StringStuff {
    * @throws IllegalArgumentException if jvmType is null
    */
   public static String jvmToReadableType(final String jvmType) throws IllegalArgumentException {
-    if (jvmType == null) {
-      throw new IllegalArgumentException("jvmType is null");
-    }
+    checkArgument(jvmType != null, "jvmType is null");
     StringBuilder readable = new StringBuilder(); // human readable version
     int numberOfDimensions = 0; // the number of array dimensions
 
@@ -559,9 +528,7 @@ public class StringStuff {
    * @throws IllegalArgumentException if jvmType is null
    */
   public static String jvmToBinaryName(String jvmType) throws IllegalArgumentException {
-    if (jvmType == null) {
-      throw new IllegalArgumentException("jvmType is null");
-    }
+    checkArgument(jvmType != null, "jvmType is null");
     StringBuilder readable = new StringBuilder(); // human readable version
     int numberOfDimensions = 0; // the number of array dimensions
 
@@ -608,9 +575,7 @@ public class StringStuff {
    * @throws IllegalArgumentException if path is null
    */
   public static String slashToDot(String path) {
-    if (path == null) {
-      throw new IllegalArgumentException("path is null");
-    }
+    checkArgument(path != null, "path is null");
     StringBuilder dotForm = new StringBuilder(path);
     // replace all '/' in the path with '.'
     for (int i = 0; i < dotForm.length(); ++i) {
@@ -630,9 +595,7 @@ public class StringStuff {
    * @throws IllegalArgumentException if path is null
    */
   public static String dollarToDot(String path) {
-    if (path == null) {
-      throw new IllegalArgumentException("path is null");
-    }
+    checkArgument(path != null, "path is null");
     StringBuilder dotForm = new StringBuilder(path);
     // replace all '$' in the path with '.'
     for (int i = 0; i < dotForm.length(); ++i) {
@@ -652,9 +615,7 @@ public class StringStuff {
    * @throws IllegalArgumentException if path is null
    */
   public static String dotToDollar(String path) {
-    if (path == null) {
-      throw new IllegalArgumentException("path is null");
-    }
+    checkArgument(path != null, "path is null");
     StringBuilder dotForm = new StringBuilder(path);
     // replace all '.' in the path with '$'
     for (int i = 0; i < dotForm.length(); ++i) {

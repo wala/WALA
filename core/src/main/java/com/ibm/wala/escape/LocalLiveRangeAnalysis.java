@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.escape;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -39,9 +41,7 @@ public class LocalLiveRangeAnalysis {
    * @throws IllegalArgumentException if du is null
    */
   public static boolean isLive(int v, int instructionIndex, IR ir, DefUse du) {
-    if (du == null) {
-      throw new IllegalArgumentException("du is null");
-    }
+    checkArgument(du != null, "du is null");
     if (du.isUnused(v)) {
       return false;
     }

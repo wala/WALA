@@ -42,6 +42,7 @@
 */
 package com.ibm.wala.ipa.summaries;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
 import com.ibm.wala.core.util.strings.Atom;
@@ -125,12 +126,8 @@ public class VolatileMethodSummary {
    * @throws IllegalArgumentException if this summary is null or not empty
    */
   public VolatileMethodSummary(MethodSummary summary) {
-    if (summary == null) {
-      throw new IllegalArgumentException("The given summary is null");
-    }
-    if (summary.getNumberOfStatements() > 0) {
-      throw new IllegalArgumentException("The given summary is not empty");
-    }
+    checkArgument(summary != null, "The given summary is null");
+    checkArgument(summary.getNumberOfStatements() <= 0, "The given summary is not empty");
     this.summary = summary;
   }
 
@@ -140,9 +137,7 @@ public class VolatileMethodSummary {
    * @throws IllegalArgumentException if the ProgramCounter is negative
    */
   public SSAInstruction getStatementAt(int programCounter) {
-    if (programCounter < 0) {
-      throw new IllegalArgumentException("Program-Counter may not be negative!");
-    }
+    checkArgument(programCounter >= 0, "Program-Counter may not be negative!");
     if (this.instructions.size() <= programCounter) {
       return null;
     }
@@ -163,10 +158,7 @@ public class VolatileMethodSummary {
    * @throws IllegalArgumentException if the count is negative (a count of zero is however ok)
    */
   public void reserveProgramCounters(int count) {
-    if (count < 0) {
-      throw new IllegalArgumentException(
-          "The count of ProgramCounters to reserve may not be negative");
-    }
+    checkArgument(count >= 0, "The count of ProgramCounters to reserve may not be negative");
     for (int i = 0; i < count; ++i) {
       instructions.add(RESERVED);
     }
@@ -195,9 +187,7 @@ public class VolatileMethodSummary {
    * @throws IllegalArgumentException if the ProgramCounter is negative
    */
   public boolean isReserved(int programCounter) {
-    if (programCounter < 0) {
-      throw new IllegalArgumentException("The Program-Counter may not be negative");
-    }
+    checkArgument(programCounter >= 0, "The Program-Counter may not be negative");
 
     if (instructions.size() - 1 < programCounter) return false;
     if (instructions.get(programCounter) == null) return false;
@@ -216,9 +206,7 @@ public class VolatileMethodSummary {
    * @throws IllegalArgumentException if the ProgramCounter is negative
    */
   public boolean isFree(int programCounter) {
-    if (programCounter < 0) {
-      throw new IllegalArgumentException("The Program-Counter may not be negative");
-    }
+    checkArgument(programCounter >= 0, "The Program-Counter may not be negative");
 
     if (instructions.size() - 1 < programCounter) return true;
     if (instructions.get(programCounter) == null) return true;
@@ -239,9 +227,7 @@ public class VolatileMethodSummary {
    * @throws IllegalArgumentException if the ProgramCounter is negative
    */
   public boolean isUsed(int programCounter) {
-    if (programCounter < 0) {
-      throw new IllegalArgumentException("The Program-Counter may not be negative");
-    }
+    checkArgument(programCounter >= 0, "The Program-Counter may not be negative");
 
     if (instructions.size() - 1 < programCounter) return false;
     if (instructions.get(programCounter) == null) return false;
@@ -265,9 +251,7 @@ public class VolatileMethodSummary {
       throw new IllegalStateException("Summary locked due to call to getMethodSummary().");
     }
     requireNonNull(statement, "Statement is null!");
-    if (statement.iIndex() < 0) {
-      throw new IllegalArgumentException("Statement has a negative iindex");
-    }
+    checkArgument(statement.iIndex() >= 0, "Statement has a negative iindex");
     if (!this.allowReservedPC && isReserved(statement.iIndex())) {
       throw new IllegalStateException(
           "ProgramCounter " + statement.iIndex() + " is reserved! Use allowReserved(true).");
@@ -405,9 +389,7 @@ public class VolatileMethodSummary {
     if ((summary.getConstants() != null) && summary.getConstants().containsKey(vn)) {
       throw new IllegalStateException("You redefined a constant at number " + vn);
     }
-    if (vn <= 0) {
-      throw new IllegalArgumentException("SSA-Value may not be zero or negative.");
-    }
+    checkArgument(vn > 0, "SSA-Value may not be zero or negative.");
     this.summary.addConstant(vn, value);
   }
 

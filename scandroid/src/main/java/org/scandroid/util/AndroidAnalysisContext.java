@@ -39,6 +39,8 @@
  */
 package org.scandroid.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.collect.Queues;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.JavaLanguage;
@@ -128,9 +130,7 @@ public class AndroidAnalysisContext {
       InputStream summariesStream,
       MethodSummary extraSummary) {
 
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     Util.addDefaultSelectors(options, cha);
     // addDefaultBypassLogic(options, scope, Util.class.getClassLoader(),
     // cha);
@@ -168,9 +168,7 @@ public class AndroidAnalysisContext {
       Collection<InputStream> summariesStreams,
       MethodSummary extraSummary) {
 
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     Util.addDefaultSelectors(options, cha);
     for (InputStream stream : summariesStreams) {
       addBypassLogic(options, scope, stream, cha, extraSummary);
@@ -197,18 +195,12 @@ public class AndroidAnalysisContext {
       MethodSummary extraSummary)
       throws IllegalArgumentException {
 
-    if (scope == null) {
-      throw new IllegalArgumentException("scope is null");
-    }
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(scope != null, "scope is null");
+    checkArgument(options != null, "options is null");
     // if (cl == null) {
     // throw new IllegalArgumentException("cl is null");
     // }
-    if (cha == null) {
-      throw new IllegalArgumentException("cha cannot be null");
-    }
+    checkArgument(cha != null, "cha cannot be null");
 
     try {
       Set<TypeReference> summaryClasses = HashSetFactory.make();

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -234,9 +236,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    */
   public void visitInvoke(CGNode node, CallSiteReference site) {
 
-    if (site == null) {
-      throw new IllegalArgumentException("site is null");
-    }
+    checkArgument(site != null, "site is null");
     if (DEBUG) {
       System.err.println(("visitInvoke: " + site));
     }
@@ -309,9 +309,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    */
   public void visitNew(CGNode node, NewSiteReference newSite) {
 
-    if (newSite == null) {
-      throw new IllegalArgumentException("newSite is null");
-    }
+    checkArgument(newSite != null, "newSite is null");
     if (DEBUG) {
       System.err.println(("visitNew: " + newSite));
     }

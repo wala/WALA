@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.IFDS;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
@@ -46,9 +48,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
    * @param forwardGraph the graph to ``reverse''
    */
   protected BackwardsSupergraph(ISupergraph<T, P> forwardGraph) {
-    if (forwardGraph == null) {
-      throw new IllegalArgumentException("null forwardGraph");
-    }
+    checkArgument(forwardGraph != null, "null forwardGraph");
     this.delegate = forwardGraph;
   }
 

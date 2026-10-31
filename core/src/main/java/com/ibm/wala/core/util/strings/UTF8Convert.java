@@ -11,6 +11,8 @@
 
 package com.ibm.wala.core.util.strings;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import java.io.UTFDataFormatException;
 
@@ -49,9 +51,7 @@ public abstract class UTF8Convert {
    */
   @SuppressWarnings("unused")
   public static String fromUTF8(byte[] utf8) throws UTFDataFormatException {
-    if (utf8 == null) {
-      throw new IllegalArgumentException("utf8 is null");
-    }
+    checkArgument(utf8 != null, "utf8 is null");
     char[] result = new char[utf8.length];
     int result_index = 0;
     for (int i = 0, n = utf8.length; i < n; ) {
@@ -115,9 +115,7 @@ public abstract class UTF8Convert {
    * @throws IllegalArgumentException if s is null
    */
   public static byte[] toUTF8(String s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     byte[] result = new byte[utfLength(s)];
     int result_index = 0;
     for (int i = 0, n = s.length(); i < n; ++i) {
@@ -143,9 +141,7 @@ public abstract class UTF8Convert {
    * @throws IllegalArgumentException if s is null
    */
   public static int utfLength(String s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     int utflen = 0;
     for (int i = 0, n = s.length(); i < n; ++i) {
       int c = s.charAt(i);
@@ -164,9 +160,7 @@ public abstract class UTF8Convert {
    * @throws IllegalArgumentException if bytes is null
    */
   public static boolean check(byte[] bytes) {
-    if (bytes == null) {
-      throw new IllegalArgumentException("bytes is null");
-    }
+    checkArgument(bytes != null, "bytes is null");
     for (int i = 0, n = bytes.length; i < n; ) {
       byte b = bytes[i++];
       if (!ALLOW_NORMAL_UTF8) if (b == 0) return false;
@@ -198,9 +192,7 @@ public abstract class UTF8Convert {
   }
 
   public static String fromUTF8(ImmutableByteArray s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     try {
       return fromUTF8(s.b);
     } catch (UTFDataFormatException e) {

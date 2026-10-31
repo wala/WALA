@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -34,12 +36,8 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
     super(A, B);
     this.A = A;
     this.B = B;
-    if (A == null) {
-      throw new IllegalArgumentException("A cannot be null");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("B cannot be null");
-    }
+    checkArgument(A != null, "A cannot be null");
+    checkArgument(B != null, "B cannot be null");
   }
 
   @Override

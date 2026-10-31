@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
@@ -41,9 +43,7 @@ public class CodeScanner {
    */
   public static Collection<CallSiteReference> getCallSites(IMethod m)
       throws InvalidClassFileException {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getCallSites(sm.getStatements());
@@ -58,9 +58,7 @@ public class CodeScanner {
    */
   public static Collection<FieldReference> getFieldsRead(IMethod m)
       throws InvalidClassFileException {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getFieldsRead(sm.getStatements());
@@ -79,9 +77,7 @@ public class CodeScanner {
    */
   public static Collection<FieldReference> getFieldsWritten(IMethod m)
       throws InvalidClassFileException {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getFieldsWritten(sm.getStatements());
@@ -98,9 +94,7 @@ public class CodeScanner {
   /** get the element types of the arrays that m may update */
   public static Collection<TypeReference> getArraysWritten(IMethod m)
       throws InvalidClassFileException {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getArraysWritten(sm.getStatements());
@@ -119,9 +113,7 @@ public class CodeScanner {
    */
   public static Collection<NewSiteReference> getNewSites(IMethod m)
       throws InvalidClassFileException {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getNewSites(sm.getStatements());
@@ -132,9 +124,7 @@ public class CodeScanner {
   }
 
   public static boolean hasObjectArrayLoad(IMethod m) throws InvalidClassFileException {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return hasObjectArrayLoad(sm.getStatements());
@@ -144,9 +134,7 @@ public class CodeScanner {
   }
 
   public static boolean hasObjectArrayStore(IMethod m) throws InvalidClassFileException {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return hasObjectArrayStore(sm.getStatements());
@@ -156,9 +144,7 @@ public class CodeScanner {
   }
 
   public static Set<TypeReference> getCaughtExceptions(IMethod m) throws InvalidClassFileException {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getCaughtExceptions(sm.getStatements());
@@ -175,9 +161,7 @@ public class CodeScanner {
    */
   public static Iterator<TypeReference> iterateCastTypes(IMethod m)
       throws InvalidClassFileException {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     if (m.isWalaSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return iterateCastTypes(sm.getStatements());
@@ -222,9 +206,7 @@ public class CodeScanner {
    */
   public static Set<TypeReference> getCaughtExceptions(SSAInstruction[] statements)
       throws IllegalArgumentException {
-    if (statements == null) {
-      throw new IllegalArgumentException("statements == null");
-    }
+    checkArgument(statements != null, "statements == null");
     final HashSet<TypeReference> result = HashSetFactory.make(10);
     Visitor v =
         new Visitor() {
@@ -247,9 +229,7 @@ public class CodeScanner {
    */
   public static Iterator<TypeReference> iterateCastTypes(SSAInstruction[] statements)
       throws IllegalArgumentException {
-    if (statements == null) {
-      throw new IllegalArgumentException("statements == null");
-    }
+    checkArgument(statements != null, "statements == null");
     final HashSet<TypeReference> result = HashSetFactory.make(10);
     for (SSAInstruction statement : statements) {
       if (statement != null) {
@@ -310,9 +290,7 @@ public class CodeScanner {
    */
   public static List<FieldReference> getFieldsRead(SSAInstruction[] statements)
       throws IllegalArgumentException {
-    if (statements == null) {
-      throw new IllegalArgumentException("statements == null");
-    }
+    checkArgument(statements != null, "statements == null");
     final List<FieldReference> result = new ArrayList<>();
     Visitor v =
         new Visitor() {
@@ -336,9 +314,7 @@ public class CodeScanner {
    */
   public static List<FieldReference> getFieldsWritten(SSAInstruction[] statements)
       throws IllegalArgumentException {
-    if (statements == null) {
-      throw new IllegalArgumentException("statements == null");
-    }
+    checkArgument(statements != null, "statements == null");
     final List<FieldReference> result = new ArrayList<>();
     Visitor v =
         new Visitor() {
@@ -362,9 +338,7 @@ public class CodeScanner {
    */
   public static List<TypeReference> getArraysWritten(SSAInstruction[] statements)
       throws IllegalArgumentException {
-    if (statements == null) {
-      throw new IllegalArgumentException("statements == null");
-    }
+    checkArgument(statements != null, "statements == null");
     final List<TypeReference> result = new ArrayList<>();
     Visitor v =
         new Visitor() {
@@ -385,9 +359,7 @@ public class CodeScanner {
   public static boolean hasObjectArrayLoad(SSAInstruction[] statements)
       throws IllegalArgumentException {
 
-    if (statements == null) {
-      throw new IllegalArgumentException("statements == null");
-    }
+    checkArgument(statements != null, "statements == null");
     class ScanVisitor extends Visitor {
       boolean foundOne = false;
 
@@ -413,9 +385,7 @@ public class CodeScanner {
   public static boolean hasObjectArrayStore(SSAInstruction[] statements)
       throws IllegalArgumentException {
 
-    if (statements == null) {
-      throw new IllegalArgumentException("statements == null");
-    }
+    checkArgument(statements != null, "statements == null");
     class ScanVisitor extends Visitor {
       boolean foundOne = false;
 

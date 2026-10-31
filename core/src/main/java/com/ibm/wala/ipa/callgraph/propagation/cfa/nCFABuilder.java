@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -37,9 +39,7 @@ public class nCFABuilder extends SSAPropagationCallGraphBuilder {
       SSAContextInterpreter appContextInterpreter) {
 
     super(abstractRootMethod, options, cache, new DefaultPointerKeyFactory());
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
 
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha));
 

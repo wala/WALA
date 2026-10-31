@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.alg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -263,9 +265,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
   private Pair<PointsToResult, Collection<InstanceKeyAndState>> getPointsToWithStates(
       PointerKey pk, Predicate<InstanceKey> ikeyPred) {
-    if (!(pk instanceof LocalPointerKey queriedPk)) {
-      throw new IllegalArgumentException("only locals for now");
-    }
+    checkArgument(pk instanceof LocalPointerKey, "only locals for now");
+    LocalPointerKey queriedPk = (LocalPointerKey) pk;
     if (DEBUG) {
       System.err.println("answering query for " + pk);
     }
@@ -280,9 +281,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    */
   private static <T> Collection<T> removeStates(
       final Collection<? extends WithState<T>> p2SetWithStates) {
-    if (p2SetWithStates == null) {
-      throw new IllegalArgumentException("p2SetWithStates == null");
-    }
+    checkArgument(p2SetWithStates != null, "p2SetWithStates == null");
     return Iterator2Collection.toSet(
         new MapIterator<WithState<T>, T>(p2SetWithStates.iterator(), WithState::getWrapped));
   }
@@ -413,9 +412,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   public PointsToResult pointsToPassesPred(
       PointerKey pk, Predicate<InstanceKey> ikeyPred, PointerAnalysis<InstanceKey> pa)
       throws IllegalArgumentException {
-    if (!(pk instanceof LocalPointerKey queriedPk)) {
-      throw new IllegalArgumentException("only locals for now");
-    }
+    checkArgument(pk instanceof LocalPointerKey, "only locals for now");
+    LocalPointerKey queriedPk = (LocalPointerKey) pk;
     if (DEBUG) {
       System.err.println("answering query for " + pk);
     }

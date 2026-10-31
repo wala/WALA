@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.summaries;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.ssa.ConstantValue;
@@ -58,9 +60,7 @@ public class MethodSummary {
   }
 
   public MethodSummary(MethodReference method, int numberOfParameters) {
-    if (method == null) {
-      throw new IllegalArgumentException("null method");
-    }
+    checkArgument(method != null, "null method");
     this.numberOfParameters = numberOfParameters;
     this.method = method;
   }

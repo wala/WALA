@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /** A context that first checks with A, then defaults to B. */
 public class DelegatingContext implements Context {
 
@@ -20,12 +22,8 @@ public class DelegatingContext implements Context {
   public DelegatingContext(Context A, Context B) {
     this.A = A;
     this.B = B;
-    if (A == null) {
-      throw new IllegalArgumentException("null A");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("null B");
-    }
+    checkArgument(A != null, "null A");
+    checkArgument(B != null, "null B");
   }
 
   @Override

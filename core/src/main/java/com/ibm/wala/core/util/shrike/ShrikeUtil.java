@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.util.shrike;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.strings.ImmutableByteArray;
 import com.ibm.wala.shrike.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrike.shrikeBT.Constants;
@@ -43,9 +45,7 @@ public class ShrikeUtil implements BytecodeConstants {
    */
   public static TypeReference makeTypeReference(ClassLoaderReference loader, String type)
       throws IllegalArgumentException {
-    if (type == null) {
-      throw new IllegalArgumentException("null type");
-    }
+    checkArgument(type != null, "null type");
     TypeReference p = primitiveMap.get(type);
     if (p != null) {
       return p;

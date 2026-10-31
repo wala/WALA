@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.util.ref.ReferenceCleanser;
@@ -85,9 +87,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
    */
   @Override
   public void addSubgraphForNode(CGNode node) throws IllegalArgumentException {
-    if (node == null) {
-      throw new IllegalArgumentException("node == null");
-    }
+    checkArgument(node != null, "node == null");
     IR ir = node.getIR();
     if (ir == null) {
       throw new IllegalArgumentException("no ir for node " + node);

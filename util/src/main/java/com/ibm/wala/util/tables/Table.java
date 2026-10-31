@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.tables;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.intset.BitVector;
@@ -33,9 +35,7 @@ public class Table<T> {
    * @throws IllegalArgumentException if t == null
    */
   public Table(Table<T> t) throws IllegalArgumentException {
-    if (t == null) {
-      throw new IllegalArgumentException("t == null");
-    }
+    checkArgument(t != null, "t == null");
     for (int i = 0; i < t.getNumberOfColumns(); i++) {
       columnHeadings.set(i, t.getColumnHeading(i));
     }
@@ -47,9 +47,7 @@ public class Table<T> {
    * @throws IllegalArgumentException if columns == null, or columns[i] == null for some i
    */
   public Table(String[] columns) throws IllegalArgumentException {
-    if (columns == null) {
-      throw new IllegalArgumentException("columns == null");
-    }
+    checkArgument(columns != null, "columns == null");
     for (int i = 0; i < columns.length; i++) {
       if (columns[i] == null) {
         throw new IllegalArgumentException("columns[" + i + "] is null");
@@ -137,9 +135,7 @@ public class Table<T> {
   }
 
   public synchronized void removeRow(Map<String, T> p) {
-    if (p == null) {
-      throw new IllegalArgumentException("p is null");
-    }
+    checkArgument(p != null, "p is null");
     BitVector toRemove = new BitVector();
     for (int i = 0; i < rows.size(); i++) {
       Map<String, T> row = row2Map(i);
@@ -155,9 +151,7 @@ public class Table<T> {
   }
 
   public static void padWithSpaces(StringBuilder b, int length) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     if (b.length() < length) {
       b.append(" ".repeat(length - b.length()));
     }

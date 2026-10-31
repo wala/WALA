@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +41,8 @@ public class CompoundPiPolicy implements SSAPiNodePolicy {
   private CompoundPiPolicy(SSAPiNodePolicy p1, SSAPiNodePolicy p2) {
     this.p1 = p1;
     this.p2 = p2;
-    if (p1 == null) {
-      throw new IllegalArgumentException("p1 is null");
-    }
-    if (p2 == null) {
-      throw new IllegalArgumentException("p2 is null");
-    }
+    checkArgument(p1 != null, "p1 is null");
+    checkArgument(p2 != null, "p2 is null");
   }
 
   @Override

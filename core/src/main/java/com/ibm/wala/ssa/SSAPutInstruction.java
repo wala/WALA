@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.types.FieldReference;
 
 /** A putfield or putstatic instruction */
@@ -58,9 +60,7 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
    */
   @Override
   public void visit(IVisitor v) {
-    if (v == null) {
-      throw new IllegalArgumentException("v is null");
-    }
+    checkArgument(v != null, "v is null");
     v.visitPut(this);
   }
 

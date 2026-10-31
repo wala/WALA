@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IField;
 
 /** An pointer key which represents a unique set for each static field. */
@@ -17,9 +19,7 @@ public final class StaticFieldKey extends AbstractPointerKey {
   private final IField field;
 
   public StaticFieldKey(IField field) {
-    if (field == null) {
-      throw new IllegalArgumentException("null field");
-    }
+    checkArgument(field != null, "null field");
     this.field = field;
   }
 

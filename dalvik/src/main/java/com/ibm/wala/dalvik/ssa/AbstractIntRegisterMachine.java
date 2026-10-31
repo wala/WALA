@@ -11,6 +11,8 @@
  */
 package com.ibm.wala.dalvik.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.CancelRuntimeException;
 import com.ibm.wala.dalvik.classLoader.DexCFG;
 import com.ibm.wala.dalvik.classLoader.DexCFG.BasicBlock;
@@ -92,9 +94,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
   public static final boolean OPTIMISTIC = true;
 
   protected AbstractIntRegisterMachine(final DexCFG G) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     //    maxStackHeight = G.getMaxStackHeight();
     maxLocals = G.getDexMethod().getMaxLocals();
     this.cfg = G;

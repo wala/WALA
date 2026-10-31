@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.util.io;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.net.URI;
 
 /** Some simple utilities used to manipulate Strings */
@@ -30,9 +32,7 @@ public class FileSuffixes {
    * @throws IllegalArgumentException if uri is null
    */
   public static boolean isDexFile(final URI uri) {
-    if (uri == null) {
-      throw new IllegalArgumentException("uri is null");
-    }
+    checkArgument(uri != null, "uri is null");
 
     if (uri.toString().startsWith("jar:")) {
       try {
@@ -55,9 +55,7 @@ public class FileSuffixes {
    * @throws IllegalArgumentException if fileName is null
    */
   public static boolean isDexFile(String fileName) {
-    if (fileName == null) {
-      throw new IllegalArgumentException("fileName is null");
-    }
+    checkArgument(fileName != null, "fileName is null");
     return fileName.toLowerCase().endsWith(DEX_SUFFIX);
   }
 
@@ -69,9 +67,7 @@ public class FileSuffixes {
    * @throws IllegalArgumentException if fileName is null
    */
   public static boolean isApkFile(String fileName) {
-    if (fileName == null) {
-      throw new IllegalArgumentException("fileName is null");
-    }
+    checkArgument(fileName != null, "fileName is null");
     return fileName.toLowerCase().endsWith(APK_SUFFIX);
   }
 
@@ -83,9 +79,7 @@ public class FileSuffixes {
    * @throws IllegalArgumentException if fileName is null
    */
   public static boolean isClassFile(String fileName) {
-    if (fileName == null) {
-      throw new IllegalArgumentException("fileName is null");
-    }
+    checkArgument(fileName != null, "fileName is null");
     return fileName.endsWith(CLASS_SUFFIX);
   }
 
@@ -97,9 +91,7 @@ public class FileSuffixes {
    * @throws IllegalArgumentException if fileName is null
    */
   public static boolean isSourceFile(String fileName) {
-    if (fileName == null) {
-      throw new IllegalArgumentException("fileName is null");
-    }
+    checkArgument(fileName != null, "fileName is null");
     return fileName.endsWith(".java");
   }
 
@@ -111,9 +103,7 @@ public class FileSuffixes {
    * @throws IllegalArgumentException if fileName is null
    */
   public static boolean isJarFile(String fileName) {
-    if (fileName == null) {
-      throw new IllegalArgumentException("fileName is null");
-    }
+    checkArgument(fileName != null, "fileName is null");
     return fileName.endsWith(JAR_SUFFIX);
   }
 
@@ -125,9 +115,7 @@ public class FileSuffixes {
    * @throws IllegalArgumentException if fileName is null
    */
   public static boolean isWarFile(String fileName) {
-    if (fileName == null) {
-      throw new IllegalArgumentException("fileName is null");
-    }
+    checkArgument(fileName != null, "fileName is null");
     return fileName.endsWith(WAR_SUFFIX);
   }
 
@@ -140,9 +128,7 @@ public class FileSuffixes {
    * @throws IllegalArgumentException if fileName is null
    */
   public static String stripSuffix(String fileName) {
-    if (fileName == null) {
-      throw new IllegalArgumentException("fileName is null");
-    }
+    checkArgument(fileName != null, "fileName is null");
     int suffixIndex = fileName.indexOf(CLASS_SUFFIX);
     suffixIndex = (suffixIndex > -1) ? suffixIndex : fileName.indexOf(".java");
     if (suffixIndex > -1) {

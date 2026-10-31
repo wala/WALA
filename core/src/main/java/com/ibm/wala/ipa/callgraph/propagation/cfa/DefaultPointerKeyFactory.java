@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.ArrayContentsKey;
@@ -37,9 +39,7 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
   @Override
   public FilteredPointerKey getFilteredPointerKeyForLocal(
       CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
-    if (filter == null) {
-      throw new IllegalArgumentException("null filter");
-    }
+    checkArgument(filter != null, "null filter");
     assert valueNumber > 0 : "illegal value number: " + valueNumber + " in " + node;
     // TODO: add type filters!
     return new LocalPointerKeyWithFilter(node, valueNumber, filter);
@@ -57,17 +57,13 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
 
   @Override
   public PointerKey getPointerKeyForStaticField(IField f) {
-    if (f == null) {
-      throw new IllegalArgumentException("null f");
-    }
+    checkArgument(f != null, "null f");
     return new StaticFieldKey(f);
   }
 
   @Override
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
-    if (field == null) {
-      throw new IllegalArgumentException("field is null");
-    }
+    checkArgument(field != null, "field is null");
 
     IField resolveAgain =
         I.concreteType().getField(field.getName(), field.getFieldTypeReference().getName());

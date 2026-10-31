@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
@@ -24,9 +26,7 @@ public class ReceiverInstanceContext implements Context {
    * @param I the instance key that represents the receiver
    */
   public ReceiverInstanceContext(InstanceKey I) {
-    if (I == null) {
-      throw new IllegalArgumentException("null I");
-    }
+    checkArgument(I != null, "null I");
     this.ik = I;
   }
 

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.fixedpoint.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.IFixedPointStatement;
 import com.ibm.wala.fixpoint.IFixedPointSystem;
@@ -91,9 +93,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
   @Override
   public void addStatement(IFixedPointStatement<T> statement)
       throws IllegalArgumentException, UnimplementedError {
-    if (statement == null) {
-      throw new IllegalArgumentException("statement == null");
-    }
+    checkArgument(statement != null, "statement == null");
     if (statement instanceof UnaryStatement<T> tUnaryStatement) {
       addStatement(tUnaryStatement);
     } else if (statement instanceof NullaryStatement<T> tNullaryStatement) {
@@ -106,9 +106,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
   }
 
   public void addStatement(GeneralStatement<T> s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     IVariable<?>[] rhs = s.getRHS();
     IVariable<?> lhs = s.getLHS();
 
@@ -133,9 +131,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
   }
 
   public void addStatement(UnaryStatement<T> s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     IVariable<?> lhs = s.getLHS();
     IVariable<?> rhs = s.getRightHandSide();
 
@@ -156,9 +152,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
   }
 
   public void addStatement(NullaryStatement<T> s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     IVariable<?> lhs = s.getLHS();
 
     equations.add(s);

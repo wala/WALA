@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
@@ -35,9 +37,7 @@ public abstract class SSANewInstruction extends SSAInstruction {
   protected SSANewInstruction(int iindex, int result, NewSiteReference site)
       throws IllegalArgumentException {
     super(iindex);
-    if (site == null) {
-      throw new IllegalArgumentException("site cannot be null");
-    }
+    checkArgument(site != null, "site cannot be null");
     this.result = result;
     this.site = site;
     this.params = null;
@@ -51,12 +51,8 @@ public abstract class SSANewInstruction extends SSAInstruction {
    */
   protected SSANewInstruction(int iindex, int result, NewSiteReference site, int[] params) {
     super(iindex);
-    if (params == null) {
-      throw new IllegalArgumentException("params is null");
-    }
-    if (site == null) {
-      throw new IllegalArgumentException("site is null");
-    }
+    checkArgument(params != null, "params is null");
+    checkArgument(site != null, "site is null");
     assert site.getDeclaredType().isArrayType()
         || site.getDeclaredType().getClassLoader().language() != ClassLoaderReference.Java;
     this.result = result;
@@ -95,9 +91,7 @@ public abstract class SSANewInstruction extends SSAInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    if (v == null) {
-      throw new IllegalArgumentException("v is null");
-    }
+    checkArgument(v != null, "v is null");
     v.visitNew(this);
   }
 

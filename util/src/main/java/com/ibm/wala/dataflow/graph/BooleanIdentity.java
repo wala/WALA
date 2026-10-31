@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.fixpoint.BooleanVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import org.jspecify.annotations.Nullable;
@@ -28,9 +30,7 @@ public class BooleanIdentity extends UnaryOperator<BooleanVariable> {
   @Override
   public byte evaluate(@Nullable BooleanVariable lhs, BooleanVariable rhs)
       throws IllegalArgumentException {
-    if (lhs == null) {
-      throw new IllegalArgumentException("lhs == null");
-    }
+    checkArgument(lhs != null, "lhs == null");
 
     if (lhs.sameValue(rhs)) {
       return NOT_CHANGED;

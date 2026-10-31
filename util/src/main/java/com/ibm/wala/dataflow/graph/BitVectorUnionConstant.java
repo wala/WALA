@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import org.jspecify.annotations.Nullable;
@@ -30,9 +32,7 @@ public class BitVectorUnionConstant extends UnaryOperator<BitVectorVariable> {
   public byte evaluate(@Nullable BitVectorVariable lhs, BitVectorVariable rhs)
       throws IllegalArgumentException {
 
-    if (lhs == null) {
-      throw new IllegalArgumentException("lhs == null");
-    }
+    checkArgument(lhs != null, "lhs == null");
     BitVectorVariable U = new BitVectorVariable();
     U.copyState(lhs);
     U.addAll(rhs);

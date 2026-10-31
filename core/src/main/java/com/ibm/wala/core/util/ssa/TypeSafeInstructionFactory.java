@@ -42,6 +42,8 @@
 */
 package com.ibm.wala.core.util.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.errorprone.annotations.FormatMethod;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory;
@@ -117,21 +119,13 @@ public class TypeSafeInstructionFactory {
       final SSAValue exception,
       final CallSiteReference site) {
     info("Now: InvokeInstruction to %s using %s", site, params);
-    if (iindex < 0) {
-      throw new IllegalArgumentException("The iIndex may not be negative");
-    }
-    if (result == null) {
-      throw new IllegalArgumentException("The result may not be null");
-    }
-    if (exception == null) {
-      throw new IllegalArgumentException("The parameter exception may not be null");
-    }
+    checkArgument(iindex >= 0, "The iIndex may not be negative");
+    checkArgument(result != null, "The result may not be null");
+    checkArgument(exception != null, "The parameter exception may not be null");
     if (params == null) {
       params = Collections.emptyList();
     }
-    if (site == null) {
-      throw new IllegalArgumentException("The CallSite may not be null");
-    }
+    checkArgument(site != null, "The CallSite may not be null");
     final ParameterAccessor acc = new ParameterAccessor(site.getDeclaredTarget(), this.cha);
     if (acc.hasImplicitThis()) {
       if (params.size() != (acc.getNumberOfParameters() + 1)) {
@@ -162,10 +156,9 @@ public class TypeSafeInstructionFactory {
                 + params);
       }
 
-      if (site.getInvocationCode() != IInvokeInstruction.Dispatch.STATIC) {
-        throw new IllegalArgumentException(
-            "A function without implicit this can only be invoked static.");
-      }
+      checkArgument(
+          site.getInvocationCode() == IInvokeInstruction.Dispatch.STATIC,
+          "A function without implicit this can only be invoked static.");
     }
 
     // final MethodReference mRef = site.getDeclaredTarget();
@@ -267,18 +260,12 @@ public class TypeSafeInstructionFactory {
       final SSAValue exception,
       final CallSiteReference site) {
     info("Now: InvokeInstruction to %s using %s", site, params);
-    if (iindex < 0) {
-      throw new IllegalArgumentException("The iIndex may not be negative");
-    }
-    if (exception == null) {
-      throw new IllegalArgumentException("The parameter exception may not be null");
-    }
+    checkArgument(iindex >= 0, "The iIndex may not be negative");
+    checkArgument(exception != null, "The parameter exception may not be null");
     if (params == null) {
       params = Collections.emptyList();
     }
-    if (site == null) {
-      throw new IllegalArgumentException("The CallSite may not be null");
-    }
+    checkArgument(site != null, "The CallSite may not be null");
     final ParameterAccessor acc = new ParameterAccessor(site.getDeclaredTarget(), this.cha);
     if (acc.hasImplicitThis()) {
       if (params.size() != (acc.getNumberOfParameters() + 1)) {
@@ -309,10 +296,9 @@ public class TypeSafeInstructionFactory {
                 + params);
       }
 
-      if (site.getInvocationCode() != IInvokeInstruction.Dispatch.STATIC) {
-        throw new IllegalArgumentException(
-            "A function without implicit this can only be invoked static.");
-      }
+      checkArgument(
+          site.getInvocationCode() == IInvokeInstruction.Dispatch.STATIC,
+          "A function without implicit this can only be invoked static.");
     }
 
     final MethodReference mRef = site.getDeclaredTarget();
@@ -390,9 +376,7 @@ public class TypeSafeInstructionFactory {
   public SSAReturnInstruction ReturnInstruction(final int iindex, final SSAValue result) {
     info("Now: ReturnInstruction using %s", result);
 
-    if (iindex < 0) {
-      throw new IllegalArgumentException("iIndex may not be negative");
-    }
+    checkArgument(iindex >= 0, "iIndex may not be negative");
     if (!isAssignableFrom(result.getType(), result.getValidIn().getReturnType())) {
       throw new IllegalArgumentException(
           "Return type not assignable from "
@@ -424,18 +408,10 @@ public class TypeSafeInstructionFactory {
       FieldReference field) {
     info("Now: Get %s from %s into %s", field, containingInstance, targetValue);
 
-    if (iindex < 0) {
-      throw new IllegalArgumentException("iIndex may not be negative");
-    }
-    if (targetValue == null) {
-      throw new IllegalArgumentException("targetValue may not be null");
-    }
-    if (containingInstance == null) {
-      throw new IllegalArgumentException("containingInstance may not be null");
-    }
-    if (field == null) {
-      throw new IllegalArgumentException("field may not be null");
-    }
+    checkArgument(iindex >= 0, "iIndex may not be negative");
+    checkArgument(targetValue != null, "targetValue may not be null");
+    checkArgument(containingInstance != null, "containingInstance may not be null");
+    checkArgument(field != null, "field may not be null");
     if (!isSuperclassOf(field.getDeclaringClass(), containingInstance.getType())) {
       throw new IllegalArgumentException(
           "The targetInstance "
@@ -484,15 +460,9 @@ public class TypeSafeInstructionFactory {
       final int iindex, final SSAValue targetValue, FieldReference field) {
     info("Now: Get %s into %s", field, targetValue);
 
-    if (iindex < 0) {
-      throw new IllegalArgumentException("iIndex may not be negative");
-    }
-    if (targetValue == null) {
-      throw new IllegalArgumentException("targetValue may not be null");
-    }
-    if (field == null) {
-      throw new IllegalArgumentException("field may not be null");
-    }
+    checkArgument(iindex >= 0, "iIndex may not be negative");
+    checkArgument(targetValue != null, "targetValue may not be null");
+    checkArgument(field != null, "field may not be null");
     if (!isAssignableFrom(field.getFieldType(), targetValue.getType())) {
       throw new IllegalArgumentException(
           "The field " + targetValue + " is not assignable from " + field);
@@ -522,18 +492,10 @@ public class TypeSafeInstructionFactory {
       FieldReference field) {
     info("Now: Put %s to %s", newValue, field);
 
-    if (iindex < 0) {
-      throw new IllegalArgumentException("iIndex may not be negative");
-    }
-    if (targetInstance == null) {
-      throw new IllegalArgumentException("targetInstance may not be null");
-    }
-    if (newValue == null) {
-      throw new IllegalArgumentException("newValue may not be null");
-    }
-    if (field == null) {
-      throw new IllegalArgumentException("field may not be null");
-    }
+    checkArgument(iindex >= 0, "iIndex may not be negative");
+    checkArgument(targetInstance != null, "targetInstance may not be null");
+    checkArgument(newValue != null, "newValue may not be null");
+    checkArgument(field != null, "field may not be null");
     if (!isSuperclassOf(field.getDeclaringClass(), targetInstance.getType())) {
       throw new IllegalArgumentException(
           "The targetInstance "
@@ -580,15 +542,9 @@ public class TypeSafeInstructionFactory {
       final int iindex, final SSAValue newValue, FieldReference field) {
     info("Now: Put %s to %s", newValue, field);
 
-    if (iindex < 0) {
-      throw new IllegalArgumentException("iIndex may not be negative");
-    }
-    if (newValue == null) {
-      throw new IllegalArgumentException("newValue may not be null");
-    }
-    if (field == null) {
-      throw new IllegalArgumentException("field may not be null");
-    }
+    checkArgument(iindex >= 0, "iIndex may not be negative");
+    checkArgument(newValue != null, "newValue may not be null");
+    checkArgument(field != null, "field may not be null");
     if (!isAssignableFrom(newValue.getType(), field.getFieldType())) {
       throw new IllegalArgumentException(
           "The field " + field + " is not assignable from " + newValue);
@@ -602,18 +558,10 @@ public class TypeSafeInstructionFactory {
   public SSANewInstruction NewInstruction(int iindex, SSAValue result, NewSiteReference site) {
     info("Now: New %s", result);
 
-    if (iindex < 0) {
-      throw new IllegalArgumentException("iIndex may not be negative");
-    }
-    if (result == null) {
-      throw new IllegalArgumentException("result may not be null");
-    }
-    if (site == null) {
-      throw new IllegalArgumentException("site may not be null");
-    }
-    if (!isAssignableFrom(site.getDeclaredType(), result.getType())) {
-      throw new IllegalArgumentException("type mismatch");
-    }
+    checkArgument(iindex >= 0, "iIndex may not be negative");
+    checkArgument(result != null, "result may not be null");
+    checkArgument(site != null, "site may not be null");
+    checkArgument(isAssignableFrom(site.getDeclaredType(), result.getType()), "type mismatch");
     result.setAssigned();
     return insts.NewInstruction(iindex, result.getNumber(), site);
   }
@@ -622,18 +570,10 @@ public class TypeSafeInstructionFactory {
       int iindex, SSAValue result, NewSiteReference site, Collection<? extends SSAValue> params) {
     info("Now: New %s", result);
 
-    if (iindex < 0) {
-      throw new IllegalArgumentException("iIndex may not be negative");
-    }
-    if (result == null) {
-      throw new IllegalArgumentException("result may not be null");
-    }
-    if (site == null) {
-      throw new IllegalArgumentException("site may not be null");
-    }
-    if (!isAssignableFrom(site.getDeclaredType(), result.getType())) {
-      throw new IllegalArgumentException("type mismatch");
-    }
+    checkArgument(iindex >= 0, "iIndex may not be negative");
+    checkArgument(result != null, "result may not be null");
+    checkArgument(site != null, "site may not be null");
+    checkArgument(isAssignableFrom(site.getDeclaredType(), result.getType()), "type mismatch");
 
     final MethodReference resultValidIn = result.getValidIn();
     final int[] aParams = new int[params.size()];
@@ -672,15 +612,9 @@ public class TypeSafeInstructionFactory {
       int iindex, SSAValue result, Collection<? extends SSAValue> params) {
     info("Now: Phi into %s from %s", result, params);
 
-    if (iindex < 0) {
-      throw new IllegalArgumentException("iIndex may not be negative");
-    }
-    if (result == null) {
-      throw new IllegalArgumentException("result may not be null");
-    }
-    if (params == null) {
-      throw new IllegalArgumentException("params may not be null");
-    }
+    checkArgument(iindex >= 0, "iIndex may not be negative");
+    checkArgument(result != null, "result may not be null");
+    checkArgument(params != null, "params may not be null");
     if (params.isEmpty()) {
       throw new IllegalArgumentException(
           "Phi needs at least one source value. Type is " + result.getType());
@@ -742,9 +676,7 @@ public class TypeSafeInstructionFactory {
    * @param iindex Zero or a positive number unique to any instruction of the same method
    */
   public SSAReturnInstruction ReturnInstruction(final int iindex) {
-    if (iindex < 0) {
-      throw new IllegalArgumentException("The iindex may not be negative");
-    }
+    checkArgument(iindex >= 0, "The iindex may not be negative");
     return insts.ReturnInstruction(iindex);
   }
 
@@ -754,12 +686,8 @@ public class TypeSafeInstructionFactory {
    * @param target the iindex of the instruction to jump to
    */
   public SSAGotoInstruction GotoInstruction(final int iindex, final int target) {
-    if (iindex < 0) {
-      throw new IllegalArgumentException("The iindex may not be negative");
-    }
-    if (target < 0) {
-      throw new IllegalArgumentException("The target-iindex may not be negative");
-    }
+    checkArgument(iindex >= 0, "The iindex may not be negative");
+    checkArgument(target >= 0, "The target-iindex may not be negative");
 
     return insts.GotoInstruction(iindex, target);
   }
@@ -788,12 +716,8 @@ public class TypeSafeInstructionFactory {
     if (iindex < 0) {
       throw new IllegalArgumentException("The iindex may not be negative. It's " + iindex);
     }
-    if (result == null) {
-      throw new IllegalArgumentException("Can't use null for the result");
-    }
-    if (array == null) {
-      throw new IllegalArgumentException("Can't load from array null");
-    }
+    checkArgument(result != null, "Can't use null for the result");
+    checkArgument(array != null, "Can't load from array null");
     if (index < 0) {
       throw new IllegalArgumentException(
           "The index in the array may not be negative. It's " + index);
@@ -831,12 +755,8 @@ public class TypeSafeInstructionFactory {
     if (iindex < 0) {
       throw new IllegalArgumentException("The iindex may not be negative. It's " + iindex);
     }
-    if (value == null) {
-      throw new IllegalArgumentException("Can't use null for the value to put");
-    }
-    if (array == null) {
-      throw new IllegalArgumentException("Can't write to array null");
-    }
+    checkArgument(value != null, "Can't use null for the value to put");
+    checkArgument(array != null, "Can't write to array null");
     if (index < 0) {
       throw new IllegalArgumentException(
           "The index in the array may not be negative. It's " + index);

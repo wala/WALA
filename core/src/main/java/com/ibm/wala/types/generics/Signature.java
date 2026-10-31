@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types.generics;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Objects;
 
 /**
@@ -23,9 +25,7 @@ public abstract class Signature {
   private final String s;
 
   public Signature(final String s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s cannot be null");
-    }
+    checkArgument(s != null, "s cannot be null");
     this.s = s;
   }
 

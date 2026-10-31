@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
@@ -162,9 +164,7 @@ public class FlatInstantiator implements IInstantiator {
       VariableKey key,
       Set<? extends SSAValue> seen,
       int currentDepth) {
-    if (T == null) {
-      throw new IllegalArgumentException("Can't create an instance of null");
-    }
+    checkArgument(T != null, "Can't create an instance of null");
     if (seen == null) {
       logger.debug("Empty seen");
       seen = new HashSet<>();
@@ -189,9 +189,7 @@ public class FlatInstantiator implements IInstantiator {
     final SSAValue instance;
     { // fetch new value
       if (asManaged) {
-        if (key == null) {
-          throw new IllegalArgumentException("A managed variable needs a key - null given.");
-        }
+        checkArgument(key != null, "A managed variable needs a key - null given.");
         if ((klass != null) && (klass.isAbstract() || klass.isInterface())) {
           // We'll need a phi
           instance = this.pm.getFree(T, key);
@@ -693,9 +691,8 @@ public class FlatInstantiator implements IInstantiator {
   public int createInstance(TypeReference type, Object... instantiatorArgs) {
     // public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey
     // key, Set<SSAValue> seen) {
-    if (!(instantiatorArgs[0] instanceof Boolean)) {
-      throw new IllegalArgumentException("Argument 0 to createInstance has to be boolean.");
-    }
+    checkArgument(
+        instantiatorArgs[0] instanceof Boolean, "Argument 0 to createInstance has to be boolean.");
     if (!((instantiatorArgs[1] == null) || (instantiatorArgs[1] instanceof VariableKey))) {
       throw new IllegalArgumentException(
           "Argument 1 to createInstance has to be null or an instance of VariableKey");

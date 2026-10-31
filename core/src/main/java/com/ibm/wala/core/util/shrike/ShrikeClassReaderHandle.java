@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.util.shrike;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.core.util.ref.CacheReference;
 import com.ibm.wala.shrike.shrikeCT.ClassReader;
@@ -38,9 +40,7 @@ public class ShrikeClassReaderHandle {
   private int hydrateCount = 0;
 
   public ShrikeClassReaderHandle(ModuleEntry entry) {
-    if (entry == null) {
-      throw new IllegalArgumentException("null entry");
-    }
+    checkArgument(entry != null, "null entry");
     this.entry = entry;
   }
 

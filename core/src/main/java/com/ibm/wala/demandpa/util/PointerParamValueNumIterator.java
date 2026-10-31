@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -63,9 +65,7 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
   int nextParameter;
 
   public PointerParamValueNumIterator(CGNode node) throws IllegalArgumentException {
-    if (node == null) {
-      throw new IllegalArgumentException("node == null");
-    }
+    checkArgument(node != null, "node == null");
     IR ir = node.getIR();
     ti = TypeInference.make(ir, false);
     symbolTable = ir.getSymbolTable();

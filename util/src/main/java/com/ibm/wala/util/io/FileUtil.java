@@ -43,9 +43,7 @@ public class FileUtil {
    */
   public static Collection<File> listFiles(
       String dir, @Language("RegExp") String regex, boolean recurse) {
-    if (dir == null) {
-      throw new IllegalArgumentException("dir is null");
-    }
+    checkArgument(dir != null, "dir is null");
     File d = new File(dir);
     Pattern p = null;
     if (regex != null) {

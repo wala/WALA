@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.InstanceOfAssertFactories.iterator;
@@ -596,9 +597,7 @@ public class CallGraphTest extends WalaTestCase {
    * @throws IllegalArgumentException if cg is null
    */
   public static Graph<MethodReference> squashCallGraph(final String name, final CallGraph cg) {
-    if (cg == null) {
-      throw new IllegalArgumentException("cg is null");
-    }
+    checkArgument(cg != null, "cg is null");
     final Set<MethodReference> nodes = HashSetFactory.make();
     for (CGNode cgNode : cg) {
       nodes.add(cgNode.getMethod().getReference());

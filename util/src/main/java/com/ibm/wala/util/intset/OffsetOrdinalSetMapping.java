@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
@@ -37,9 +39,7 @@ public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
   }
 
   public static <T> OffsetOrdinalSetMapping<T> make(OrdinalSetMapping<T> delegate, int offset) {
-    if (delegate == null) {
-      throw new IllegalArgumentException("null delegate");
-    }
+    checkArgument(delegate != null, "null delegate");
     return new OffsetOrdinalSetMapping<>(delegate, offset);
   }
 

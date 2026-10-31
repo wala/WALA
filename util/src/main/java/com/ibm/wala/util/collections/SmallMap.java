@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
 import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedNull;
 
@@ -167,9 +168,7 @@ public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
   @Override
   @SuppressWarnings({"unchecked", "unused"})
   public @Nullable V put(Object key, Object value) {
-    if (key == null) {
-      throw new IllegalArgumentException("null key");
-    }
+    checkArgument(key != null, "null key");
     if (keysAndValues != null) {
       for (int i = 0; i < size(); i++) {
         if (keysAndValues[i] != null && keysAndValues[i].equals(key)) {

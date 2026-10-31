@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -599,9 +601,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
     if (!built) {
       getMethod();
     }
-    if (asMethod == null) {
-      throw new IllegalArgumentException("asMethod may not be null");
-    }
+    checkArgument(asMethod != null, "asMethod may not be null");
     if (flags == null) {
       flags = Collections.emptySet();
     }

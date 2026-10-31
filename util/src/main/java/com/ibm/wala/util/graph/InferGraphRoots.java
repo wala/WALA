@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashSetFactory;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,9 +20,7 @@ import java.util.Set;
 public class InferGraphRoots {
 
   public static <T> Set<T> inferRoots(Graph<T> g) {
-    if (g == null) {
-      throw new IllegalArgumentException("g is null");
-    }
+    checkArgument(g != null, "g is null");
     HashSet<T> s = HashSetFactory.make();
     for (T node : g) {
       if (g.getPredNodeCount(node) == 0) {

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.jspecify.annotations.Nullable;
@@ -17,9 +19,7 @@ import org.jspecify.annotations.Nullable;
 /** A utility to efficiently compose an iterator and a singleton */
 public class IteratorPlusOne<T> implements Iterator<T> {
   public static <T> IteratorPlusOne<T> make(Iterator<? extends T> it, T xtra) {
-    if (it == null) {
-      throw new IllegalArgumentException("null it");
-    }
+    checkArgument(it != null, "null it");
     return new IteratorPlusOne<>(it, xtra);
   }
 

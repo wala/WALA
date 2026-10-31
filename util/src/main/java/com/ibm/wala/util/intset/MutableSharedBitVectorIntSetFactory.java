@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /** A factory for mutable shared bit vector int sets */
 public class MutableSharedBitVectorIntSetFactory
     implements MutableIntSetFactory<MutableSharedBitVectorIntSet> {
@@ -30,9 +32,7 @@ public class MutableSharedBitVectorIntSetFactory
 
   @Override
   public MutableSharedBitVectorIntSet makeCopy(IntSet x) throws IllegalArgumentException {
-    if (x == null) {
-      throw new IllegalArgumentException("x == null");
-    }
+    checkArgument(x != null, "x == null");
     if (x instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
       return new MutableSharedBitVectorIntSet(mutableSharedBitVectorIntSet);
     } else if (x instanceof SparseIntSet sparseIntSet) {

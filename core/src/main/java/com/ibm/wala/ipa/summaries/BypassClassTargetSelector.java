@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.summaries;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -45,9 +47,7 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
       IClassHierarchy cha,
       IClassLoader bypassLoader)
       throws IllegalArgumentException {
-    if (bypassLoader == null) {
-      throw new IllegalArgumentException("bypassLoader == null");
-    }
+    checkArgument(bypassLoader != null, "bypassLoader == null");
     assert bypassLoader instanceof BypassSyntheticClassLoader
         : "unexpected bypass loader: " + bypassLoader.getClass();
 
@@ -60,9 +60,7 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
   @Override
   public IClass getAllocatedTarget(CGNode caller, NewSiteReference site) {
 
-    if (site == null) {
-      throw new IllegalArgumentException("site is null");
-    }
+    checkArgument(site != null, "site is null");
     TypeReference nominalRef = site.getDeclaredType();
     if (DEBUG) {
       System.err.println(("BypassClassTargetSelector getAllocatedTarget: " + nominalRef));

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -50,9 +52,7 @@ public class HashMapFactory {
    * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
   public static <K, V> HashMap<K, V> make(Map<? extends K, ? extends V> t) {
-    if (t == null) {
-      throw new IllegalArgumentException("null t");
-    }
+    checkArgument(t != null, "null t");
     if (HashSetFactory.DEBUG) {
       return new ParanoidHashMap<>(t);
     } else {

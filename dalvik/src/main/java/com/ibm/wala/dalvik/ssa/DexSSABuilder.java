@@ -11,6 +11,8 @@
  */
 package com.ibm.wala.dalvik.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.Language;
@@ -95,9 +97,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
       boolean buildLocalMap,
       SSAPiNodePolicy piNodePolicy)
       throws IllegalArgumentException {
-    if (scfg == null) {
-      throw new IllegalArgumentException("scfg == null");
-    }
+    checkArgument(scfg != null, "scfg == null");
     return new DexSSABuilder(
         method, cfg, scfg, instructions, symbolTable, buildLocalMap, piNodePolicy);
   }

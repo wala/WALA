@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -24,9 +26,7 @@ public class PointerKeyComparator implements Comparator<PointerKey> {
   private final IClassHierarchy cha;
 
   public PointerKeyComparator(IClassHierarchy cha) {
-    if (cha == null) {
-      throw new IllegalArgumentException("null cha");
-    }
+    checkArgument(cha != null, "null cha");
     this.cha = cha;
   }
 

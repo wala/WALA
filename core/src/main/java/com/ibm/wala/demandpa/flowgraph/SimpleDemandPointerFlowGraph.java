@@ -11,6 +11,8 @@
 
 package com.ibm.wala.demandpa.flowgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.cfg.ControlFlowGraph;
@@ -136,9 +138,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
 
   public SimpleDemandPointerFlowGraph(
       CallGraph cg, HeapModel heapModel, MemoryAccessMap fam, IClassHierarchy cha) {
-    if (cg == null) {
-      throw new IllegalArgumentException("null cg");
-    }
+    checkArgument(cg != null, "null cg");
     this.cg = cg;
     this.heapModel = heapModel;
     this.fam = fam;
@@ -191,10 +191,9 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
 
   @Override
   public IntSet getSuccNodeNumbers(Object node) throws IllegalArgumentException {
-    if (node instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey) {
-      throw new IllegalArgumentException(
-          "node instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey");
-    }
+    checkArgument(
+        !(node instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey),
+        "node instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey");
     return super.getSuccNodeNumbers(node);
   }
 
@@ -209,10 +208,9 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
 
   @Override
   public Iterator<Object> getPredNodes(Object N) throws IllegalArgumentException {
-    if (N instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey) {
-      throw new IllegalArgumentException(
-          "N instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey");
-    }
+    checkArgument(
+        !(N instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey),
+        "N instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey");
     return super.getPredNodes(N);
   }
 

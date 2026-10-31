@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.Serial;
 import java.util.Arrays;
 import org.jspecify.annotations.Nullable;
@@ -69,9 +71,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @throws IllegalArgumentException if s is null
    */
   public OffsetBitVector(OffsetBitVector s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     offset = s.offset;
     bits = s.bits.clone();
   }
@@ -234,9 +234,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   @Override
   public boolean intersectionEmpty(OffsetBitVector set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (this == set) {
       return isZero();
     }
@@ -264,9 +262,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   @Override
   public boolean sameBits(OffsetBitVector set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (this == set) { // should help alias analysis
       return true;
     }
@@ -316,9 +312,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   @Override
   public boolean isSubset(OffsetBitVector other) throws IllegalArgumentException {
-    if (other == null) {
-      throw new IllegalArgumentException("other == null");
-    }
+    checkArgument(other != null, "other == null");
     if (this == other) { // should help alias analysis
       return true;
     }
@@ -355,9 +349,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @throws IllegalArgumentException if set is null
    */
   public void copyBits(OffsetBitVector set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set is null");
-    }
+    checkArgument(set != null, "set is null");
     super.copyBits(set);
     offset = set.offset;
   }
@@ -370,9 +362,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   @Override
   public void and(OffsetBitVector set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (this == set) {
       return;
     }
@@ -403,9 +393,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   @Override
   public void or(OffsetBitVector set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (this == set) { // should help alias analysis
       return;
     }
@@ -429,9 +417,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   @Override
   public void xor(OffsetBitVector set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (this == set) {
       clearAll();
       return;
@@ -450,9 +436,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 
   @Override
   public void andNot(OffsetBitVector set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (this == set) {
       clearAll();
       return;
@@ -482,9 +466,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   public static OffsetBitVector and(OffsetBitVector b1, OffsetBitVector b2)
       throws IllegalArgumentException {
-    if (b2 == null) {
-      throw new IllegalArgumentException("b2 == null");
-    }
+    checkArgument(b2 != null, "b2 == null");
     OffsetBitVector b = new OffsetBitVector(b1);
     b.and(b2);
     return b;
@@ -497,9 +479,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   public static OffsetBitVector or(OffsetBitVector b1, OffsetBitVector b2)
       throws IllegalArgumentException {
-    if (b2 == null) {
-      throw new IllegalArgumentException("b2 == null");
-    }
+    checkArgument(b2 != null, "b2 == null");
     OffsetBitVector b = new OffsetBitVector(b1);
     b.or(b2);
     return b;

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashSetFactory;
 import java.io.File;
 import java.util.Iterator;
@@ -26,9 +28,7 @@ public abstract class DirectoryTreeModule implements Module {
    */
   DirectoryTreeModule(File root) throws IllegalArgumentException {
     this.root = root;
-    if (root == null) {
-      throw new IllegalArgumentException("null root");
-    }
+    checkArgument(root != null, "null root");
     if (!root.exists()) {
       throw new IllegalArgumentException("root does not exist " + root);
     }

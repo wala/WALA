@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -187,9 +189,7 @@ public abstract class BitVectorBase<T extends BitVectorBase> implements Cloneabl
    * @throws IllegalArgumentException if set is null
    */
   public void copyBits(BitVectorBase set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set is null");
-    }
+    checkArgument(set != null, "set is null");
     int setLength = set.bits.length;
     bits = new int[setLength];
     for (int i = setLength - 1; i >= 0; ) {

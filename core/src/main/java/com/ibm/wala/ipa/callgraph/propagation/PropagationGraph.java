@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.fixedpoint.impl.GeneralStatement;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.AbstractStatement;
@@ -169,9 +171,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
    * @throws IllegalArgumentException if eq is null
    */
   public void addStatement(GeneralStatement<PointsToSetVariable> eq) {
-    if (eq == null) {
-      throw new IllegalArgumentException("eq is null");
-    }
+    checkArgument(eq != null, "eq is null");
     PointsToSetVariable lhs = eq.getLHS();
     delegateGraph.addEquation(eq);
     delegateStatements.add(eq);
@@ -189,9 +189,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   public void addStatement(UnaryStatement<PointsToSetVariable> eq) throws IllegalArgumentException {
-    if (eq == null) {
-      throw new IllegalArgumentException("eq == null");
-    }
+    checkArgument(eq != null, "eq == null");
     if (useImplicitRepresentation(eq)) {
       addImplicitStatement(eq);
     } else {
@@ -404,9 +402,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   @Override
   public void removeStatement(IFixedPointStatement<PointsToSetVariable> eq)
       throws IllegalArgumentException {
-    if (eq == null) {
-      throw new IllegalArgumentException("eq == null");
-    }
+    checkArgument(eq != null, "eq == null");
     if (useImplicitRepresentation(eq)) {
       removeImplicitStatement((UnaryStatement<PointsToSetVariable>) eq);
     } else {
@@ -596,9 +592,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
   @Override
   public Iterator<AbstractStatement> getStatementsThatUse(PointsToSetVariable v) {
-    if (v == null) {
-      throw new IllegalArgumentException("v is null");
-    }
+    checkArgument(v != null, "v is null");
     int number = v.getGraphNodeId();
     if (number == -1) {
       return EmptyIterator.instance();
@@ -623,9 +617,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement<PointsToSetVariable, ?>> getStatementsThatDef(
       PointsToSetVariable v) {
-    if (v == null) {
-      throw new IllegalArgumentException("v is null");
-    }
+    checkArgument(v != null, "v is null");
     int number = v.getGraphNodeId();
     if (number == -1) {
       return EmptyIterator.instance();
@@ -655,9 +647,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
    */
   @Override
   public int getNumberOfStatementsThatUse(PointsToSetVariable v) {
-    if (v == null) {
-      throw new IllegalArgumentException("v is null");
-    }
+    checkArgument(v != null, "v is null");
     int number = v.getGraphNodeId();
     if (number == -1) {
       return 0;
@@ -674,9 +664,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
   @Override
   public int getNumberOfStatementsThatDef(PointsToSetVariable v) {
-    if (v == null) {
-      throw new IllegalArgumentException("v is null");
-    }
+    checkArgument(v != null, "v is null");
     int number = v.getGraphNodeId();
     if (number == -1) {
       return 0;
@@ -724,9 +712,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   @Override
   public boolean containsStatement(IFixedPointStatement<PointsToSetVariable> eq)
       throws IllegalArgumentException {
-    if (eq == null) {
-      throw new IllegalArgumentException("eq == null");
-    }
+    checkArgument(eq != null, "eq == null");
     if (useImplicitRepresentation(eq)) {
       UnaryStatement<PointsToSetVariable> ueq = (UnaryStatement<PointsToSetVariable>) eq;
       return containsImplicitStatement(ueq);
@@ -764,9 +750,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   @Override
   public void addStatement(IFixedPointStatement<PointsToSetVariable> statement)
       throws IllegalArgumentException, UnimplementedError {
-    if (statement == null) {
-      throw new IllegalArgumentException("statement == null");
-    }
+    checkArgument(statement != null, "statement == null");
     if (statement
         instanceof UnaryStatement<PointsToSetVariable> pointsToSetVariableUnaryStatement) {
       addStatement(pointsToSetVariableUnaryStatement);

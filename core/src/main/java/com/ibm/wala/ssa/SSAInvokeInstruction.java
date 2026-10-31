@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
@@ -52,9 +54,7 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
 
   public static void assertParamsKosher(int result, int[] params, CallSiteReference site)
       throws IllegalArgumentException {
-    if (site == null) {
-      throw new IllegalArgumentException("site cannot be null");
-    }
+    checkArgument(site != null, "site cannot be null");
     assert !site.getDeclaredTarget().getReturnType().equals(TypeReference.Void) || result == -1
         : "bogus call to " + site;
 
@@ -81,9 +81,7 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
    */
   @Override
   public void visit(IVisitor v) {
-    if (v == null) {
-      throw new IllegalArgumentException("v is null");
-    }
+    checkArgument(v != null, "v is null");
     v.visitInvoke(this);
   }
 

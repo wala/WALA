@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashMapFactory;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -82,9 +84,7 @@ public class BitVectorRepository {
    * @throws IllegalArgumentException if value is null
    */
   public static synchronized BitVectorIntSet findOrCreateSharedSubset(BitVectorIntSet value) {
-    if (value == null) {
-      throw new IllegalArgumentException("value is null");
-    }
+    checkArgument(value != null, "value is null");
     if (STATS) {
       queries++;
       if (queries % STATS_WINDOW == 0) {

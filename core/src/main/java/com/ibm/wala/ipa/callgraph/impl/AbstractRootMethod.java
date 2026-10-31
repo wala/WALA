@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -91,9 +93,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     this.cha = cha;
     this.cache = cache;
     this.insts = declaringClass.getClassLoader().getInstructionFactory();
-    if (cache == null) {
-      throw new IllegalArgumentException("null cache");
-    }
+    checkArgument(cache != null, "null cache");
     // I'd like to enforce that declaringClass is a FakeRootClass ... but CASt would currently
     // break.
     // so checking dynamically instead.
@@ -154,9 +154,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
    * @throws IllegalArgumentException if site is null
    */
   public SSAAbstractInvokeInstruction addInvocation(int[] params, CallSiteReference site) {
-    if (site == null) {
-      throw new IllegalArgumentException("site is null");
-    }
+    checkArgument(site != null, "site is null");
     CallSiteReference newSite =
         CallSiteReference.make(
             statements.size(), site.getDeclaredTarget(), site.getInvocationCode());
@@ -242,9 +240,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
    * @throws IllegalArgumentException if T is null
    */
   private SSANewInstruction addAllocation(TypeReference T, boolean invokeCtor) {
-    if (T == null) {
-      throw new IllegalArgumentException("T is null");
-    }
+    checkArgument(T != null, "T is null");
     int instance = nextLocal++;
     SSANewInstruction result = null;
 

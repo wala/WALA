@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.typeInference;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -23,9 +25,7 @@ public class PointType extends TypeAbstraction {
    * @throws IllegalArgumentException if type is null
    */
   public PointType(IClass type) {
-    if (type == null) {
-      throw new IllegalArgumentException("type is null");
-    }
+    checkArgument(type != null, "type is null");
     this.type = type;
     assert type.getReference().isReferenceType();
   }

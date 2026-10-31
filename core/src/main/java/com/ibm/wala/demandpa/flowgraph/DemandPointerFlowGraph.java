@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -473,9 +475,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
    */
   public static NewMultiDimInfo getInfoForNewMultiDim(
       SSANewInstruction instruction, HeapModel heapModel, CGNode node) {
-    if (heapModel == null) {
-      throw new IllegalArgumentException("null heapModel");
-    }
+    checkArgument(heapModel != null, "null heapModel");
     Collection<Pair<PointerKey, InstanceKey>> newInstrs = HashSetFactory.make();
     Collection<Pair<PointerKey, PointerKey>> arrStoreInstrs = HashSetFactory.make();
     InstanceKey iKey = heapModel.getInstanceKeyForAllocation(node, instruction.getNewSite());

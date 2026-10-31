@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.escape;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -56,9 +58,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
   public boolean mayEscape(MethodReference allocMethod, int allocPC, MethodReference m)
       throws WalaException {
 
-    if (allocMethod == null) {
-      throw new IllegalArgumentException("null allocMethod");
-    }
+    checkArgument(allocMethod != null, "null allocMethod");
     // nodes:= set of call graph nodes representing method m
     Set<CGNode> nodes = cg.getNodes(m);
     if (nodes.isEmpty()) {
@@ -126,9 +126,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
    * @return the NewSiteReference for the allocation
    */
   static NewSiteReference findAlloc(CGNode n, int allocPC) throws WalaException {
-    if (n == null) {
-      throw new IllegalArgumentException("null n");
-    }
+    checkArgument(n != null, "null n");
     for (NewSiteReference site : Iterator2Iterable.make(n.iterateNewSites())) {
       if (site.getProgramCounter() == allocPC) {
         return site;

@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedNull;
 
 import java.util.Iterator;
@@ -32,12 +33,8 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
    * @param f a filter which defines which elements belong to the generated iterator
    */
   public FilterIterator(Iterator<? extends T> i, Predicate<? super T> f) {
-    if (i == null) {
-      throw new IllegalArgumentException("null i");
-    }
-    if (f == null) {
-      throw new IllegalArgumentException("null f");
-    }
+    checkArgument(i != null, "null i");
+    checkArgument(f != null, "null f");
     this.i = i;
     this.f = f;
     advance();

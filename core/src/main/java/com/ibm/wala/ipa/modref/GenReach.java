@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.modref;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFramework;
 import com.ibm.wala.dataflow.graph.BitVectorUnion;
@@ -38,9 +40,7 @@ public class GenReach<T, L> extends BitVectorFramework<T, L> {
 
   private static <T, L> OrdinalSetMapping<L> makeDomain(Map<T, Collection<L>> gen) {
     MutableMapping<L> result = MutableMapping.make();
-    if (gen == null) {
-      throw new IllegalArgumentException("null gen");
-    }
+    checkArgument(gen != null, "null gen");
     for (Collection<L> c : gen.values()) {
       for (L p : c) {
         result.add(p);

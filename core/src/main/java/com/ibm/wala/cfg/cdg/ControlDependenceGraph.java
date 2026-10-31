@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cfg.cdg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.MinimalCFG;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -219,9 +221,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
    * @param wantEdgeLabels whether to compute edge labels for CDG edges
    */
   public ControlDependenceGraph(MinimalCFG<T> cfg, boolean wantEdgeLabels) {
-    if (cfg == null) {
-      throw new IllegalArgumentException("null cfg");
-    }
+    checkArgument(cfg != null, "null cfg");
     this.cfg = cfg;
     this.edgeManager = constructGraphEdges(buildControlDependence(wantEdgeLabels));
   }

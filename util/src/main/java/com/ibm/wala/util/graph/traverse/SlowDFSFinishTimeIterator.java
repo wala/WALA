@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.Graph;
@@ -36,9 +38,7 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
    * @throws IllegalArgumentException if G is null
    */
   public SlowDFSFinishTimeIterator(Graph<T> G, T N) throws IllegalArgumentException {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     if (!G.containsNode(N)) {
       throw new IllegalArgumentException("source node not in graph: " + N);
     }
@@ -53,12 +53,8 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
    * @param nodes the set of nodes from which to start searching
    */
   public SlowDFSFinishTimeIterator(Graph<T> G, @Nullable Iterator<? extends T> nodes) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
-    if (nodes == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
+    checkArgument(nodes != null, "G is null");
     init(G, nodes);
   }
 

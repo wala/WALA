@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.intset.IntSet;
 import java.util.Iterator;
@@ -45,9 +47,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T>
 
   @Override
   public int getNumber(@Nullable T N) {
-    if (N == null) {
-      throw new IllegalArgumentException("N cannot be null");
-    }
+    checkArgument(N != null, "N cannot be null");
     return getNodeManager().getNumber(N);
   }
 

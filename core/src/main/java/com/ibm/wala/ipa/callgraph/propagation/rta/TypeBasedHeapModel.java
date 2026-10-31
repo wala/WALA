@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.ArrayClass;
@@ -75,9 +77,7 @@ public class TypeBasedHeapModel implements HeapModel {
    * @throws IllegalArgumentException if cg is null
    */
   public TypeBasedHeapModel(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) {
-    if (cg == null) {
-      throw new IllegalArgumentException("cg is null");
-    }
+    checkArgument(cg != null, "cg is null");
     iKeyFactory = new ClassBasedInstanceKeys(options, cg.getClassHierarchy());
     this.klasses = klasses;
     this.cg = cg;

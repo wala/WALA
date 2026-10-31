@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
@@ -137,9 +139,7 @@ public final class AndroidEntryPointLocator {
    * @return partially sorted list of applicable EntryPoints
    */
   public List<AndroidEntryPoint> getEntryPoints(final IClassHierarchy cha) {
-    if (cha == null) {
-      throw new IllegalArgumentException("I need a ClassHierarchy to search");
-    }
+    checkArgument(cha != null, "I need a ClassHierarchy to search");
 
     Set<AndroidEntryPoint> entryPoints = new HashSet<>();
 

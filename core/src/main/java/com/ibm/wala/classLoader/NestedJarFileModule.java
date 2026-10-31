@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Objects;
@@ -25,12 +27,8 @@ public class NestedJarFileModule extends AbstractNestedJarFileModule {
     super(parent);
     this.parent = parent;
     this.entry = entry;
-    if (parent == null) {
-      throw new IllegalArgumentException("null parent");
-    }
-    if (entry == null) {
-      throw new IllegalArgumentException("null entry");
-    }
+    checkArgument(parent != null, "null parent");
+    checkArgument(entry != null, "null entry");
   }
 
   @Override

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.gson.Gson;
 import com.ibm.wala.classLoader.ArrayClassLoader;
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
@@ -269,9 +271,7 @@ public class AnalysisScope {
   /** Add a module to the scope for a loader */
   @SuppressWarnings("unused")
   public void addToScope(ClassLoaderReference loader, Module m) {
-    if (m == null) {
-      throw new IllegalArgumentException("null m");
-    }
+    checkArgument(m != null, "null m");
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     if (DEBUG_LEVEL > 0) {
       System.err.println(("AnalysisScope: add module " + m));
@@ -281,9 +281,7 @@ public class AnalysisScope {
 
   /** Add all modules from another scope */
   public void addToScope(AnalysisScope other) {
-    if (other == null) {
-      throw new IllegalArgumentException("null other");
-    }
+    checkArgument(other != null, "null other");
     for (ClassLoaderReference loader : other.getLoaders()) {
       for (Module m : other.getModules(loader)) {
         addToScope(loader, m);
@@ -297,9 +295,7 @@ public class AnalysisScope {
    */
   @SuppressWarnings("unused")
   public void addToScopeHead(ClassLoaderReference loader, Module m) {
-    if (m == null) {
-      throw new IllegalArgumentException("null m");
-    }
+    checkArgument(m != null, "null m");
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     if (DEBUG_LEVEL > 0) {
       System.err.println(("AnalysisScope: add overriding module " + m));
@@ -312,12 +308,8 @@ public class AnalysisScope {
    * @throws IllegalArgumentException if name is null
    */
   public ClassLoaderReference getLoader(Atom name) throws IllegalArgumentException {
-    if (name == null) {
-      throw new IllegalArgumentException("name is null");
-    }
-    if (name.length() == 0) {
-      throw new IllegalArgumentException("empty atom is not a legal class loader name");
-    }
+    checkArgument(name != null, "name is null");
+    checkArgument(name.length() != 0, "empty atom is not a legal class loader name");
     /*
      * if (Assertions.verifyAssertions) { if (name.getVal(0) > 'Z') { Assertions._assert(name.getVal(0) <= 'Z',
      * "Classloader name improperly capitalised?  (" + name + ")"); } }
@@ -338,12 +330,8 @@ public class AnalysisScope {
   public void setLoaderImpl(
       ClassLoaderReference ref,
       @org.intellij.lang.annotations.Language("jvm-class-name") String implClass) {
-    if (ref == null) {
-      throw new IllegalArgumentException("null ref");
-    }
-    if (implClass == null) {
-      throw new IllegalArgumentException("null implClass");
-    }
+    checkArgument(ref != null, "null ref");
+    checkArgument(implClass != null, "null implClass");
     loaderImplByRef.put(ref, implClass);
   }
 
@@ -414,9 +402,7 @@ public class AnalysisScope {
 
   /** Utility function. Useful when parsing input. */
   public MethodReference findMethod(Atom loader, String klass, Atom name, ImmutableByteArray desc) {
-    if (desc == null) {
-      throw new IllegalArgumentException("null desc");
-    }
+    checkArgument(desc != null, "null desc");
     ClassLoaderReference clr = getLoader(loader);
     Descriptor ddesc = Descriptor.findOrCreate(languages.get(clr.language()), desc);
     TypeReference type = TypeReference.findOrCreate(clr, TypeName.string2TypeName(klass));

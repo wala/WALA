@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -43,9 +45,7 @@ public class GraphSlicer {
    *     reachable.
    */
   public static <T> Set<T> slice(Graph<T> g, Predicate<T> p) {
-    if (g == null) {
-      throw new IllegalArgumentException("g is null");
-    }
+    checkArgument(g != null, "g is null");
     HashSet<T> roots = HashSetFactory.make();
     for (T o : g) {
       if (p.test(o)) {
@@ -58,9 +58,7 @@ public class GraphSlicer {
 
   /** Prune a graph to only the nodes accepted by the {@link Predicate} p */
   public static <T> Graph<T> prune(final Graph<T> g, final Predicate<T> p) {
-    if (g == null) {
-      throw new IllegalArgumentException("g is null");
-    }
+    checkArgument(g != null, "g is null");
     final NodeManager<T> n =
         new NodeManager<>() {
           int nodeCount = -1;

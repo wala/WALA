@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.stackMachine;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.cfg.ShrikeCFG.BasicBlock;
 import com.ibm.wala.core.util.CancelRuntimeException;
@@ -88,9 +90,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   public static final boolean OPTIMISTIC = true;
 
   protected AbstractIntStackMachine(final ShrikeCFG G) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     this.cfg = G;
   }
 

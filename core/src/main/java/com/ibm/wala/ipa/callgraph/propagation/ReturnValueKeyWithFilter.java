@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
@@ -22,9 +24,7 @@ public class ReturnValueKeyWithFilter extends ReturnValueKey implements Filtered
 
   public ReturnValueKeyWithFilter(CGNode node, TypeFilter typeFilter) {
     super(node);
-    if (typeFilter == null) {
-      throw new IllegalArgumentException("null typeFilter");
-    }
+    checkArgument(typeFilter != null, "null typeFilter");
     this.typeFilter = typeFilter;
   }
 

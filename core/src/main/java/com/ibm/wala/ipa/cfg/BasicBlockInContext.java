@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.cfg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -29,9 +31,7 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   private final CGNode node;
 
   public BasicBlockInContext(CGNode node, T bb) {
-    if (bb == null) {
-      throw new IllegalArgumentException("null bb");
-    }
+    checkArgument(bb != null, "null bb");
     this.delegate = bb;
     this.node = node;
   }

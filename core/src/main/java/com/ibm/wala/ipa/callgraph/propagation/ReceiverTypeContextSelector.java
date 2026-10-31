@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.reflection.JavaTypeContext;
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -31,9 +33,7 @@ public class ReceiverTypeContextSelector implements ContextSelector {
     if (site.isStatic()) {
       return Everywhere.EVERYWHERE;
     } else {
-      if (receiver == null) {
-        throw new IllegalArgumentException("receiver is null");
-      }
+      checkArgument(receiver != null, "receiver is null");
       PointType P = new PointType(receiver[0].concreteType());
       return new JavaTypeContext(P);
     }

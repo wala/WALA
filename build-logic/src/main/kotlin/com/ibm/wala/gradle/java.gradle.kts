@@ -280,6 +280,7 @@ tasks.withType<JavaCompile>().configureEach {
           "PreferCharsetOverload",
           "PreferInstanceofOverGetKind",
           "PreferInstanceofOverGetKind",
+          "PreferPreconditions",
           "PreferTestParameter",
           "PreferThrowsTag",
           "PrimitiveAtomicReference",

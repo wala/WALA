@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.util.ref;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
@@ -46,10 +48,10 @@ public final class CacheReference {
     }
     return switch (choice) {
       case SOFT -> {
-        if (!(reference instanceof SoftReference<?> softReference)) {
-          throw new IllegalArgumentException(
-              "not ( reference instanceof java.lang.ref.SoftReference ) ");
-        }
+        checkArgument(
+            reference instanceof SoftReference<?>,
+            "not ( reference instanceof java.lang.ref.SoftReference ) ");
+        SoftReference<?> softReference = (SoftReference<?>) reference;
         yield softReference.get();
       }
       case WEAK -> ((WeakReference<?>) reference).get();

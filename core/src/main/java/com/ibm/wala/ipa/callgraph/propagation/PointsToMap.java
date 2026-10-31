@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.IVector;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -77,9 +79,7 @@ public class PointsToMap {
 
   /** If p is unified, returns the representative for p. */
   public PointsToSetVariable getPointsToSet(PointerKey p) {
-    if (p == null) {
-      throw new IllegalArgumentException("null p");
-    }
+    checkArgument(p != null, "null p");
     if (isImplicit(p)) {
       throw new IllegalArgumentException(
           "unexpected: shouldn't ask a PointsToMap for an implicit points-to-set: " + p);
@@ -108,9 +108,7 @@ public class PointsToMap {
 
   /** record that a particular points-to-set is represented implicitly */
   public void recordImplicit(PointerKey key) {
-    if (key == null) {
-      throw new IllegalArgumentException("null key");
-    }
+    checkArgument(key != null, "null key");
     int i = findOrCreateIndex(key);
     pointsToSets.set(i, IMPLICIT);
   }
@@ -130,9 +128,7 @@ public class PointsToMap {
 
   /** record that a particular points-to-set has been unioned with another */
   public void recordUnified(PointerKey key) {
-    if (key == null) {
-      throw new IllegalArgumentException("null key");
-    }
+    checkArgument(key != null, "null key");
     int i = findOrCreateIndex(key);
     pointsToSets.set(i, UNIFIED);
   }
@@ -144,9 +140,7 @@ public class PointsToMap {
    * from which the transitive closure flows.
    */
   public void recordTransitiveRoot(PointerKey key) {
-    if (key == null) {
-      throw new IllegalArgumentException("null key");
-    }
+    checkArgument(key != null, "null key");
     int i = findOrCreateIndex(key);
     transitiveRoots.set(i);
   }
@@ -161,9 +155,7 @@ public class PointsToMap {
   }
 
   public boolean isUnified(PointerKey p) {
-    if (p == null) {
-      throw new IllegalArgumentException("null p");
-    }
+    checkArgument(p != null, "null p");
     int i = findOrCreateIndex(p);
     return pointsToSets.get(i) == UNIFIED;
   }
@@ -201,9 +193,7 @@ public class PointsToMap {
    * @throws IllegalArgumentException if s is null
    */
   public void unify(IntSet s) throws IllegalArgumentException {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     if (s.size() <= 1) {
       throw new IllegalArgumentException("Can't unify set of size " + s.size());
     }

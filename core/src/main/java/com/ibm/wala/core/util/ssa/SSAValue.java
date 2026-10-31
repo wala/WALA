@@ -42,6 +42,8 @@
 */
 package com.ibm.wala.core.util.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -183,12 +185,8 @@ public class SSAValue {
       throw new IllegalArgumentException(
           "A SSA-Value can't have a negative number, " + number + "given");
     }
-    if (type == null) {
-      throw new IllegalArgumentException("The type for the SSA-Variable may not be null");
-    }
-    if (type.equals(TypeReference.Void)) {
-      throw new IllegalArgumentException("You can't create a SSA-Variable of type void");
-    }
+    checkArgument(type != null, "The type for the SSA-Variable may not be null");
+    checkArgument(!type.equals(TypeReference.Void), "You can't create a SSA-Variable of type void");
 
     this.type = type;
     this.number = number;

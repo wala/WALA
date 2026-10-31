@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types.annotations;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.shrike.shrikeCT.AnnotationsReader;
 import com.ibm.wala.shrike.shrikeCT.AnnotationsReader.AnnotationAttribute;
 import com.ibm.wala.shrike.shrikeCT.AnnotationsReader.ElementValue;
@@ -50,9 +52,7 @@ public class Annotation {
       Map<String, ElementValue> namedArguments,
       Pair<TypeReference, Object>[] unnamedArguments) {
     this.type = type;
-    if (namedArguments == null) {
-      throw new IllegalArgumentException("namedArguments is null");
-    }
+    checkArgument(namedArguments != null, "namedArguments is null");
     this.namedArguments = namedArguments;
     this.unnamedArguments = unnamedArguments;
   }

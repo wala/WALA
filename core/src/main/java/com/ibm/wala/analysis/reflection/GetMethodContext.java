@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.reflection;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.classLoader.IClass;
@@ -58,13 +60,9 @@ public class GetMethodContext implements Context {
    * @param name the name of the method
    */
   public GetMethodContext(TypeAbstraction type, ConstantKey<String> name) {
-    if (type == null) {
-      throw new IllegalArgumentException("null == type");
-    }
+    checkArgument(type != null, "null == type");
     this.type = type;
-    if (name == null) {
-      throw new IllegalArgumentException("null == name");
-    }
+    checkArgument(name != null, "null == name");
     this.name = name;
   }
 
