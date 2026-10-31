@@ -58,16 +58,6 @@ public class IntraproceduralExceptionAnalysis {
     this.exceptions = Collections.emptySet();
   }
 
-  /**
-   * You can use this method, if you don't have a call graph, but want some exception analysis. But
-   * as no pointer analysis is given, we can not consider throw instructions.
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public IntraproceduralExceptionAnalysis(
-      IR ir, ExceptionFilter<SSAInstruction> filter, ClassHierarchy cha) {
-    this(ir, filter, cha, null, null);
-  }
-
   /** Create and compute intraprocedural exception analysis. (IR from node.getIR() will be used.) */
   public IntraproceduralExceptionAnalysis(
       CGNode node,

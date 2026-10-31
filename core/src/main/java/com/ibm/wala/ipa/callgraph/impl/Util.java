@@ -18,7 +18,6 @@ import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -99,28 +98,6 @@ public class Util {
    * @throws IllegalArgumentException if cl is null
    * @throws IllegalArgumentException if options is null
    * @throws IllegalArgumentException if scope is null
-   * @deprecated This method is being replaced. Please
-   *     <p>Use {@link Util#addBypassLogic(AnalysisOptions, ClassLoader, String, IClassHierarchy)}
-   *     instead
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static void addBypassLogic(
-      AnalysisOptions options,
-      @SuppressWarnings("unused") AnalysisScope scope,
-      ClassLoader cl,
-      String xmlFile,
-      IClassHierarchy cha)
-      throws IllegalArgumentException {
-    addBypassLogic(options, cl, xmlFile, cha);
-  }
-
-  /**
-   * Modify an options object to include bypass logic as specified by a an XML file.
-   *
-   * @throws IllegalArgumentException if scope is null
-   * @throws IllegalArgumentException if cl is null
-   * @throws IllegalArgumentException if options is null
-   * @throws IllegalArgumentException if scope is null
    */
   public static void addBypassLogic(
       AnalysisOptions options, ClassLoader cl, String xmlFile, IClassHierarchy cha)
@@ -136,22 +113,6 @@ public class Util {
       System.err.println("Could not close XML method summary reader: " + e.getLocalizedMessage());
       e.printStackTrace();
     }
-  }
-
-  /**
-   * @deprecated Method will be replaced. Please
-   *     <p>Use {@link Util#addBypassLogic(AnalysisOptions, ClassLoader, XMLMethodSummaryReader,
-   *     IClassHierarchy)} instead
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static void addBypassLogic(
-      AnalysisOptions options,
-      @SuppressWarnings("unused") AnalysisScope scope,
-      ClassLoader cl,
-      XMLMethodSummaryReader summary,
-      IClassHierarchy cha)
-      throws IllegalArgumentException {
-    addBypassLogic(options, cl, summary, cha);
   }
 
   public static void addBypassLogic(
@@ -216,19 +177,6 @@ public class Util {
   /**
    * @return set of all eligible Main classes in the class hierarchy
    * @throws IllegalArgumentException if scope is null
-   * @deprecated
-   *     <p>Use {@link Util#makeMainEntrypoints(IClassHierarchy)} instead
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static Iterable<Entrypoint> makeMainEntrypoints(
-      @SuppressWarnings("unused") AnalysisScope scope, IClassHierarchy cha) {
-
-    return makeMainEntrypoints(cha);
-  }
-
-  /**
-   * @return set of all eligible Main classes in the class hierarchy
-   * @throws IllegalArgumentException if scope is null
    */
   public static Iterable<Entrypoint> makeMainEntrypoints(IClassHierarchy cha) {
     return makeMainEntrypoints(cha.getScope().getApplicationLoader(), cha);
@@ -256,35 +204,11 @@ public class Util {
   }
 
   /**
-   * @deprecated
-   *     <p>Use {@link Util#makeMainEntrypoints(IClassHierarchy, String)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static Iterable<Entrypoint> makeMainEntrypoints(
-      @SuppressWarnings("unused") AnalysisScope scope,
-      final IClassHierarchy cha,
-      String className) {
-    return makeMainEntrypoints(scope, cha, new String[] {className});
-  }
-
-  /**
    * @return Entrypoints for a set of J2SE Main classes
    */
   public static Iterable<Entrypoint> makeMainEntrypoints(
       final IClassHierarchy cha, String className) {
     return makeMainEntrypoints(cha, new String[] {className});
-  }
-
-  /**
-   * @deprecated Please
-   *     <p>Use {@link Util#makeMainEntrypoints(IClassHierarchy, String[])}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static Iterable<Entrypoint> makeMainEntrypoints(
-      @SuppressWarnings("unused") final AnalysisScope scope,
-      final IClassHierarchy cha,
-      final String[] classNames) {
-    return makeMainEntrypoints(cha, classNames);
   }
 
   /**
@@ -408,24 +332,6 @@ public class Util {
    * @return an RTA Call Graph builder.
    * @param options options that govern call graph construction
    * @param cha governing class hierarchy
-   * @param scope representation of the analysis scope
-   * @deprecated
-   *     <p>Use {@link Util#makeRTABuilder(AnalysisOptions, IAnalysisCacheView, IClassHierarchy)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static CallGraphBuilder<InstanceKey> makeRTABuilder(
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope) {
-
-    return makeRTABuilder(options, cache, cha);
-  }
-
-  /**
-   * @return an RTA Call Graph builder.
-   * @param options options that govern call graph construction
-   * @param cha governing class hierarchy
    */
   public static CallGraphBuilder<InstanceKey> makeRTABuilder(
       AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
@@ -439,55 +345,11 @@ public class Util {
   /**
    * @param options options that govern call graph construction
    * @param cha governing class hierarchy
-   * @param scope representation of the analysis scope
-   * @return a 0-CFA Call Graph Builder.
-   * @deprecated
-   *     <p>Use {@link Util#makeZeroCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
-      Language l,
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope) {
-    return makeZeroCFABuilder(l, options, cache, cha);
-  }
-
-  /**
-   * @param options options that govern call graph construction
-   * @param cha governing class hierarchy
    * @return a 0-CFA Call Graph Builder.
    */
   public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
       Language l, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
     return makeZeroCFABuilder(l, options, cache, cha, null, null);
-  }
-
-  /**
-   * @param options options that govern call graph construction
-   * @param cha governing class hierarchy
-   * @param scope representation of the analysis scope
-   * @param customSelector user-defined context selector, or null if none
-   * @param customInterpreter user-defined context interpreter, or null if none
-   * @return a 0-CFA Call Graph Builder.
-   * @throws IllegalArgumentException if options is null
-   * @deprecated
-   *     <p>Use {@link Util#makeZeroCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy, ContextSelector, SSAContextInterpreter)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
-      Language l,
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope,
-      ContextSelector customSelector,
-      SSAContextInterpreter customInterpreter) {
-
-    return makeZeroCFABuilder(l, options, cache, cha, customSelector, customInterpreter);
   }
 
   /**
@@ -518,55 +380,10 @@ public class Util {
    * @return a 0-1-CFA Call Graph Builder.
    * @param options options that govern call graph construction
    * @param cha governing class hierarchy
-   * @param scope representation of the analysis scope
-   * @deprecated
-   *     <p>Use {@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(
-      Language l,
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope) {
-    return makeZeroOneCFABuilder(l, options, cache, cha, null, null);
-  }
-
-  /**
-   * @return a 0-1-CFA Call Graph Builder.
-   * @param options options that govern call graph construction
-   * @param cha governing class hierarchy
    */
   public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(
       Language l, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
     return makeZeroOneCFABuilder(l, options, cache, cha, null, null);
-  }
-
-  /**
-   * @param options options that govern call graph construction
-   * @param cha governing class hierarchy
-   * @param scope representation of the analysis scope
-   * @param customSelector user-defined context selector, or null if none
-   * @param customInterpreter user-defined context interpreter, or null if none
-   * @return a 0-1-CFA Call Graph Builder.
-   * @throws IllegalArgumentException if options is null
-   * @deprecated
-   *     <p>Use {@link Util#makeVanillaZeroOneCFABuilder(Language, AnalysisOptions,
-   *     IAnalysisCacheView, IClassHierarchy, ContextSelector, SSAContextInterpreter)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(
-      Language l,
-      AnalysisOptions options,
-      IAnalysisCacheView analysisCache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope,
-      ContextSelector customSelector,
-      SSAContextInterpreter customInterpreter) {
-
-    return makeVanillaZeroOneCFABuilder(
-        l, options, analysisCache, cha, customSelector, customInterpreter);
   }
 
   /**
@@ -603,53 +420,10 @@ public class Util {
    * @return a 0-1-CFA Call Graph Builder.
    * @param options options that govern call graph construction
    * @param cha governing class hierarchy
-   * @param scope representation of the analysis scope
-   * @deprecated
-   *     <p>use {@link Util#makeVanillaZeroOneCFABuilder(Language, AnalysisOptions,
-   *     IAnalysisCacheView, IClassHierarchy)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(
-      Language l,
-      AnalysisOptions options,
-      IAnalysisCacheView analysisCache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope) {
-    return makeVanillaZeroOneCFABuilder(l, options, analysisCache, cha, null, null);
-  }
-
-  /**
-   * @return a 0-1-CFA Call Graph Builder.
-   * @param options options that govern call graph construction
-   * @param cha governing class hierarchy
    */
   public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(
       Language l, AnalysisOptions options, IAnalysisCacheView analysisCache, IClassHierarchy cha) {
     return makeVanillaZeroOneCFABuilder(l, options, analysisCache, cha, null, null);
-  }
-
-  /**
-   * @param options options that govern call graph construction
-   * @param cha governing class hierarchy
-   * @param scope representation of the analysis scope
-   * @param customSelector user-defined context selector, or null if none
-   * @param customInterpreter user-defined context interpreter, or null if none
-   * @return a 0-1-CFA Call Graph Builder.
-   * @throws IllegalArgumentException if options is null
-   * @deprecated
-   *     <p>Use {@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy, ContextSelector, SSAContextInterpreter)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(
-      Language l,
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope,
-      ContextSelector customSelector,
-      SSAContextInterpreter customInterpreter) {
-    return makeZeroOneCFABuilder(l, options, cache, cha, customSelector, customInterpreter);
   }
 
   /**
@@ -689,25 +463,6 @@ public class Util {
   /**
    * @param options options that govern call graph construction
    * @param cha governing class hierarchy
-   * @param scope representation of the analysis scope
-   * @return a 0-CFA Call Graph Builder augmented with extra logic for containers
-   * @throws IllegalArgumentException if options is null
-   * @deprecated
-   *     <p>Use {@link Util#makeZeroContainerCFABuilder(AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeZeroContainerCFABuilder(
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope) {
-    return makeZeroContainerCFABuilder(options, cache, cha);
-  }
-
-  /**
-   * @param options options that govern call graph construction
-   * @param cha governing class hierarchy
    * @return a 0-CFA Call Graph Builder augmented with extra logic for containers
    * @throws IllegalArgumentException if options is null
    */
@@ -722,42 +477,6 @@ public class Util {
 
     return new ZeroXContainerCFABuilder(
         cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.NONE);
-  }
-
-  /**
-   * @param options options that govern call graph construction
-   * @param cha governing class hierarchy
-   * @param scope representation of the analysis scope
-   * @return a 0-1-CFA Call Graph Builder augmented with extra logic for containers
-   * @throws IllegalArgumentException if options is null
-   * @deprecated
-   *     <p>Use {@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope) {
-    return makeZeroOneContainerCFABuilder(options, cache, cha);
-  }
-
-  /**
-   * @deprecated
-   *     <p>Use {@link Util#makeZeroOneContainerCFABuilder(AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy, ContextSelector, SSAContextInterpreter)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope,
-      ContextSelector appSelector,
-      SSAContextInterpreter appInterpreter) {
-
-    return makeZeroOneContainerCFABuilder(options, cache, cha, appSelector, appInterpreter);
   }
 
   /**
@@ -798,24 +517,6 @@ public class Util {
   /**
    * make a {@link CallGraphBuilder} that uses call-string context sensitivity, with call-string
    * length limited to n, and a context-sensitive allocation-site-based heap abstraction.
-   *
-   * @deprecated
-   *     <p>Use {@link Util#makeNCFABuilder(int, Language, AnalysisOptions,
-   *     IAnalysisCacheView,IClassHierarchy)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeNCFABuilder(
-      int n,
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope) {
-    return makeNCFABuilder(n, JavaLanguage.get(), options, cache, cha);
-  }
-
-  /**
-   * make a {@link CallGraphBuilder} that uses call-string context sensitivity, with call-string
-   * length limited to n, and a context-sensitive allocation-site-based heap abstraction.
    */
   public static SSAPropagationCallGraphBuilder makeNCFABuilder(
       int n, Language l, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
@@ -839,24 +540,6 @@ public class Util {
                 | ZeroXInstanceKeys.SMUSH_STRINGS
                 | ZeroXInstanceKeys.SMUSH_THROWABLES));
     return result;
-  }
-
-  /**
-   * make a {@link CallGraphBuilder} that uses object context sensitivity, with allocation-string
-   * length limited to n
-   *
-   * @deprecated
-   *     <p>Use {@link Util#makeNObjBuilder(int, AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeNObjBuilder(
-      int n,
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope) {
-    return makeNObjBuilder(n, options, cache, cha);
   }
 
   /**
@@ -887,24 +570,6 @@ public class Util {
   /**
    * make a {@link CallGraphBuilder} that uses object context sensitivity, with allocation-string
    * length limited to n
-   *
-   * @deprecated
-   *     <p>Use {@link Util#makeVanillaNObjBuilder(int, AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeVanillaNObjBuilder(
-      int n,
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope) {
-    return makeVanillaNCFABuilder(n, options, cache, cha);
-  }
-
-  /**
-   * make a {@link CallGraphBuilder} that uses object context sensitivity, with allocation-string
-   * length limited to n
    */
   public static SSAPropagationCallGraphBuilder makeVanillaNObjBuilder(
       int n, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
@@ -915,21 +580,6 @@ public class Util {
     SSAContextInterpreter appInterpreter = null;
     return new nObjBuilder(
         n, cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.ALLOCATIONS);
-  }
-
-  /**
-   * @deprecated
-   *     <p>Use {@link Util#makeVanillaNCFABuilder(int, AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeVanillaNCFABuilder(
-      int n,
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope) {
-    return makeVanillaNCFABuilder(n, options, cache, cha);
   }
 
   /**
@@ -963,21 +613,6 @@ public class Util {
   }
 
   /**
-   * @deprecated
-   *     <p>Use {@link Util#makeVanillaZeroOneContainerCFABuilder(AnalysisOptions,
-   *     IAnalysisCacheView, IClassHierarchy)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneContainerCFABuilder(
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope) {
-
-    return makeVanillaZeroOneContainerCFABuilder(options, cache, cha);
-  }
-
-  /**
    * @param options options that govern call graph construction
    * @param cha governing class hierarchy
    * @return a 0-1-CFA Call Graph Builder augmented with extra logic for containers
@@ -995,19 +630,6 @@ public class Util {
 
     return new ZeroXContainerCFABuilder(
         cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.ALLOCATIONS);
-  }
-
-  /**
-   * @deprecated
-   *     <p>Use {@link Util#addDefaultBypassLogic(AnalysisOptions, ClassLoader, IClassHierarchy)}
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static void addDefaultBypassLogic(
-      AnalysisOptions options,
-      @SuppressWarnings("unused") AnalysisScope scope,
-      ClassLoader cl,
-      IClassHierarchy cha) {
-    addDefaultBypassLogic(options, cl, cha);
   }
 
   public static void addDefaultBypassLogic(
