@@ -111,11 +111,6 @@ public class JdtUtil {
     return javaElt.getHandleIdentifier();
   }
 
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static IJavaElement createJavaElementFromJdtHandle(String jdtHandle) {
-    return JavaCore.create(jdtHandle);
-  }
-
   public static IType[] getClasses(ICompilationUnit cu) {
     checkArgument(cu != null, "cu is null");
     try {
@@ -413,54 +408,6 @@ public class JdtUtil {
       result[j] = it.next();
     }
     return result;
-  }
-
-  /**
-   * Find the IMethod in the workspace corresponding to a method signature.
-   *
-   * <p>This doesn't work for elements declared in inner classes. It's possible this is a 3.2 bug
-   * fixed in 3.3
-   *
-   * @return null if not found
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static IMethod findJavaMethodInWorkspaceBrokenForInnerClasses(String methodSig) {
-    // dammit ... this doesn't work for inner classes.
-
-    System.err.println("Search for " + methodSig);
-    SearchPattern p =
-        SearchPattern.createPattern(
-            methodSig,
-            IJavaSearchConstants.METHOD,
-            IJavaSearchConstants.DECLARATIONS,
-            SearchPattern.R_EXACT_MATCH);
-    IJavaSearchScope scope = SearchEngine.createWorkspaceScope();
-    SearchEngine engine = new SearchEngine();
-    final Collection<IJavaElement> kludge = HashSetFactory.make();
-    SearchRequestor requestor =
-        new SearchRequestor() {
-
-          @Override
-          public void acceptSearchMatch(SearchMatch match) throws CoreException {
-            kludge.add((IJavaElement) match.getElement());
-          }
-        };
-    try {
-      engine.search(
-          p,
-          new SearchParticipant[] {SearchEngine.getDefaultSearchParticipant()},
-          scope,
-          requestor,
-          null);
-    } catch (CoreException e) {
-      e.printStackTrace();
-    }
-    if (kludge.size() == 1) {
-      return (IMethod) kludge.iterator().next();
-    } else {
-      System.err.println("RETURNED " + kludge.size() + ' ' + kludge);
-      return null;
-    }
   }
 
   /** Use the search engine to find all methods in a java element */

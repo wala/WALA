@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.callgraph.impl;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.util.strings.Atom;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
@@ -26,18 +25,6 @@ public class FakeWorldClinitMethod extends AbstractRootMethod {
 
   private static final Descriptor descr =
       Descriptor.findOrCreate(new TypeName[0], TypeReference.VoidName);
-
-  /**
-   * @deprecated to remove unused {@code options} parameter
-   * @see #FakeWorldClinitMethod(IClass, IAnalysisCacheView)
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public FakeWorldClinitMethod(
-      final IClass fakeRootClass,
-      @SuppressWarnings("unused") AnalysisOptions options,
-      IAnalysisCacheView cache) {
-    this(fakeRootClass, cache);
-  }
 
   public FakeWorldClinitMethod(final IClass fakeRootClass, IAnalysisCacheView cache) {
     super(

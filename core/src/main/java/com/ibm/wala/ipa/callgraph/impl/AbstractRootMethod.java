@@ -21,7 +21,6 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.core.util.warnings.Warnings;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
@@ -70,20 +69,6 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   protected final SSAInstructionFactory insts;
 
-  /**
-   * @deprecated to remove unused {@code options} parameter
-   * @see #AbstractRootMethod(MethodReference, IClass, IClassHierarchy, IAnalysisCacheView)
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public AbstractRootMethod(
-      MethodReference method,
-      IClass declaringClass,
-      final IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisOptions options,
-      IAnalysisCacheView cache) {
-    this(method, declaringClass, cha, cache);
-  }
-
   public AbstractRootMethod(
       MethodReference method,
       IClass declaringClass,
@@ -100,19 +85,6 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     if (declaringClass instanceof FakeRootClass fakeRootClass) {
       fakeRootClass.addMethod(this);
     }
-  }
-
-  /**
-   * @deprecated to remove unused {@code options} parameter
-   * @see #AbstractRootMethod(MethodReference, IClassHierarchy, IAnalysisCacheView)
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public AbstractRootMethod(
-      MethodReference method,
-      final IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisOptions options,
-      IAnalysisCacheView cache) {
-    this(method, cha, cache);
   }
 
   public AbstractRootMethod(

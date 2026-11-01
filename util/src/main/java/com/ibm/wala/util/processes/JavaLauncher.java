@@ -261,28 +261,6 @@ public class JavaLauncher extends Launcher {
     return cp.toString().trim();
   }
 
-  /**
-   * If the input string contains a space, quote it (for use as a classpath). TODO: Figure out how
-   * to make a Mac happy with quotes. Trailing separators are unsafe, so we have to escape the last
-   * backslash (if present and unescaped), so it doesn't escape the closing quote.
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public static String quoteStringIfNeeded(String s) {
-    s = s.trim();
-    // s = s.replaceAll(" ", "\\\\ ");
-    return s;
-    // Check if there's a space. If not, skip quoting to make Macs happy.
-    // TODO: Add the check for an escaped space.
-    // if (s.indexOf(' ') == -1) {
-    // return s;
-    // }
-    // if (s.charAt(s.length() - 1) == '\\' && s.charAt(s.length() - 2) != '\\')
-    // {
-    // s += '\\'; // Escape the last backslash, so it doesn't escape the quote.
-    // }
-    // return '\"' + s + '\"';
-  }
-
   public boolean isEnableAssertions() {
     return enableAssertions;
   }

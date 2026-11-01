@@ -16,7 +16,6 @@ import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.util.strings.Atom;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MemberReference;
@@ -31,18 +30,6 @@ public class FakeRootMethod extends AbstractRootMethod {
 
   public static final Descriptor descr =
       Descriptor.findOrCreate(new TypeName[0], TypeReference.VoidName);
-
-  /**
-   * @deprecated to remove unused {@code options} parameter
-   * @see #FakeRootMethod(IClass, IAnalysisCacheView)
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public FakeRootMethod(
-      final IClass fakeRootClass,
-      @SuppressWarnings("unused") AnalysisOptions options,
-      IAnalysisCacheView cache) {
-    this(fakeRootClass, cache);
-  }
 
   public FakeRootMethod(final IClass fakeRootClass, IAnalysisCacheView cache) {
     super(

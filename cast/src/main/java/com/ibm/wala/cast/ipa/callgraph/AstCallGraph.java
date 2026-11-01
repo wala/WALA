@@ -43,39 +43,12 @@ public class AstCallGraph extends ExplicitCallGraph {
 
   public static class AstFakeRoot extends AbstractRootMethod {
 
-    /**
-     * @deprecated to remove unused {@code options} parameter
-     * @see #AstFakeRoot(MethodReference, IClass, IClassHierarchy, IAnalysisCacheView)
-     */
-    @Deprecated(forRemoval = true, since = "1.7.2")
-    public AstFakeRoot(
-        MethodReference rootMethod,
-        IClass declaringClass,
-        IClassHierarchy cha,
-        @SuppressWarnings("unused") AnalysisOptions options,
-        IAnalysisCacheView cache) {
-      this(rootMethod, declaringClass, cha, cache);
-    }
-
     public AstFakeRoot(
         MethodReference rootMethod,
         IClass declaringClass,
         IClassHierarchy cha,
         IAnalysisCacheView cache) {
       super(rootMethod, declaringClass, cha, cache);
-    }
-
-    /**
-     * @deprecated to remove unused {@code options} parameter
-     * @see #AstFakeRoot(MethodReference, IClassHierarchy, IAnalysisCacheView)
-     */
-    @Deprecated(forRemoval = true, since = "1.7.2")
-    public AstFakeRoot(
-        MethodReference rootMethod,
-        IClassHierarchy cha,
-        @SuppressWarnings("unused") AnalysisOptions options,
-        IAnalysisCacheView cache) {
-      this(rootMethod, cha, cache);
     }
 
     public AstFakeRoot(MethodReference rootMethod, IClassHierarchy cha, IAnalysisCacheView cache) {
@@ -116,19 +89,6 @@ public class AstCallGraph extends ExplicitCallGraph {
         @SuppressWarnings("unused") AnalysisOptions options,
         IAnalysisCacheView cache) {
       this(rootMethod, declaringClass, cha, cache);
-    }
-
-    /**
-     * @deprecated to remove unused {@code options} parameter
-     * @see #ScriptFakeRoot(MethodReference, IClassHierarchy, IAnalysisCacheView)
-     */
-    @Deprecated(forRemoval = true, since = "1.7.2")
-    public ScriptFakeRoot(
-        MethodReference rootMethod,
-        IClassHierarchy cha,
-        @SuppressWarnings("unused") AnalysisOptions options,
-        IAnalysisCacheView cache) {
-      this(rootMethod, cha, cache);
     }
 
     public ScriptFakeRoot(

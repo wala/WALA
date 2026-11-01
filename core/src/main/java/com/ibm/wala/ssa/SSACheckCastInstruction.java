@@ -125,16 +125,6 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     return val;
   }
 
-  /**
-   * @deprecated the system now supports multiple types, so this accessor will not work for all
-   *     languages.
-   */
-  @Deprecated(forRemoval = true, since = "1.7.2")
-  public TypeReference getDeclaredResultType() {
-    assert declaredResultTypes.length == 1;
-    return declaredResultTypes[0];
-  }
-
   public TypeReference[] getDeclaredResultTypes() {
     return declaredResultTypes;
   }

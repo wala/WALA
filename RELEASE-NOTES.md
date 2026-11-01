@@ -1,5 +1,16 @@
 # WALA Release Notes
 
+## Version 1.10.0
+
+### Deprecated APIs removed
+
+Deprecated APIs marked for removal since 1.7.2 have now been removed across
+WALA's call-graph, Dalvik, Scandroid, Shrike, and IDE utilities. This includes
+legacy call-graph helpers and constructors, old Dalvik flag constants, and
+superseded taint-analysis and bytecode-optimization APIs, along with other
+obsolete compatibility methods and classes. Consumers still using these APIs
+should migrate to their replacements.
+
 ## Version 1.9.0
 
 ### Functionality changes
