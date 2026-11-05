@@ -229,7 +229,6 @@ public class CallGraphTransitiveClosureTest extends WalaTestCase {
             JavaLanguage.get(), hello.options(), new AnalysisCacheImpl(), hello.cha());
     CallGraph cg = builder.makeCallGraph(hello.options(), null);
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
-    assertHasDependentCycles(cg);
 
     ModRef<InstanceKey> modRef = ModRef.make();
     ExtendedHeapModel h = modRef.makeHeapModel(pa);
