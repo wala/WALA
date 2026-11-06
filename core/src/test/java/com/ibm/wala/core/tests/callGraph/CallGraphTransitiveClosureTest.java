@@ -30,7 +30,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.graph.traverse.DFS;
@@ -64,17 +63,17 @@ public class CallGraphTransitiveClosureTest extends WalaTestCase {
    * @return a map from each node to the analysis result for the node and its transitive callees
    * @throws CancelException if the solver is canceled
    */
-  private static <T> Map<CGNode, Set<T>> fixedPointClosure(
+  private static <T> Map<CGNode, Collection<T>> fixedPointClosure(
       CallGraph cg, Map<CGNode, Collection<T>> nodeResults) throws CancelException {
     GenReach<CGNode, T> gr = new GenReach<>(GraphInverter.invert(cg), nodeResults);
     BitVectorSolver<CGNode> solver = new BitVectorSolver<>(gr);
     solver.solve(null);
-    Map<CGNode, Set<T>> result = HashMapFactory.make();
+    Map<CGNode, Collection<T>> result = HashMapFactory.make();
     for (CGNode n : cg) {
       result.put(
           n,
-          Iterator2Collection.toSet(
-              new OrdinalSet<>(solver.getOut(n).getValue(), gr.getLatticeValues()).iterator()));
+          OrdinalSet.toCollection(
+              new OrdinalSet<>(solver.getOut(n).getValue(), gr.getLatticeValues())));
     }
     return result;
   }
@@ -85,9 +84,9 @@ public class CallGraphTransitiveClosureTest extends WalaTestCase {
    * @param closure a map from each node to its closure
    * @return a map from each node to the elements of its closure
    */
-  private static <T> Map<CGNode, Set<T>> toSets(Map<CGNode, OrdinalSet<T>> closure) {
-    Map<CGNode, Set<T>> result = HashMapFactory.make();
-    closure.forEach((n, s) -> result.put(n, Iterator2Collection.toSet(s.iterator())));
+  private static <T> Map<CGNode, Collection<T>> toSets(Map<CGNode, OrdinalSet<T>> closure) {
+    Map<CGNode, Collection<T>> result = HashMapFactory.make();
+    closure.forEach((n, s) -> result.put(n, OrdinalSet.toCollection(s)));
     return result;
   }
 
@@ -146,7 +145,7 @@ public class CallGraphTransitiveClosureTest extends WalaTestCase {
    */
   private static void assertClosureOfEvenNodes(CallGraph cg) throws CancelException {
     Map<CGNode, Collection<CGNode>> nodeResults = evenNodes(cg);
-    Map<CGNode, Set<CGNode>> closure =
+    Map<CGNode, Collection<CGNode>> closure =
         toSets(CallGraphTransitiveClosure.transitiveClosure(cg, nodeResults));
     assertThat(closure).isEqualTo(fixedPointClosure(cg, nodeResults));
     int stride = Math.max(1, cg.getNumberOfNodes() / REACHABILITY_SAMPLES);
