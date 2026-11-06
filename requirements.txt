@@ -1,3 +1,3 @@
-black == 26.3.*
+black ==26.10.*
 numpy == 2.3.*
 pandas == 2.3.*
