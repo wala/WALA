@@ -75,6 +75,19 @@ public class TransitiveClosureBenchmark {
   /** Each node's own mod set, not including its callees. */
   private Map<CGNode, Collection<PointerKey>> nodeResults;
 
+  /**
+   * Builds the 0-1-CFA call graph and pointer analysis for the BCEL verifier's {@code main} and
+   * collects each node's own mod set, once per trial and outside the timed region.
+   *
+   * <p>Each node's mod set is the union of {@link ModRef#getMod} over the node's normal
+   * instructions, as {@link ModRef#computeMod} computes it before closing when given no heap
+   * exclusions.
+   *
+   * @throws CancelException if call graph construction is canceled
+   * @throws ClassHierarchyException if the class hierarchy cannot be built
+   * @throws IllegalArgumentException if call graph construction rejects its arguments
+   * @throws IOException if the BCEL analysis scope cannot be read
+   */
   @Setup(Level.Trial)
   public void setup()
       throws CancelException, ClassHierarchyException, IllegalArgumentException, IOException {
