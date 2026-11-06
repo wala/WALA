@@ -236,7 +236,7 @@ public class CallGraphTransitiveClosureTest extends WalaTestCase {
         CallGraphTransitiveClosure.collectNodeResults(
             cg,
             n -> {
-              Set<PointerKey> mod = HashSetFactory.make();
+              Collection<PointerKey> mod = HashSetFactory.make();
               IR ir = n.getIR();
               if (ir != null) {
                 for (SSAInstruction s : Iterator2Iterable.make(ir.iterateNormalInstructions())) {

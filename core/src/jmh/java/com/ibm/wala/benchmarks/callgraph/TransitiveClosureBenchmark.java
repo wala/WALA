@@ -30,7 +30,6 @@ import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -110,7 +109,7 @@ public class TransitiveClosureBenchmark {
         CallGraphTransitiveClosure.collectNodeResults(
             cg,
             n -> {
-              Set<PointerKey> mod = HashSetFactory.make();
+              Collection<PointerKey> mod = HashSetFactory.make();
               IR ir = n.getIR();
               if (ir != null) {
                 for (SSAInstruction s : Iterator2Iterable.make(ir.iterateNormalInstructions())) {
