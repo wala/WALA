@@ -60,8 +60,7 @@ public class CallGraphTransitiveClosure {
       }
     }
 
-    @SuppressWarnings("unchecked")
-    OrdinalSet<T>[] closure = new OrdinalSet[cg.getMaxNumber() + 1];
+    BitVectorIntSet[] closure = new BitVectorIntSet[cg.getMaxNumber() + 1];
     Map<CGNode, OrdinalSet<T>> result = HashMapFactory.make();
     for (int i = components.size() - 1; i >= 0; i--) {
       Set<CGNode> component = components.get(i);
@@ -78,13 +77,13 @@ public class CallGraphTransitiveClosure {
           // A callee in this component contributes its own results above; any other callee's
           // component has already been visited.
           if (componentOf[calleeNumber] != i) {
-            bits.addAll(closure[calleeNumber].getBackingSet());
+            bits.addAll(closure[calleeNumber]);
           }
         }
       }
       OrdinalSet<T> componentClosure = new OrdinalSet<>(bits, domain);
       for (CGNode n : component) {
-        closure[cg.getNumber(n)] = componentClosure;
+        closure[cg.getNumber(n)] = bits;
         result.put(n, componentClosure);
       }
     }
