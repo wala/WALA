@@ -36,6 +36,10 @@ public class CallGraphTransitiveClosure {
    * Each component's result is the union of its members' own results and the results of the
    * components its members call, so every node in a component shares the same result.
    *
+   * <p>The elements of the results are identified by {@link Object#equals} and {@link
+   * Object#hashCode}, so equal elements are treated as one, and an element must not change in a way
+   * that affects either method while the closure is computed.
+   *
    * @param cg the call graph
    * @param nodeResults analysis result for each individual node
    * @return a map from each node to the analysis result for the node and its transitive callees
