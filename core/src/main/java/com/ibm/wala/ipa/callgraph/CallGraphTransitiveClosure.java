@@ -10,16 +10,17 @@
  */
 package com.ibm.wala.ipa.callgraph;
 
-import com.ibm.wala.core.util.CancelRuntimeException;
-import com.ibm.wala.dataflow.graph.BitVectorSolver;
-import com.ibm.wala.fixpoint.BitVectorVariable;
-import com.ibm.wala.ipa.modref.GenReach;
-import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.graph.impl.GraphInverter;
+import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.graph.traverse.SCCIterator;
+import com.ibm.wala.util.intset.BitVectorIntSet;
+import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.OrdinalSet;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -31,26 +32,66 @@ public class CallGraphTransitiveClosure {
   /**
    * Compute the transitive closure of an analysis result over all callees.
    *
+   * <p>The closure is computed over the strongly connected components of {@code cg}, callees first.
+   * Each component's result is the union of its members' own results and the results of the
+   * components its members call, so every node in a component shares the same result.
+   *
+   * <p>The elements of the results are identified by {@link Object#equals} and {@link
+   * Object#hashCode}, so equal elements are treated as one, and an element must not change in a way
+   * that affects either method while the closure is computed.
+   *
    * @param cg the call graph
    * @param nodeResults analysis result for each individual node
    * @return a map from each node to the analysis result for the node and its transitive callees
    */
   public static <T> Map<CGNode, OrdinalSet<T>> transitiveClosure(
       CallGraph cg, Map<CGNode, Collection<T>> nodeResults) {
-    try {
-      // invert the call graph, to compute the bottom-up result
-      GenReach<CGNode, T> gr = new GenReach<>(GraphInverter.invert(cg), nodeResults);
-      BitVectorSolver<CGNode> solver = new BitVectorSolver<>(gr);
-      solver.solve(null);
-      Map<CGNode, OrdinalSet<T>> result = HashMapFactory.make();
-      for (CGNode n : cg) {
-        BitVectorVariable bv = solver.getOut(n);
-        result.put(n, new OrdinalSet<>(bv.getValue(), gr.getLatticeValues()));
+    MutableMapping<T> domain = MutableMapping.make();
+    for (Collection<T> c : nodeResults.values()) {
+      for (T t : c) {
+        domain.add(t);
       }
-      return result;
-    } catch (CancelException e) {
-      throw new CancelRuntimeException(e);
     }
+
+    // SCCIterator enumerates components callers first, so walk them in reverse to visit each
+    // component only after every component it calls.
+    List<Set<CGNode>> components = new ArrayList<>();
+    new SCCIterator<>(cg).forEachRemaining(components::add);
+    int[] componentOf = new int[cg.getMaxNumber() + 1];
+    for (int i = 0; i < components.size(); i++) {
+      for (CGNode n : components.get(i)) {
+        componentOf[cg.getNumber(n)] = i;
+      }
+    }
+
+    BitVectorIntSet[] closure = new BitVectorIntSet[cg.getMaxNumber() + 1];
+    Map<CGNode, OrdinalSet<T>> result = HashMapFactory.make();
+    for (int i = components.size() - 1; i >= 0; i--) {
+      Set<CGNode> component = components.get(i);
+      BitVectorIntSet bits = new BitVectorIntSet();
+      for (CGNode n : component) {
+        Collection<T> own = nodeResults.get(n);
+        if (own != null) {
+          for (T t : own) {
+            bits.add(domain.getMappedIndex(t));
+          }
+        }
+        for (CGNode callee : Iterator2Iterable.make(cg.getSuccNodes(n))) {
+          int calleeNumber = cg.getNumber(callee);
+          // A callee in this component contributes its own results above; any other callee's
+          // component has already been visited.
+          if (componentOf[calleeNumber] != i) {
+            bits.addAll(closure[calleeNumber]);
+          }
+        }
+      }
+      OrdinalSet<T> componentClosure = new OrdinalSet<>(bits, domain);
+      for (CGNode n : component) {
+        closure[cg.getNumber(n)] = bits;
+        result.put(n, componentClosure);
+      }
+    }
+    return result;
   }
 
   /** Collect analysis result for each {@link CGNode} in a {@link Map}. */
