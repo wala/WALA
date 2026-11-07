@@ -54,7 +54,7 @@ rhino = "org.mozilla:rhino:1.9.1"
 slf4j-api = "org.slf4j:slf4j-api:2.0.20"
 
 [plugins]
-dependency-analysis = "com.autonomousapps.dependency-analysis:3.19.2"
+dependency-analysis = "com.autonomousapps.dependency-analysis:3.20.0"
 eclipse-mavencentral = "com.diffplug.eclipse.mavencentral:4.4.1"
 errorprone = "net.ltgt.errorprone:5.1.1"
 file-lister = "all.shared.gradle.file-lister:1.0.2"
