@@ -6,7 +6,7 @@ plugins {
   id("com.vanniktech.maven.publish")
 }
 
-val isSnapshot = providers.provider { "SNAPSHOT" in version as String }
+val isSnapshot = providers.present("SNAPSHOT" in version as String)
 
 // Make per-project publishing settings available as `project.walaPublishing`.
 val walaPublishing = extensions.create<WalaPublishingExtension>("walaPublishing")

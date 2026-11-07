@@ -45,7 +45,7 @@ private val resultsFileSuffix =
             .asText
             .map { "-${it.trim()}" }
       } else {
-        providers.provider { "" }
+        providers.present("")
       }
     }
 
