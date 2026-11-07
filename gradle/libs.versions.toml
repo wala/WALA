@@ -23,7 +23,7 @@ eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "e
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
 #noinspection UnusedVersionCatalogEntry
 errorprone-core = "com.google.errorprone:error_prone_core:2.51.0"
-gson = "com.google.code.gson:gson:2.14.0"
+gson = "com.google.code.gson:gson:2.15.0"
 guava = "com.google.guava:guava:33.7.2-jre"
 htmlparser = "nu.validator.htmlparser:htmlparser:1.4"
 javaCup = "java_cup:java_cup:0.9e"
