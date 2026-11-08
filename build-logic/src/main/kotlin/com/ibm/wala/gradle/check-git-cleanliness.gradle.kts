@@ -57,7 +57,7 @@ abstract class CheckGitCleanlinessTask : DefaultTask() {
                 .toList()
         if (dirtyProblems.isNotEmpty()) {
           throw problems.reporter.throwing(
-              VerificationException(dirtyProblemGroup.displayName),
+              VerificationException(dirtyProblemGroup.name),
               dirtyProblems,
           )
         }
@@ -66,33 +66,25 @@ abstract class CheckGitCleanlinessTask : DefaultTask() {
     logger.info("Git working directory is clean")
   }
 
-  companion object {
-    private val ids by lazy {
-      object {
+  private val ids by lazy {
+    object {
+      val dirtyProblemGroup = problems.groups.verification.group("Git working directory is dirty")
 
-        val dirtyProblemGroup =
-            ProblemGroup.create(
-                "com.ibm.wala.gradle.check-git-cleanliness",
-                "Git working directory is dirty",
-            )
+      fun createId(name: String) = dirtyProblemGroup.problemId(name)
 
-        fun createId(name: String, displayName: String) =
-            ProblemId.create(name, displayName, dirtyProblemGroup)
+      val addedId = createId("Added to index, but not in HEAD")
 
-        val addedId = createId("added", "Added to index, but not in HEAD")
+      val changedId = createId("Changed from HEAD to index")
 
-        val changedId = createId("changed", "Changed from HEAD to index")
+      val removedId = createId("Removed from HEAD, but in index")
 
-        val removedId = createId("removed", "Removed from HEAD, but in index")
+      val missingId = createId("In index, but not filesystem")
 
-        val missingId = createId("missing", "In index, but not filesystem")
+      val modifiedId = createId("Modified relative to index")
 
-        val modifiedId = createId("modified", "Modified relative to index")
+      val untrackedId = createId("Not ignored, and not in index")
 
-        val untrackedId = createId("untracked", "Not ignored, and not in index")
-
-        val conflictingId = createId("conflicting", "In conflict")
-      }
+      val conflictingId = createId("In conflict")
     }
   }
 }
