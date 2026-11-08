@@ -1,10 +1,17 @@
 {
   "name": "Java",
-  "image": "mcr.microsoft.com/devcontainers/java:1-21-bullseye",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "features": {
     "ghcr.io/devcontainers/features/java:1": {},
+    "ghcr.io/devcontainers/features/sshd:1": {}
   },
-  "postCreateCommand": "pip3 install apm-cli==0.34.0 || echo 'Could not install apm; the agent skills cannot be fetched.'; bash ./refresh-agent-skills.sh || echo 'Could not fetch the agent skills; run ./refresh-agent-skills.sh when you have network access.'",
+  "postCreateCommand": "bash ./refresh-agent-skills.sh || echo 'Could not fetch the agent skills; see CONTRIBUTING.md for recovery instructions.'",
+  "postStartCommand": "Xvfb :99 -screen 0 1024x768x24 >/tmp/xvfb.log 2>&1 &",
+  "containerEnv": {
+    "DISPLAY": ":99"
+  },
   "customizations": {
     "jetbrains": {
       "backend": "IntelliJ",

@@ -37,6 +37,27 @@ If your code fails check 2, you can run `./gradlew spotlessApply` to
 automatically format it.  The CI job runs `./gradlew build` and will
 fail if any of these additional checks fail.
 
+Dev Containers
+--------------
+
+To connect to a GitHub Codespace using the container's SSH server, run:
+
+    gh codespace ssh --codespace <codespace-name>
+
+The GitHub CLI handles the SSH connection; no port forwarding or
+container password setup is needed.
+
+Installing APM in the devcontainer image is best-effort, so a failed
+package download does not prevent the container from being created. To
+retry after network access is available, install APM in its virtual
+environment and then fetch the skills:
+
+    sudo /opt/apm/bin/pip install --no-cache-dir apm-cli==0.34.0
+    ./refresh-agent-skills.sh
+
+If APM is already installed but fetching skills failed, rerun only
+`./refresh-agent-skills.sh`.
+
 Agent Skills
 ------------
 
