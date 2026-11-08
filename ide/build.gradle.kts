@@ -45,6 +45,7 @@ dependencyAnalysis.issues {
   onUsedTransitiveDependencies {
     exclude(
         "org.eclipse.platform:org.eclipse.swt.cocoa.macosx.aarch64",
+        "org.eclipse.platform:org.eclipse.swt.gtk.linux.aarch64",
         "org.eclipse.platform:org.eclipse.swt.gtk.linux.x86_64",
         "org.eclipse.platform:org.eclipse.swt.win32.win32.x86_64",
     )

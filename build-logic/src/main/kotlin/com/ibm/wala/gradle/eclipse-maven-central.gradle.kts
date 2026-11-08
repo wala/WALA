@@ -36,8 +36,9 @@ tasks.withType<JavaCompile>().configureEach { options.release = 17 }
  *
  * ### Default Configuration
  *
- * This extension always applies [ReleaseConfigurer.constrainTransitivesToThisRelease] and
- * [ReleaseConfigurer.useNativesForRunningPlatform] to the selected release.
+ * This extension always applies [ReleaseConfigurer.constrainTransitivesToThisRelease] to the
+ * selected release, and selects native SWT dependencies for the running platform. On Linux ARM64,
+ * it selects the published GTK artifact directly because Goomph does not recognize that platform.
  *
  * ## Generally Useful Additions
  *
@@ -62,9 +63,36 @@ open class WalaMavenCentralReleaseConfigurerExtension @Inject constructor(projec
    */
   private val configurer =
       project.run {
+
+        // Work around a known bug in selecting an architecture-specific SWT artifact for Linux
+        // ARM64: <https://github.com/diffplug/durian-swt/issues/29>,
+        // <https://github.com/wala/WALA/issues/1472>.
+
+        val isLinuxArm64 =
+            System.getProperty("os.name").startsWith("Linux") &&
+                System.getProperty("os.arch") in setOf("aarch64", "arm64")
+
+        if (isLinuxArm64) {
+          // Goomph maps Linux ARM64 to the unavailable "unknown" SWT artifact.
+          configurations.configureEach {
+            resolutionStrategy.eachDependency {
+              if (
+                  requested.group == "org.eclipse.platform" &&
+                      requested.name == $$"org.eclipse.swt.${osgi.platform}"
+              ) {
+                useTarget(
+                    "org.eclipse.platform:org.eclipse.swt.gtk.linux.aarch64:${requested.version}"
+                )
+              }
+            }
+          }
+        }
+
         eclipseMavenCentral.ReleaseConfigurer(official(catalogVersion("eclipse"))).apply {
           constrainTransitivesToThisRelease()
-          useNativesForRunningPlatform()
+          if (!isLinuxArm64) {
+            useNativesForRunningPlatform()
+          }
         }
       }
 
