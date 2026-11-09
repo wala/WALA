@@ -7,7 +7,12 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import org.junit.jupiter.api.Test;
 
-/** Tests for {@link EdgeFilteredNumberedGraph}. */
+/**
+ * Tests for {@link EdgeFilteredNumberedGraph}.
+ *
+ * <p>The tests check that successor and predecessor queries both honor the ignored-edge relation in
+ * the direction of each edge, and agree with {@link EdgeFilteredNumberedGraph#hasEdge}.
+ */
 public class EdgeFilteredNumberedGraphTest {
 
   /**
