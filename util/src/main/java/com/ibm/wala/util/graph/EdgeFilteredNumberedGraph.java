@@ -101,6 +101,12 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
     }
 
     /**
+     * Returns the neighbors in {@code s} whose edge with {@code node} is not ignored.
+     *
+     * <p>An edge's direction depends on the kind of neighbor: it runs from {@code node} to a
+     * successor, and from a predecessor to {@code node}. The ignored-edge relation is checked in
+     * that direction.
+     *
      * @param node the node whose neighbors are filtered
      * @param s the numbers of {@code node}'s neighbors in the delegate graph
      * @param successors whether {@code s} holds successors, so each edge runs from {@code node} to
