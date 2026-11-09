@@ -95,6 +95,8 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
     @Override
     public IntSet getPredNodeNumbers(@Nullable T node) {
+      // Predecessors' edges run from the neighbor to node. That's why this passes false; false
+      // means the neighbors are predecessors, so each ignored-edge check is (neighbor, node).
       return getFilteredNodeNumbers(node, delegate.getPredNodeNumbers(node), false);
     }
 
@@ -119,6 +121,8 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
     @Override
     public IntSet getSuccNodeNumbers(@Nullable T node) {
+      // Successors' edges run from node to the neighbor. That's why this passes true; true means
+      // the neighbors are successors, so each ignored-edge check is (node, neighbor).
       return getFilteredNodeNumbers(node, delegate.getSuccNodeNumbers(node), true);
     }
 
