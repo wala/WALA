@@ -184,9 +184,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         assertThat(methodUnderTest).asInstanceOf(type(IBytecodeMethod.class)).actual();
 
     Collection<Annotation> runtimeVisibleAnnotations = bcMethodUnderTest.getAnnotations(false);
-    assertThat(runtimeVisibleAnnotations).hasSize(1);
-
-    Annotation x = runtimeVisibleAnnotations.iterator().next();
+    Annotation x = assertThat(runtimeVisibleAnnotations).singleElement().actual();
     assertThat(x.getType())
         .isEqualTo(
             TypeReference.findOrCreate(

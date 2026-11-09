@@ -71,8 +71,7 @@ public class ZeroLengthArrayTest {
             Everywhere.EVERYWHERE);
     OrdinalSet<InstanceKey> pointsToSet =
         pa.getPointsToSet(heapModel.getPointerKeyForLocal(mainNode, 4));
-    assertThat(pointsToSet).hasSize(1);
-    InstanceKey arrayKey = pointsToSet.iterator().next();
+    InstanceKey arrayKey = assertThat(pointsToSet).singleElement().actual();
     OrdinalSet<InstanceKey> arrayContents =
         pa.getPointsToSet(heapModel.getPointerKeyForArrayContents(arrayKey));
     System.err.println(arrayContents);

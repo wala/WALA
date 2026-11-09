@@ -35,7 +35,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
@@ -98,10 +97,6 @@ public class ObjectSensitiveTest {
     MethodReference mr =
         MethodReference.findOrCreate(mainClassTr, "doNothing", "(Ljava/lang/Object;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    assertThat(nodes).hasSize(1);
-
-    Optional<CGNode> firstMatched = nodes.stream().findFirst();
-    assertThat(firstMatched).isPresent();
-    return firstMatched.get();
+    return assertThat(nodes).singleElement().actual();
   }
 }
