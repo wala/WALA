@@ -72,8 +72,7 @@ public class XMLMethodSummaryReaderParamNamesTest extends WalaTestCase {
         new XMLMethodSummaryReader(
             new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)), scope());
     Map<MethodReference, MethodSummary> summaries = reader.getSummaries();
-    assertThat(summaries).hasSize(1);
-    return summaries.values().iterator().next();
+    return assertThat(summaries).values().singleElement().actual();
   }
 
   /**
