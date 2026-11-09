@@ -95,14 +95,22 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
     @Override
     public IntSet getPredNodeNumbers(@Nullable T node) {
-      return getFilteredNodeNumbers(node, delegate.getPredNodeNumbers(node));
+      return getFilteredNodeNumbers(node, delegate.getPredNodeNumbers(node), false);
     }
 
-    private IntSet getFilteredNodeNumbers(@Nullable T node, IntSet s) {
+    /**
+     * @param node the node whose neighbors are filtered
+     * @param s the numbers of {@code node}'s neighbors in the delegate graph
+     * @param successors whether {@code s} holds successors, so each edge runs from {@code node} to
+     *     the neighbor, rather than predecessors
+     * @return the numbers of the neighbors whose edge with {@code node} is not ignored
+     */
+    private IntSet getFilteredNodeNumbers(@Nullable T node, IntSet s, boolean successors) {
+      int x = getNumber(node);
       MutableIntSet result = MutableSparseIntSet.makeEmpty();
       for (IntIterator it = s.intIterator(); it.hasNext(); ) {
         int y = it.next();
-        if (!ignoreEdges.contains(y, getNumber(node))) {
+        if (!(successors ? ignoreEdges.contains(x, y) : ignoreEdges.contains(y, x))) {
           result.add(y);
         }
       }
@@ -111,7 +119,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
     @Override
     public IntSet getSuccNodeNumbers(@Nullable T node) {
-      return getFilteredNodeNumbers(node, delegate.getSuccNodeNumbers(node));
+      return getFilteredNodeNumbers(node, delegate.getSuccNodeNumbers(node), true);
     }
 
     @Override
