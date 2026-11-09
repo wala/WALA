@@ -1,16 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "assignees": [
-    "liblit"
-  ],
   "extends": [
     "config:recommended"
   ],
   "labels": [
     "dependencies"
-  ],
-  "reviewers": [
-    "liblit"
   ],
   "minimumReleaseAge": "1 week"
 }
