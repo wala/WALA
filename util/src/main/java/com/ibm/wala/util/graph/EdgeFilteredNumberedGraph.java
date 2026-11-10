@@ -95,9 +95,16 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
     @Override
     public IntSet getPredNodeNumbers(@Nullable T node) {
-      // Predecessors' edges run from the neighbor to node. That's why this passes false; false
-      // means the neighbors are predecessors, so each ignored-edge check is (neighbor, node).
-      return getFilteredNodeNumbers(node, delegate.getPredNodeNumbers(node), false);
+      return getFilteredNodeNumbers(
+          node, delegate.getPredNodeNumbers(node), Direction.PREDECESSORS);
+    }
+
+    /** The kind of neighbors whose edges {@link #getFilteredNodeNumbers} filters. */
+    private enum Direction {
+      /** Successors, whose edges run from the node to the neighbor. */
+      SUCCESSORS,
+      /** Predecessors, whose edges run from the neighbor to the node. */
+      PREDECESSORS
     }
 
     /**
@@ -109,16 +116,20 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
      *
      * @param node the node whose neighbors are filtered
      * @param s the numbers of {@code node}'s neighbors in the delegate graph
-     * @param successors whether {@code s} holds successors, so each edge runs from {@code node} to
-     *     the neighbor, rather than predecessors
+     * @param direction whether {@code s} holds successors or predecessors of {@code node}
      * @return the numbers of the neighbors whose edge with {@code node} is not ignored
      */
-    private IntSet getFilteredNodeNumbers(@Nullable T node, IntSet s, boolean successors) {
+    private IntSet getFilteredNodeNumbers(@Nullable T node, IntSet s, Direction direction) {
       int x = getNumber(node);
       MutableIntSet result = MutableSparseIntSet.makeEmpty();
       for (IntIterator it = s.intIterator(); it.hasNext(); ) {
         int y = it.next();
-        if (!(successors ? ignoreEdges.contains(x, y) : ignoreEdges.contains(y, x))) {
+        boolean ignored =
+            switch (direction) {
+              case SUCCESSORS -> ignoreEdges.contains(x, y);
+              case PREDECESSORS -> ignoreEdges.contains(y, x);
+            };
+        if (!ignored) {
           result.add(y);
         }
       }
@@ -127,9 +138,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
     @Override
     public IntSet getSuccNodeNumbers(@Nullable T node) {
-      // Successors' edges run from node to the neighbor. That's why this passes true; true means
-      // the neighbors are successors, so each ignored-edge check is (node, neighbor).
-      return getFilteredNodeNumbers(node, delegate.getSuccNodeNumbers(node), true);
+      return getFilteredNodeNumbers(node, delegate.getSuccNodeNumbers(node), Direction.SUCCESSORS);
     }
 
     @Override
