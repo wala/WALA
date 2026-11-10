@@ -62,24 +62,23 @@ public class ECJJava17IRTest extends ECJIRTests {
         public void check(CallGraph cg) {
           for (Pair<MethodReference, int[]> m : constants) {
             cg.getNodes(m.fst)
-                .forEach(
-                    (n) -> {
-                      SymbolTable st = n.getIR().getSymbolTable();
-                      for (int value : m.snd) {
-                        boolean found = false;
-                        for (int i = 1; i <= st.getMaxValueNumber(); i++) {
-                          if (st.isIntegerConstant(i) && st.getIntValue(i) == value) {
-                            System.err.println("found " + value + " in " + n);
-                            found = true;
-                            break;
-                          }
-                        }
-                        if (!found) {
-                          //noinspection ResultOfMethodCallIgnored
-                          fail("cannot find %s in %s", value, n);
-                        }
+                .forEach(n -> {
+                  SymbolTable st = n.getIR().getSymbolTable();
+                  for (int value : m.snd) {
+                    boolean found = false;
+                    for (int i = 1; i <= st.getMaxValueNumber(); i++) {
+                      if (st.isIntegerConstant(i) && st.getIntValue(i) == value) {
+                        System.err.println("found " + value + " in " + n);
+                        found = true;
+                        break;
                       }
-                    });
+                    }
+                    if (!found) {
+                      //noinspection ResultOfMethodCallIgnored
+                      fail("cannot find %s in %s", value, n);
+                    }
+                  }
+                });
           }
         }
       };
@@ -106,20 +105,18 @@ public class ECJJava17IRTest extends ECJIRTests {
                               "Ljava/lang/IndexOutOfBoundsException")));
 
           cg.getNodes(testMethod)
-              .forEach(
-                  (n) ->
-                      n.getIR()
-                          .getControlFlowGraph()
-                          .forEach(
-                              (bb) -> {
-                                if (bb.isCatchBlock()) {
-                                  assertThat(bb.getCaughtExceptionTypes())
-                                      .toIterable()
-                                      .extracting(cg.getClassHierarchy()::lookupClass)
-                                      .as(() -> n.getIR().toString())
-                                      .hasSameElementsAs(expectedTypes);
-                                }
-                              }));
+              .forEach(n ->
+                  n.getIR()
+                      .getControlFlowGraph()
+                      .forEach(bb -> {
+                        if (bb.isCatchBlock()) {
+                          assertThat(bb.getCaughtExceptionTypes())
+                              .toIterable()
+                              .extracting(cg.getClassHierarchy()::lookupClass)
+                              .as(() -> n.getIR().toString())
+                              .hasSameElementsAs(expectedTypes);
+                        }
+                      }));
         }
       };
 

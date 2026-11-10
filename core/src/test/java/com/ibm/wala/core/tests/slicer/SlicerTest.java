@@ -1093,18 +1093,17 @@ public class SlicerTest {
         slice.stream().filter(s -> s.getNode().equals(main)).collect(Collectors.toList());
     // check that we are tracking the size field in a HeapReturnCaller statement for the add() call
     assertThat(inMain)
-        .filteredOn(
-            st -> {
-              if (st instanceof HeapReturnCaller hrc) {
-                if (hrc.getCall().getDeclaredTarget().getName().toString().equals("add")) {
-                  PointerKey location = hrc.getLocation();
-                  if (location instanceof InstanceFieldKey ifk) {
-                    return ifk.getField().getName().toString().equals("size");
-                  }
-                }
+        .filteredOn(st -> {
+          if (st instanceof HeapReturnCaller hrc) {
+            if (hrc.getCall().getDeclaredTarget().getName().toString().equals("add")) {
+              PointerKey location = hrc.getLocation();
+              if (location instanceof InstanceFieldKey ifk) {
+                return ifk.getField().getName().toString().equals("size");
               }
-              return false;
-            })
+            }
+          }
+          return false;
+        })
         .isNotEmpty();
   }
 

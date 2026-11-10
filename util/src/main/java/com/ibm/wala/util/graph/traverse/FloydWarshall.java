@@ -189,18 +189,17 @@ public class FloydWarshall<T> {
               } else {
                 final Set<List<T>> result = new HashSet<>();
 
-                intermediate.foreach(
-                    x -> {
-                      T in = G.getNode(x);
-                      for (List<T> pre : getPaths(from, in)) {
-                        for (List<T> post : getPaths(in, to)) {
-                          List<T> path = new ArrayList<>(pre);
-                          path.add(in);
-                          path.addAll(post);
-                          result.add(path);
-                        }
-                      }
-                    });
+                intermediate.foreach(x -> {
+                  T in = G.getNode(x);
+                  for (List<T> pre : getPaths(from, in)) {
+                    for (List<T> post : getPaths(in, to)) {
+                      List<T> path = new ArrayList<>(pre);
+                      path.add(in);
+                      path.addAll(post);
+                      result.add(path);
+                    }
+                  }
+                });
 
                 return result;
               }

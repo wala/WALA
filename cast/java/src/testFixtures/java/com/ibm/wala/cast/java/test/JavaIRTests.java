@@ -104,117 +104,110 @@ public abstract class JavaIRTests extends IRTests {
           });
 
   static List<? extends IRAssertion> callAssertionForInheritance1 =
-      Collections.singletonList(
-          cg -> {
-            final String typeStr = "Derived";
+      Collections.singletonList(cg -> {
+        final String typeStr = "Derived";
 
-            final TypeReference type =
-                findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
+        final TypeReference type =
+            findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
-            final IClass derivedClass = cg.getClassHierarchy().lookupClass(type);
-            assertThat(derivedClass).isNotNull();
+        final IClass derivedClass = cg.getClassHierarchy().lookupClass(type);
+        assertThat(derivedClass).isNotNull();
 
-            final TypeReference baseType =
-                findOrCreateTypeReference("Source", "Base", cg.getClassHierarchy());
-            final IClass baseClass = cg.getClassHierarchy().lookupClass(baseType);
+        final TypeReference baseType =
+            findOrCreateTypeReference("Source", "Base", cg.getClassHierarchy());
+        final IClass baseClass = cg.getClassHierarchy().lookupClass(baseType);
 
-            assertThat(derivedClass.getSuperclass())
-                .as("Expected 'Base' to be the superclass of 'Derived'")
-                .isEqualTo(baseClass);
+        assertThat(derivedClass.getSuperclass())
+            .as("Expected 'Base' to be the superclass of 'Derived'")
+            .isEqualTo(baseClass);
 
-            Collection<IClass> subclasses = cg.getClassHierarchy().computeSubClasses(baseType);
+        Collection<IClass> subclasses = cg.getClassHierarchy().computeSubClasses(baseType);
 
-            assertThat(subclasses)
-                .as("Expected subclasses of 'Base' to be 'Base' and 'Derived'.")
-                .contains(derivedClass, baseClass);
-          });
+        assertThat(subclasses)
+            .as("Expected subclasses of 'Base' to be 'Base' and 'Derived'.")
+            .contains(derivedClass, baseClass);
+      });
 
   static List<? extends IRAssertion> callAssertionForArrayLiteral1 =
-      Collections.singletonList(
-          cg -> {
-            MethodReference mref =
-                descriptorToMethodRef(
-                    "Source#ArrayLiteral1#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
+      Collections.singletonList(cg -> {
+        MethodReference mref =
+            descriptorToMethodRef(
+                "Source#ArrayLiteral1#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
 
-            CGNode node = cg.getNodes(mref).iterator().next();
-            SSAInstruction s = node.getIR().getInstructions()[2];
-            assertThat(s)
-                .as("Did not find new array instruction.")
-                .asInstanceOf(type(SSANewInstruction.class))
-                .extracting(sni -> sni.getNewSite().getDeclaredType())
-                .matches(TypeReference::isArrayType);
-          });
+        CGNode node = cg.getNodes(mref).iterator().next();
+        SSAInstruction s = node.getIR().getInstructions()[2];
+        assertThat(s)
+            .as("Did not find new array instruction.")
+            .asInstanceOf(type(SSANewInstruction.class))
+            .extracting(sni -> sni.getNewSite().getDeclaredType())
+            .matches(TypeReference::isArrayType);
+      });
 
   static List<? extends IRAssertion> callAssertionForQualifiedStatic =
-      Collections.singletonList(
-          cg -> {
-            MethodReference mref =
-                descriptorToMethodRef(
-                    "Source#QualifiedStatic#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
+      Collections.singletonList(cg -> {
+        MethodReference mref =
+            descriptorToMethodRef(
+                "Source#QualifiedStatic#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
 
-            CGNode node = cg.getNodes(mref).iterator().next();
-            SSAInstruction s = node.getIR().getInstructions()[4];
+        CGNode node = cg.getNodes(mref).iterator().next();
+        SSAInstruction s = node.getIR().getInstructions()[4];
 
-            final FieldReference field =
-                assertThat(s)
-                    .asInstanceOf(type(SSAGetInstruction.class))
-                    .matches(SSAFieldAccessInstruction::isStatic)
-                    .actual()
-                    .getDeclaredField();
-            assertThat(field.getName()).hasToString("value");
-            assertThat(field.getDeclaringClass().getName()).hasToString("LFooQ");
-          });
+        final FieldReference field =
+            assertThat(s)
+                .asInstanceOf(type(SSAGetInstruction.class))
+                .matches(SSAFieldAccessInstruction::isStatic)
+                .actual()
+                .getDeclaredField();
+        assertThat(field.getName()).hasToString("value");
+        assertThat(field.getDeclaringClass().getName()).hasToString("LFooQ");
+      });
 
   static List<? extends IRAssertion> callAssertionForArrayLiteral2 =
-      Collections.singletonList(
-          cg -> {
-            MethodReference mref =
-                descriptorToMethodRef(
-                    "Source#ArrayLiteral2#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
+      Collections.singletonList(cg -> {
+        MethodReference mref =
+            descriptorToMethodRef(
+                "Source#ArrayLiteral2#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
 
-            CGNode node = cg.getNodes(mref).iterator().next();
+        CGNode node = cg.getNodes(mref).iterator().next();
 
-            final SSAInstruction[] instructions = node.getIR().getInstructions();
+        final SSAInstruction[] instructions = node.getIR().getInstructions();
 
-            // tests 1 and 2
-            assertThat(List.of(2, 3))
-                .allSatisfy(
-                    slot ->
-                        assertThat(instructions[slot])
-                            .as(
-                                () ->
-                                    String.format(
-                                        "Expected instruction %d to be a new array instruction.",
-                                        slot + 1))
-                            .asInstanceOf(type(SSANewInstruction.class))
-                            .extracting(sni -> sni.getNewSite().getDeclaredType())
-                            .matches(TypeReference::isArrayType));
+        // tests 1 and 2
+        assertThat(List.of(2, 3))
+            .allSatisfy(slot ->
+                assertThat(instructions[slot])
+                    .as(() ->
+                        String.format(
+                            "Expected instruction %d to be a new array instruction.", slot + 1))
+                    .asInstanceOf(type(SSANewInstruction.class))
+                    .extracting(sni -> sni.getNewSite().getDeclaredType())
+                    .matches(TypeReference::isArrayType));
 
-            // test 3: the last 4 instructions are of the form y[i] = i+1;
-            {
-              final SymbolTable symbolTable = node.getIR().getSymbolTable();
-              for (int i = 4; i <= 7; i++) {
+        // test 3: the last 4 instructions are of the form y[i] = i+1;
+        {
+          final SymbolTable symbolTable = node.getIR().getSymbolTable();
+          for (int i = 4; i <= 7; i++) {
 
-                SSAArrayStoreInstruction as =
-                    assertThat(Arrays.stream(instructions))
-                        .element(i)
-                        .asInstanceOf(type(SSAArrayStoreInstruction.class))
-                        .actual();
+            SSAArrayStoreInstruction as =
+                assertThat(Arrays.stream(instructions))
+                    .element(i)
+                    .asInstanceOf(type(SSAArrayStoreInstruction.class))
+                    .actual();
 
-                assertThat(node.getIR().getLocalNames(i, as.getArrayRef())[0])
-                    .as("Expected an array store to 'y'.")
-                    .isEqualTo("y");
+            assertThat(node.getIR().getLocalNames(i, as.getArrayRef())[0])
+                .as("Expected an array store to 'y'.")
+                .isEqualTo("y");
 
-                final Integer valueOfArrayIndex =
-                    ((Integer) symbolTable.getConstantValue(as.getIndex()));
-                final Integer valueAssigned = (Integer) symbolTable.getConstantValue(as.getValue());
+            final Integer valueOfArrayIndex =
+                ((Integer) symbolTable.getConstantValue(as.getIndex()));
+            final Integer valueAssigned = (Integer) symbolTable.getConstantValue(as.getValue());
 
-                assertThat(valueAssigned.intValue())
-                    .as("Expected an array store to 'y' with value %d", valueOfArrayIndex + 1)
-                    .isEqualTo(valueOfArrayIndex + 1);
-              }
-            }
-          });
+            assertThat(valueAssigned.intValue())
+                .as("Expected an array store to 'y' with value %d", valueOfArrayIndex + 1)
+                .isEqualTo(valueOfArrayIndex + 1);
+          }
+        }
+      });
 
   static List<EdgeAssertions> edgeAssertions =
       Arrays.asList(
@@ -268,118 +261,112 @@ public abstract class JavaIRTests extends IRTests {
               "Source#Simple1#instanceMethod1#()V", "Source#Simple1#instanceMethod2#()V"));
 
   static List<? extends IRAssertion> callAssertionForTwoClasses =
-      List.of(
-          cg -> {
-            final String typeStr = singleInputForTest("TwoClasses");
+      List.of(cg -> {
+        final String typeStr = singleInputForTest("TwoClasses");
 
-            final TypeReference type =
-                findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
+        final TypeReference type =
+            findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
-            final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-            assertThat(iClass).isNotNull();
+        final IClass iClass = cg.getClassHierarchy().lookupClass(type);
+        assertThat(iClass).isNotNull();
 
-            /*
-            assertThat(iClass.getClassLoader().getNumberOfClasses()).isEqualTo(2);
+        /*
+        assertThat(iClass.getClassLoader().getNumberOfClasses()).isEqualTo(2);
 
-            for (IClass cls : Iterator2Iterable.make(iClass.getClassLoader().iterateAllClasses())) {
-              assertTrue("Expected class to be either " + typeStr + " or " + "Bar", cls.getName().getClassName().toString()
-                  .equals(typeStr)
-                  || cls.getName().getClassName().toString().equals("Bar"));
-            }
-            */
-          });
+        for (IClass cls : Iterator2Iterable.make(iClass.getClassLoader().iterateAllClasses())) {
+          assertTrue("Expected class to be either " + typeStr + " or " + "Bar", cls.getName().getClassName().toString()
+              .equals(typeStr)
+              || cls.getName().getClassName().toString().equals("Bar"));
+        }
+        */
+      });
   static List<? extends IRAssertion> callAssertionForStaticNesting =
-      Collections.singletonList(
-          cg -> {
-            final String typeStr = singleInputForTest("StaticNesting") + "$WhatsIt";
+      Collections.singletonList(cg -> {
+        final String typeStr = singleInputForTest("StaticNesting") + "$WhatsIt";
 
-            final TypeReference type =
-                findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
+        final TypeReference type =
+            findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
-            final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-            assertThat(iClass).isNotNull();
+        final IClass iClass = cg.getClassHierarchy().lookupClass(type);
+        assertThat(iClass).isNotNull();
 
-            // todo: this fails: assertNotNull("Expected to be enclosed in
-            // 'StaticNesting'.",
-            // ((JavaSourceLoaderImpl.JavaClass)iClass).getEnclosingClass());
-            // todo: is there the concept of CompilationUnit?
+        // todo: this fails: assertNotNull("Expected to be enclosed in
+        // 'StaticNesting'.",
+        // ((JavaSourceLoaderImpl.JavaClass)iClass).getEnclosingClass());
+        // todo: is there the concept of CompilationUnit?
 
-            /*
-             * {@link JavaCAst2IRTranslator#getEnclosingType} return null for static inner
-             * classes..?
-             */
-          });
+        /*
+         * {@link JavaCAst2IRTranslator#getEnclosingType} return null for static inner
+         * classes..?
+         */
+      });
 
   static List<? extends IRAssertion> callAssertionForInnerClass =
-      Collections.singletonList(
-          cg -> {
-            final String typeStr = singleInputForTest("InnerClass");
+      Collections.singletonList(cg -> {
+        final String typeStr = singleInputForTest("InnerClass");
 
-            final TypeReference type =
-                findOrCreateTypeReference("Source", typeStr + "$WhatsIt", cg.getClassHierarchy());
+        final TypeReference type =
+            findOrCreateTypeReference("Source", typeStr + "$WhatsIt", cg.getClassHierarchy());
 
-            final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-            assertThat(iClass).isNotNull();
+        final IClass iClass = cg.getClassHierarchy().lookupClass(type);
+        assertThat(iClass).isNotNull();
 
-            assertThat(((JavaClass) iClass).getEnclosingClass())
-                .as("Expected to be enclosed in 'InnerClass'.")
-                .isEqualTo(
-                    cg.getClassHierarchy()
-                        .lookupClass(
-                            findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy())));
-          });
-
-  static List<? extends IRAssertion> callAssertionForLocalClass =
-      Collections.singletonList(
-          cg -> {
-            final String typeStr = singleInputForTest("LocalClass");
-            final String localClassStr = "Foo";
-
-            // Observe the descriptor for a class local to a method.
-            final TypeReference mainFooType =
-                findOrCreateTypeReference(
-                    "Source",
-                    typeStr + "/main([Ljava/lang/String;)V/" + localClassStr,
-                    cg.getClassHierarchy());
-
-            // Observe the descriptor for a class local to a method.
-            final IClass mainFooClass = cg.getClassHierarchy().lookupClass(mainFooType);
-            assertThat(mainFooClass).isNotNull();
-
-            final TypeReference methodFooType =
-                findOrCreateTypeReference(
-                    "Source", typeStr + "/method()V/" + localClassStr, cg.getClassHierarchy());
-
-            final IClass methodFooClass = cg.getClassHierarchy().lookupClass(methodFooType);
-            assertThat(methodFooClass).isNotNull();
-
-            final IClass localClass =
+        assertThat(((JavaClass) iClass).getEnclosingClass())
+            .as("Expected to be enclosed in 'InnerClass'.")
+            .isEqualTo(
                 cg.getClassHierarchy()
                     .lookupClass(
-                        findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy()));
+                        findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy())));
+      });
 
-            assertThat(((JavaClass) methodFooClass).getEnclosingClass())
-                .as("'Foo' is enclosed in 'Local'")
-                .isSameAs(localClass);
-            // todo: is this failing because 'main' is static?
-            // assertSame("'Foo' is enclosed in 'Local'",
-            // ((JavaSourceLoaderImpl.JavaClass)mainFooClass).getEnclosingClass(),
-            // localClass);
-          });
+  static List<? extends IRAssertion> callAssertionForLocalClass =
+      Collections.singletonList(cg -> {
+        final String typeStr = singleInputForTest("LocalClass");
+        final String localClassStr = "Foo";
+
+        // Observe the descriptor for a class local to a method.
+        final TypeReference mainFooType =
+            findOrCreateTypeReference(
+                "Source",
+                typeStr + "/main([Ljava/lang/String;)V/" + localClassStr,
+                cg.getClassHierarchy());
+
+        // Observe the descriptor for a class local to a method.
+        final IClass mainFooClass = cg.getClassHierarchy().lookupClass(mainFooType);
+        assertThat(mainFooClass).isNotNull();
+
+        final TypeReference methodFooType =
+            findOrCreateTypeReference(
+                "Source", typeStr + "/method()V/" + localClassStr, cg.getClassHierarchy());
+
+        final IClass methodFooClass = cg.getClassHierarchy().lookupClass(methodFooType);
+        assertThat(methodFooClass).isNotNull();
+
+        final IClass localClass =
+            cg.getClassHierarchy()
+                .lookupClass(findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy()));
+
+        assertThat(((JavaClass) methodFooClass).getEnclosingClass())
+            .as("'Foo' is enclosed in 'Local'")
+            .isSameAs(localClass);
+        // todo: is this failing because 'main' is static?
+        // assertSame("'Foo' is enclosed in 'Local'",
+        // ((JavaSourceLoaderImpl.JavaClass)mainFooClass).getEnclosingClass(),
+        // localClass);
+      });
   static List<? extends IRAssertion> callAssertionForAnonymousClass =
-      Collections.singletonList(
-          cg -> {
-            final String typeStr = singleInputForTest("AnonymousClass");
+      Collections.singletonList(cg -> {
+        final String typeStr = singleInputForTest("AnonymousClass");
 
-            final TypeReference type =
-                findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
+        final TypeReference type =
+            findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
-            final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-            assertThat(iClass).isNotNull();
+        final IClass iClass = cg.getClassHierarchy().lookupClass(type);
+        assertThat(iClass).isNotNull();
 
-            // todo what to check?? could not find anything in the APIs for
-            // anonymous
-          });
+        // todo what to check?? could not find anything in the APIs for
+        // anonymous
+      });
 
   private static final List<IRAssertion> MLAssertions =
       Collections.singletonList(

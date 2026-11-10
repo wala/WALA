@@ -35,32 +35,31 @@ public class IrAndSourceViewer {
     sourceViewer = new SourceViewer();
     splitPane.setRightComponent(sourceViewer);
 
-    irViewer.addSelectedPcListner(
-        pc -> {
-          IMethod method = ir.getMethod();
-          int sourceLineNumber = IrViewer.NA;
-          String sourceFileName = null;
-          if (pc != IrViewer.NA) {
-            try {
-              sourceLineNumber = method.getLineNumber(pc);
-              IClassLoader loader = method.getDeclaringClass().getClassLoader();
-              sourceFileName = loader.getSourceFileName(method, pc);
-            } catch (Exception e1) {
-              e1.printStackTrace();
-            }
-          }
-          if (sourceFileName != null) {
-            URL url;
-            try {
-              url = new File(sourceFileName).toURI().toURL();
-              sourceViewer.setSource(url, sourceLineNumber);
-            } catch (MalformedURLException e2) {
-              e2.printStackTrace();
-            }
-          } else {
-            sourceViewer.removeSource();
-          }
-        });
+    irViewer.addSelectedPcListner(pc -> {
+      IMethod method = ir.getMethod();
+      int sourceLineNumber = IrViewer.NA;
+      String sourceFileName = null;
+      if (pc != IrViewer.NA) {
+        try {
+          sourceLineNumber = method.getLineNumber(pc);
+          IClassLoader loader = method.getDeclaringClass().getClassLoader();
+          sourceFileName = loader.getSourceFileName(method, pc);
+        } catch (Exception e1) {
+          e1.printStackTrace();
+        }
+      }
+      if (sourceFileName != null) {
+        URL url;
+        try {
+          url = new File(sourceFileName).toURI().toURL();
+          sourceViewer.setSource(url, sourceLineNumber);
+        } catch (MalformedURLException e2) {
+          e2.printStackTrace();
+        }
+      } else {
+        sourceViewer.removeSource();
+      }
+    });
 
     return splitPane;
   }

@@ -152,7 +152,7 @@ public class LambdaTest extends WalaTestCase {
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 
     Function<String, MethodReference> getTargetRef =
-        (klass) ->
+        klass ->
             MethodReference.findOrCreate(
                 TypeReference.findOrCreate(
                     ClassLoaderReference.Application, "Llambda/MethodRefs$" + klass),
@@ -181,7 +181,7 @@ public class LambdaTest extends WalaTestCase {
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 
     Function<String, MethodReference> getTargetRef =
-        (klass) ->
+        klass ->
             MethodReference.findOrCreate(
                 TypeReference.findOrCreate(
                     ClassLoaderReference.Application, "Llambda/ParamsAndCapture$" + klass),
@@ -189,7 +189,7 @@ public class LambdaTest extends WalaTestCase {
                 Descriptor.findOrCreateUTF8("()V"));
 
     Consumer<String> checkCalledFromOneSite =
-        (klassName) -> {
+        klassName -> {
           Set<CGNode> nodes = cg.getNodes(getTargetRef.apply(klassName));
           CGNode node = assertThat(nodes).singleElement().actual();
           List<CGNode> predNodes = Iterator2Collection.toList(cg.getPredNodes(node));

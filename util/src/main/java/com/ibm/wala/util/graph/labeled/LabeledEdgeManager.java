@@ -80,8 +80,7 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
   Iterator<T> getPredNodes(T N, U label);
 
   default Iterator<T> getPredNodes(T N, Predicate<U> pred) {
-    return new FilterIterator<>(
-        getPredNodes(N), (p) -> getEdgeLabels(p, N).stream().anyMatch(pred));
+    return new FilterIterator<>(getPredNodes(N), p -> getEdgeLabels(p, N).stream().anyMatch(pred));
   }
 
   /**

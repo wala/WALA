@@ -200,22 +200,20 @@ public abstract class IRTests {
 
       assertThat(cg.getNodes(mref))
           .allSatisfy(cgNode -> assertThat(cgNode.getMethod()).isInstanceOf(AstMethod.class))
-          .anySatisfy(
-              cgNode -> {
-                DebuggingInformation dbg = ((AstMethod) cgNode.getMethod()).debugInfo();
-                assertThat(cgNode.getIR().getInstructions())
-                    .filteredOn(findInstruction)
-                    .extracting(inst -> dbg.getOperandPosition(inst.iIndex(), operand))
-                    .filteredOn(Objects::nonNull)
-                    .anySatisfy(
-                        pos ->
-                            assertThat(position)
-                                .containsExactly(
-                                    pos.getFirstLine(),
-                                    pos.getFirstCol(),
-                                    pos.getLastLine(),
-                                    pos.getLastCol()));
-              });
+          .anySatisfy(cgNode -> {
+            DebuggingInformation dbg = ((AstMethod) cgNode.getMethod()).debugInfo();
+            assertThat(cgNode.getIR().getInstructions())
+                .filteredOn(findInstruction)
+                .extracting(inst -> dbg.getOperandPosition(inst.iIndex(), operand))
+                .filteredOn(Objects::nonNull)
+                .anySatisfy(pos ->
+                    assertThat(position)
+                        .containsExactly(
+                            pos.getFirstLine(),
+                            pos.getFirstCol(),
+                            pos.getLastLine(),
+                            pos.getLastCol()));
+          });
     }
   }
 

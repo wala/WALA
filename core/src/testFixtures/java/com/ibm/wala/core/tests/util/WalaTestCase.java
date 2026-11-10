@@ -82,13 +82,10 @@ public abstract class WalaTestCase {
         Arrays.stream(System.getProperty("java.class.path").split(File.pathSeparator))
             .map(candidate -> Paths.get(candidate).normalize())
             .filter(candidate -> candidate.toString().contains(normalizedElt))
-            .map(
-                found -> {
-                  final String foundString = found.toString();
-                  return found.toFile().isDirectory()
-                      ? foundString + File.separatorChar
-                      : foundString;
-                })
+            .map(found -> {
+              final String foundString = found.toString();
+              return found.toFile().isDirectory() ? foundString + File.separatorChar : foundString;
+            })
             .collect(Collectors.joining(File.pathSeparator));
     assertThat(result).as("cannot find %s", elt).isNotEmpty();
     return result;

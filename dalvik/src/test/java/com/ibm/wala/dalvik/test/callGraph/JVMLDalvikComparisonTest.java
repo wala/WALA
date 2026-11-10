@@ -134,48 +134,47 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
   private static void checkSourceLines(CallGraph java, CallGraph android) {
     MutableIntSet ajlines = IntSetUtil.make();
     MutableIntSet aalines = IntSetUtil.make();
-    java.forEach(
-        jnode -> {
-          if (jnode
-              .getMethod()
-              .getReference()
-              .getDeclaringClass()
-              .getClassLoader()
-              .equals(ClassLoaderReference.Application)) {
-            if (jnode.getMethod() instanceof ShrikeCTMethod m) {
-              MutableIntSet jlines = IntSetUtil.make();
-              for (SSAInstruction inst : jnode.getIR().getInstructions()) {
-                if (inst != null) {
-                  try {
-                    int bcIndex = m.getBytecodeIndex(inst.iIndex());
-                    int javaLine = m.getLineNumber(bcIndex);
-                    jlines.add(javaLine);
-                    ajlines.add(javaLine);
-                  } catch (InvalidClassFileException e) {
-                    //noinspection ResultOfMethodCallIgnored
-                    fail("Unexpected InvalidClassFileException while computing line numbers", e);
-                  }
-                }
-              }
-
-              for (CGNode an : android.getNodes(m.getReference())) {
-                DexIMethod am = (DexIMethod) an.getMethod();
-                MutableIntSet alines = IntSetUtil.make();
-                for (SSAInstruction ainst : an.getIR().getInstructions()) {
-                  if (ainst != null) {
-                    int ai = am.getLineNumber(am.getBytecodeIndex(ainst.iIndex()));
-                    if (ai >= 0) {
-                      alines.add(ai);
-                      aalines.add(ai);
-                    }
-                  }
-                }
-
-                assertThat(alines).as("no debug info").isNotEmpty();
+    java.forEach(jnode -> {
+      if (jnode
+          .getMethod()
+          .getReference()
+          .getDeclaringClass()
+          .getClassLoader()
+          .equals(ClassLoaderReference.Application)) {
+        if (jnode.getMethod() instanceof ShrikeCTMethod m) {
+          MutableIntSet jlines = IntSetUtil.make();
+          for (SSAInstruction inst : jnode.getIR().getInstructions()) {
+            if (inst != null) {
+              try {
+                int bcIndex = m.getBytecodeIndex(inst.iIndex());
+                int javaLine = m.getLineNumber(bcIndex);
+                jlines.add(javaLine);
+                ajlines.add(javaLine);
+              } catch (InvalidClassFileException e) {
+                //noinspection ResultOfMethodCallIgnored
+                fail("Unexpected InvalidClassFileException while computing line numbers", e);
               }
             }
           }
-        });
+
+          for (CGNode an : android.getNodes(m.getReference())) {
+            DexIMethod am = (DexIMethod) an.getMethod();
+            MutableIntSet alines = IntSetUtil.make();
+            for (SSAInstruction ainst : an.getIR().getInstructions()) {
+              if (ainst != null) {
+                int ai = am.getLineNumber(am.getBytecodeIndex(ainst.iIndex()));
+                if (ai >= 0) {
+                  alines.add(ai);
+                  aalines.add(ai);
+                }
+              }
+            }
+
+            assertThat(alines).as("no debug info").isNotEmpty();
+          }
+        }
+      }
+    });
 
     IntSet both = ajlines.intersection(aalines);
     assertThat((double) both.size())

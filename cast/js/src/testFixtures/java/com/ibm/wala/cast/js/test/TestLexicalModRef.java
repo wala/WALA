@@ -36,37 +36,35 @@ public abstract class TestLexicalModRef {
     Map<CGNode, OrdinalSet<Pair<CGNode, String>>> readResult = lexAccesses.computeLexicalRef();
     Map<CGNode, OrdinalSet<Pair<CGNode, String>>> writeResult = lexAccesses.computeLexicalMod();
     assertThat(readResult)
-        .anySatisfy(
-            (n, readVars) -> {
-              assertThat(n)
-                  .asString()
-                  .startsWith("Node: <Code body of function Lsimple-lexical.js/outer/inner>");
-              // function "inner" reads exactly x and z
-              assertThat(readVars)
-                  .extracting(Object::toString)
-                  .containsExactly(
-                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,x]",
-                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,z]");
-              // writes x and z as well
-              assertThat(writeResult.get(n))
-                  .extracting(Object::toString)
-                  .containsExactlyInAnyOrder(
-                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,x]",
-                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,z]");
-            })
-        .anySatisfy(
-            (n, readVars) -> {
-              assertThat(n)
-                  .asString()
-                  .startsWith("Node: <Code body of function Lsimple-lexical.js/outer/inner2>");
-              // function "inner3" reads exactly innerName, inner3, and x and z via callees
-              assertThat(readVars)
-                  .extracting(Object::toString)
-                  .containsExactlyInAnyOrder(
-                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,x]",
-                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,inner3]",
-                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,innerName]",
-                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,z]");
-            });
+        .anySatisfy((n, readVars) -> {
+          assertThat(n)
+              .asString()
+              .startsWith("Node: <Code body of function Lsimple-lexical.js/outer/inner>");
+          // function "inner" reads exactly x and z
+          assertThat(readVars)
+              .extracting(Object::toString)
+              .containsExactly(
+                  "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,x]",
+                  "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,z]");
+          // writes x and z as well
+          assertThat(writeResult.get(n))
+              .extracting(Object::toString)
+              .containsExactlyInAnyOrder(
+                  "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,x]",
+                  "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,z]");
+        })
+        .anySatisfy((n, readVars) -> {
+          assertThat(n)
+              .asString()
+              .startsWith("Node: <Code body of function Lsimple-lexical.js/outer/inner2>");
+          // function "inner3" reads exactly innerName, inner3, and x and z via callees
+          assertThat(readVars)
+              .extracting(Object::toString)
+              .containsExactlyInAnyOrder(
+                  "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,x]",
+                  "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,inner3]",
+                  "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,innerName]",
+                  "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,z]");
+        });
   }
 }

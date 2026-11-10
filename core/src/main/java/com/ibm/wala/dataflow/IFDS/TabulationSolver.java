@@ -304,11 +304,10 @@ public class TabulationSolver<T, P, F> {
         System.err.println(" reached: " + D3);
       }
       if (D3 != null) {
-        D3.foreach(
-            d3 -> {
-              newNormalExplodedEdge(edge, m, d3);
-              propagate(edge.entry, edge.d1, m, d3);
-            });
+        D3.foreach(d3 -> {
+          newNormalExplodedEdge(edge, m, d3);
+          propagate(edge.entry, edge.d1, m, d3);
+        });
       }
     }
   }
@@ -421,11 +420,10 @@ public class TabulationSolver<T, P, F> {
       final T[] entries,
       final T retSite,
       final IFlowFunction retf) {
-    D4.foreach(
-        d4 -> {
-          final IntSet D5 = computeBinaryFlow(d4, edge.d2, (IBinaryReturnFlowFunction) retf);
-          propToReturnSite(c, entries, retSite, d4, D5, edge);
-        });
+    D4.foreach(d4 -> {
+      final IntSet D5 = computeBinaryFlow(d4, edge.d2, (IBinaryReturnFlowFunction) retf);
+      propToReturnSite(c, entries, retSite, d4, D5, edge);
+    });
   }
 
   /**
@@ -447,36 +445,34 @@ public class TabulationSolver<T, P, F> {
       final IntSet D5,
       final PathEdge<T> edge) {
     if (D5 != null) {
-      D5.foreach(
-          d5 -> {
-            // [26 - 28]
-            // note that we've modified the algorithm here to account
-            // for potential
-            // multiple entry nodes. Instead of propagating the new
-            // summary edge
-            // with respect to one s_profOf(c), we have to propagate
-            // for each
-            // potential entry node s_p /in s_procOf(c)
-            for (final T s_p : entries) {
-              if (DEBUG_LEVEL > 1) {
-                System.err.println(" do entry " + s_p);
-              }
-              IntSet D3 = getInversePathEdges(s_p, c, d4);
-              if (DEBUG_LEVEL > 1) {
-                System.err.println("D3" + D3);
-              }
-              if (D3 != null) {
-                D3.foreach(
-                    d3 -> {
-                      // set curPathEdge to be consistent with its setting in processCall() when
-                      // applying a summary edge
-                      curPathEdge = PathEdge.createPathEdge(s_p, d3, c, d4);
-                      newSummaryEdge(curPathEdge, edge, retSite, d5);
-                      propagate(s_p, d3, retSite, d5);
-                    });
-              }
-            }
-          });
+      D5.foreach(d5 -> {
+        // [26 - 28]
+        // note that we've modified the algorithm here to account
+        // for potential
+        // multiple entry nodes. Instead of propagating the new
+        // summary edge
+        // with respect to one s_profOf(c), we have to propagate
+        // for each
+        // potential entry node s_p /in s_procOf(c)
+        for (final T s_p : entries) {
+          if (DEBUG_LEVEL > 1) {
+            System.err.println(" do entry " + s_p);
+          }
+          IntSet D3 = getInversePathEdges(s_p, c, d4);
+          if (DEBUG_LEVEL > 1) {
+            System.err.println("D3" + D3);
+          }
+          if (D3 != null) {
+            D3.foreach(d3 -> {
+              // set curPathEdge to be consistent with its setting in processCall() when
+              // applying a summary edge
+              curPathEdge = PathEdge.createPathEdge(s_p, d3, c, d4);
+              newSummaryEdge(curPathEdge, edge, retSite, d5);
+              propagate(s_p, d3, retSite, d5);
+            });
+          }
+        }
+      });
     }
   }
 
@@ -527,11 +523,10 @@ public class TabulationSolver<T, P, F> {
         System.err.println("normal successor reached: " + D3);
       }
       if (D3 != null) {
-        D3.foreach(
-            d3 -> {
-              newNormalExplodedEdge(edge, m, d3);
-              propagate(edge.entry, edge.d1, m, d3);
-            });
+        D3.foreach(d3 -> {
+          newNormalExplodedEdge(edge, m, d3);
+          propagate(edge.entry, edge.d1, m, d3);
+        });
       }
     }
 
@@ -552,13 +547,12 @@ public class TabulationSolver<T, P, F> {
         System.err.println("reached: " + reached);
       }
       if (reached != null) {
-        reached.foreach(
-            x -> {
-              assert x >= 0;
-              assert edge.d1 >= 0;
-              newNormalExplodedEdge(edge, returnSite, x);
-              propagate(edge.entry, edge.d1, returnSite, x);
-            });
+        reached.foreach(x -> {
+          assert x >= 0;
+          assert edge.d1 >= 0;
+          newNormalExplodedEdge(edge, returnSite, x);
+          propagate(edge.entry, edge.d1, returnSite, x);
+        });
       }
     }
   }
@@ -611,67 +605,61 @@ public class TabulationSolver<T, P, F> {
       final CallFlowEdges callFlow = findOrCreateCallFlowEdges(calleeEntry);
       final int s_p_num = supergraph.getLocalBlockNumber(calleeEntry);
 
-      reached.foreach(
-          d1 -> {
-            // we get reuse if we _don't_ propagate a new fact to the callee entry
-            final boolean gotReuse = !propagate(calleeEntry, d1, calleeEntry, d1);
-            recordCall(edge.target, calleeEntry, d1, gotReuse);
-            newCallExplodedEdge(edge, calleeEntry, d1);
-            // cache the fact that we've flowed <c, d2> -> <callee, d1> by a
-            // call flow
-            callFlow.addCallEdge(callNodeNum, edge.d2, d1);
-            // handle summary edges now as well. this is different from the PoPL
-            // 95 paper.
-            if (summaries != null) {
-              // for each exit from the callee
-              P p = supergraph.getProcOf(calleeEntry);
-              T[] exits = supergraph.getExitsForProcedure(p);
-              for (final T exit : exits) {
-                assert DEBUG_LEVEL <= 0 || supergraph.containsNode(exit);
-                int x_num = supergraph.getLocalBlockNumber(exit);
-                // reachedBySummary := {d2} s.t. <callee,d1> -> <exit,d2>
-                // was recorded as a summary edge
-                IntSet reachedBySummary = summaries.getSummaryEdges(s_p_num, x_num, d1);
-                if (reachedBySummary != null) {
-                  for (final T returnSite : returnSitesForCallee) {
-                    // if "exit" is a valid exit from the callee to the return
-                    // site being processed
-                    if (supergraph.hasEdge(exit, returnSite)) {
-                      final IFlowFunction retf =
-                          flowFunctionMap.getReturnFlowFunction(edge.target, exit, returnSite);
-                      reachedBySummary.foreach(
-                          d2 -> {
-                            assert curSummaryEdge == null : "curSummaryEdge should be null here";
-                            curSummaryEdge = PathEdge.createPathEdge(calleeEntry, d1, exit, d2);
-                            if (retf
-                                instanceof IBinaryReturnFlowFunction iBinaryReturnFlowFunction) {
-                              final IntSet D51 =
-                                  computeBinaryFlow(edge.d2, d2, iBinaryReturnFlowFunction);
-                              if (D51 != null) {
-                                D51.foreach(
-                                    d5 -> {
-                                      newSummaryEdge(edge, curSummaryEdge, returnSite, d5);
-                                      propagate(edge.entry, edge.d1, returnSite, d5);
-                                    });
-                              }
-                            } else {
-                              final IntSet D52 = computeFlow(d2, (IUnaryFlowFunction) retf);
-                              if (D52 != null) {
-                                D52.foreach(
-                                    d5 -> {
-                                      newSummaryEdge(edge, curSummaryEdge, returnSite, d5);
-                                      propagate(edge.entry, edge.d1, returnSite, d5);
-                                    });
-                              }
-                            }
-                            curSummaryEdge = null;
-                          });
+      reached.foreach(d1 -> {
+        // we get reuse if we _don't_ propagate a new fact to the callee entry
+        final boolean gotReuse = !propagate(calleeEntry, d1, calleeEntry, d1);
+        recordCall(edge.target, calleeEntry, d1, gotReuse);
+        newCallExplodedEdge(edge, calleeEntry, d1);
+        // cache the fact that we've flowed <c, d2> -> <callee, d1> by a
+        // call flow
+        callFlow.addCallEdge(callNodeNum, edge.d2, d1);
+        // handle summary edges now as well. this is different from the PoPL
+        // 95 paper.
+        if (summaries != null) {
+          // for each exit from the callee
+          P p = supergraph.getProcOf(calleeEntry);
+          T[] exits = supergraph.getExitsForProcedure(p);
+          for (final T exit : exits) {
+            assert DEBUG_LEVEL <= 0 || supergraph.containsNode(exit);
+            int x_num = supergraph.getLocalBlockNumber(exit);
+            // reachedBySummary := {d2} s.t. <callee,d1> -> <exit,d2>
+            // was recorded as a summary edge
+            IntSet reachedBySummary = summaries.getSummaryEdges(s_p_num, x_num, d1);
+            if (reachedBySummary != null) {
+              for (final T returnSite : returnSitesForCallee) {
+                // if "exit" is a valid exit from the callee to the return
+                // site being processed
+                if (supergraph.hasEdge(exit, returnSite)) {
+                  final IFlowFunction retf =
+                      flowFunctionMap.getReturnFlowFunction(edge.target, exit, returnSite);
+                  reachedBySummary.foreach(d2 -> {
+                    assert curSummaryEdge == null : "curSummaryEdge should be null here";
+                    curSummaryEdge = PathEdge.createPathEdge(calleeEntry, d1, exit, d2);
+                    if (retf instanceof IBinaryReturnFlowFunction iBinaryReturnFlowFunction) {
+                      final IntSet D51 = computeBinaryFlow(edge.d2, d2, iBinaryReturnFlowFunction);
+                      if (D51 != null) {
+                        D51.foreach(d5 -> {
+                          newSummaryEdge(edge, curSummaryEdge, returnSite, d5);
+                          propagate(edge.entry, edge.d1, returnSite, d5);
+                        });
+                      }
+                    } else {
+                      final IntSet D52 = computeFlow(d2, (IUnaryFlowFunction) retf);
+                      if (D52 != null) {
+                        D52.foreach(d5 -> {
+                          newSummaryEdge(edge, curSummaryEdge, returnSite, d5);
+                          propagate(edge.entry, edge.d1, returnSite, d5);
+                        });
+                      }
                     }
-                  }
+                    curSummaryEdge = null;
+                  });
                 }
               }
             }
-          });
+          }
+        }
+      });
     }
   }
 

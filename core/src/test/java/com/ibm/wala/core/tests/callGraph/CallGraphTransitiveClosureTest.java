@@ -117,12 +117,11 @@ public class CallGraphTransitiveClosureTest extends WalaTestCase {
   private static void assertHasDependentCycles(CallGraph cg) {
     Set<Set<CGNode>> cycles = HashSetFactory.make();
     new SCCIterator<>(cg)
-        .forEachRemaining(
-            c -> {
-              if (c.size() > 1) {
-                cycles.add(c);
-              }
-            });
+        .forEachRemaining(c -> {
+          if (c.size() > 1) {
+            cycles.add(c);
+          }
+        });
     boolean dependent = false;
     for (Set<CGNode> c : cycles) {
       Set<CGNode> reachable = DFS.getReachableNodes(cg, c);

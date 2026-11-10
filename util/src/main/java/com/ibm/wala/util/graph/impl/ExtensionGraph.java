@@ -241,14 +241,13 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
   public Iterator<T> iterateNodes(IntSet s) {
     final MutableIntSet os = IntSetUtil.make();
     final MutableIntSet es = IntSetUtil.make();
-    s.foreach(
-        x -> {
-          if (x <= original.getMaxNumber()) {
-            os.add(x);
-          } else {
-            es.add(x - original.getMaxNumber() - 1);
-          }
-        });
+    s.foreach(x -> {
+      if (x <= original.getMaxNumber()) {
+        os.add(x);
+      } else {
+        es.add(x - original.getMaxNumber() - 1);
+      }
+    });
     return new CompoundIterator<>(original.iterateNodes(os), additionalNodes.iterateNodes(es));
   }
 

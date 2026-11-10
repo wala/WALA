@@ -77,30 +77,30 @@ public class GraphDataflowTest extends WalaTestCase {
    */
   public static String expectedStringNodeOnly() {
     return """
-        ------
-        Node A(0) = { 0 }
-        Node B(1) = { 0 1 }
-        Node C(2) = { 0 1 2 }
-        Node D(3) = { 0 1 3 }
-        Node E(4) = { 0 1 2 3 4 }
-        Node F(5) = { 0 1 2 3 4 5 }
-        Node G(6) = { 6 }
-        Node H(7) = { 7 }
-        """;
+    ------
+    Node A(0) = { 0 }
+    Node B(1) = { 0 1 }
+    Node C(2) = { 0 1 2 }
+    Node D(3) = { 0 1 3 }
+    Node E(4) = { 0 1 2 3 4 }
+    Node F(5) = { 0 1 2 3 4 5 }
+    Node G(6) = { 6 }
+    Node H(7) = { 7 }
+    """;
   }
 
   public static String expectedStringNodeEdge() {
     return """
-        ------
-        Node A(0) = { 0 }
-        Node B(1) = { 0 1 }
-        Node C(2) = { 0 2 }
-        Node D(3) = { 1 3 }
-        Node E(4) = { 0 1 2 3 4 }
-        Node F(5) = { 0 1 2 3 4 5 }
-        Node G(6) = { 6 }
-        Node H(7) = { 7 }
-        """;
+    ------
+    Node A(0) = { 0 }
+    Node B(1) = { 0 1 }
+    Node C(2) = { 0 2 }
+    Node D(3) = { 1 3 }
+    Node E(4) = { 0 1 2 3 4 }
+    Node F(5) = { 0 1 2 3 4 5 }
+    Node G(6) = { 6 }
+    Node H(7) = { 7 }
+    """;
   }
 
   /**

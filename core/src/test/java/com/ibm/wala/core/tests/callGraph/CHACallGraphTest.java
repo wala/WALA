@@ -76,7 +76,7 @@ public class CHACallGraphTest {
             "Llambda/ParamsAndCapture",
             CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     Function<String, MethodReference> getTargetRef =
-        (klass) ->
+        klass ->
             MethodReference.findOrCreate(
                 TypeReference.findOrCreate(
                     ClassLoaderReference.Application, "Llambda/ParamsAndCapture$" + klass),
@@ -84,7 +84,7 @@ public class CHACallGraphTest {
                 Descriptor.findOrCreateUTF8("()V"));
 
     Consumer<String> checkCalledFromFiveSites =
-        (klassName) -> {
+        klassName -> {
           CGNode node =
               assertThat(cg.getNodes(getTargetRef.apply(klassName))).singleElement().actual();
           CGNode pred = assertThat(cg.getPredNodes(node)).toIterable().singleElement().actual();
@@ -109,7 +109,7 @@ public class CHACallGraphTest {
             CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
     Function<String, MethodReference> getTargetRef =
-        (klass) ->
+        klass ->
             MethodReference.findOrCreate(
                 TypeReference.findOrCreate(
                     ClassLoaderReference.Application, "Llambda/MethodRefs$" + klass),
@@ -143,12 +143,11 @@ public class CHACallGraphTest {
     for (CGNode node : CG) {
       int nodeNum = CG.getNumber(node);
       CG.getSuccNodeNumbers(node)
-          .foreach(
-              succNum -> {
-                CGNode succNode = CG.getNode(succNum);
-                IntSet predNodeNumbers = CG.getPredNodeNumbers(succNode);
-                assertThat(predNodeNumbers).is(contains(nodeNum));
-              });
+          .foreach(succNum -> {
+            CGNode succNode = CG.getNode(succNum);
+            IntSet predNodeNumbers = CG.getPredNodeNumbers(succNode);
+            assertThat(predNodeNumbers).is(contains(nodeNum));
+          });
     }
     return CG;
   }

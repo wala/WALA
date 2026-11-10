@@ -827,36 +827,33 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (typeFilter instanceof SingleClassFilter singleClassFilter) {
         final IClass concreteType = singleClassFilter.concreteType();
         final MutableIntSet tmp = intSetFactory.make();
-        vals.foreach(
-            x -> {
-              InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
-              if (cha.isAssignableFrom(concreteType, ikAndState.getInstanceKey().concreteType())) {
-                tmp.add(x);
-              }
-            });
+        vals.foreach(x -> {
+          InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
+          if (cha.isAssignableFrom(concreteType, ikAndState.getInstanceKey().concreteType())) {
+            tmp.add(x);
+          }
+        });
         vals = tmp;
       } else if (typeFilter instanceof MultipleClassesFilter multipleClassesFilter) {
         final MutableIntSet tmp = intSetFactory.make();
-        vals.foreach(
-            x -> {
-              InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
-              for (IClass t : multipleClassesFilter.getConcreteTypes()) {
-                if (cha.isAssignableFrom(t, ikAndState.getInstanceKey().concreteType())) {
-                  tmp.add(x);
-                }
-              }
-            });
+        vals.foreach(x -> {
+          InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
+          for (IClass t : multipleClassesFilter.getConcreteTypes()) {
+            if (cha.isAssignableFrom(t, ikAndState.getInstanceKey().concreteType())) {
+              tmp.add(x);
+            }
+          }
+        });
         vals = tmp;
       } else if (typeFilter instanceof SingleInstanceFilter singleInstanceFilter) {
         final InstanceKey theOnlyInstanceKey = singleInstanceFilter.getInstance();
         final MutableIntSet tmp = intSetFactory.make();
-        vals.foreach(
-            x -> {
-              InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
-              if (ikAndState.getInstanceKey().equals(theOnlyInstanceKey)) {
-                tmp.add(x);
-              }
-            });
+        vals.foreach(x -> {
+          InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
+          if (ikAndState.getInstanceKey().equals(theOnlyInstanceKey)) {
+            tmp.add(x);
+          }
+        });
         vals = tmp;
       } else {
         Assertions.UNREACHABLE();

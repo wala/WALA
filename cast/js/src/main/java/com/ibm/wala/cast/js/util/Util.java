@@ -33,14 +33,13 @@ public class Util {
     int size;
     do {
       size = result.size();
-      result.foreach(
-          vn -> {
-            for (SSAInstruction inst : Iterator2Iterable.make(du.getUses(vn))) {
-              if (inst instanceof PrototypeLookup || inst instanceof SSAPhiInstruction) {
-                result.add(inst.getDef());
-              }
-            }
-          });
+      result.foreach(vn -> {
+        for (SSAInstruction inst : Iterator2Iterable.make(du.getUses(vn))) {
+          if (inst instanceof PrototypeLookup || inst instanceof SSAPhiInstruction) {
+            result.add(inst.getDef());
+          }
+        }
+      });
     } while (size != result.size());
 
     return result;

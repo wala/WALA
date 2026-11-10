@@ -70,13 +70,9 @@ public class MissingSuperTest extends WalaTestCase {
 
     // there should be one PhantomClass in the Application class loader
     assertThat(cha)
-        .filteredOn(
-            klass2 ->
-                klass2 instanceof PhantomClass
-                    && klass2
-                        .getReference()
-                        .getClassLoader()
-                        .equals(ClassLoaderReference.Application))
+        .filteredOn(klass2 ->
+            klass2 instanceof PhantomClass
+                && klass2.getReference().getClassLoader().equals(ClassLoaderReference.Application))
         .first()
         .extracting(klass2 -> klass2.getReference().getName())
         .hasToString("Lmissingsuper/Super");

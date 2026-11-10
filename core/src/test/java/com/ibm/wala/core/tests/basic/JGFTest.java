@@ -59,17 +59,14 @@ public class JGFTest {
     JsonAssert assertThatNodes = assertThatGraph.node("nodes");
     JsonListAssert assertThatEdges = assertThatGraph.node("edges").isArray();
     assertThat(G)
-        .allSatisfy(
-            node -> {
-              int number = G.getNumber(node);
-              assertThatNodes.node(number + ".metadata.name").isEqualTo(node);
-              assertThat(G.getSuccNodes(node))
-                  .toIterable()
-                  .allSatisfy(
-                      successor ->
-                          assertThatEdges.contains(
-                              Map.of(
-                                  "source", "" + number, "target", "" + G.getNumber(successor))));
-            });
+        .allSatisfy(node -> {
+          int number = G.getNumber(node);
+          assertThatNodes.node(number + ".metadata.name").isEqualTo(node);
+          assertThat(G.getSuccNodes(node))
+              .toIterable()
+              .allSatisfy(successor ->
+                  assertThatEdges.contains(
+                      Map.of("source", "" + number, "target", "" + G.getNumber(successor))));
+        });
   }
 }

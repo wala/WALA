@@ -224,24 +224,22 @@ public class PruneArrayOutOfBoundExceptionEdge {
         final Condition<TypeReference> itemMatcher = anyOf(isJLNPE, isJLAIOOBE);
         softly
             .assertThat(lastInstruction.getExceptionTypes())
-            .as(
-                () ->
-                    "Edge deleted but cause instruction can't throw NullPointerException"
-                        + "nor ArrayIndexOutOfBoundsException: "
-                        + identifier
-                        + ":"
-                        + method.getLineNumber(lastInstruction.iIndex()))
+            .as(() ->
+                "Edge deleted but cause instruction can't throw NullPointerException"
+                    + "nor ArrayIndexOutOfBoundsException: "
+                    + identifier
+                    + ":"
+                    + method.getLineNumber(lastInstruction.iIndex()))
             .areAtLeastOne(itemMatcher);
 
         softly
             .assertThat(lastInstruction.getExceptionTypes())
-            .as(
-                () ->
-                    "Edge deleted but cause instruction throws other exceptions as NullPointerException"
-                        + "and ArrayIndexOutOfBoundsException: "
-                        + identifier
-                        + ":"
-                        + method.getLineNumber(lastInstruction.iIndex()))
+            .as(() ->
+                "Edge deleted but cause instruction throws other exceptions as NullPointerException"
+                    + "and ArrayIndexOutOfBoundsException: "
+                    + identifier
+                    + ":"
+                    + method.getLineNumber(lastInstruction.iIndex()))
             .are(itemMatcher);
 
       } else {
