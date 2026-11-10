@@ -8,7 +8,7 @@ pluginManagement {
 
 // Version catalog from `libs.versions.toml`is unavailable in a settings `buildscript` block:
 // <https://github.com/gradle/gradle/issues/36437>.
-buildscript { dependencies.classpath("com.diffplug.spotless:spotless-lib-extra:4.10.4") }
+buildscript { dependencies.classpath("com.diffplug.spotless:spotless-lib-extra:4.11.0") }
 
 plugins {
   id("com.diffplug.configuration-cache-for-platform-specific-build") version "4.4.1"
