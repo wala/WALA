@@ -95,14 +95,41 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
     @Override
     public IntSet getPredNodeNumbers(@Nullable T node) {
-      return getFilteredNodeNumbers(node, delegate.getPredNodeNumbers(node));
+      return getFilteredNodeNumbers(
+          node, delegate.getPredNodeNumbers(node), Direction.PREDECESSORS);
     }
 
-    private IntSet getFilteredNodeNumbers(@Nullable T node, IntSet s) {
+    /** The kind of neighbors whose edges {@link #getFilteredNodeNumbers} filters. */
+    private enum Direction {
+      /** Successors, whose edges run from the node to the neighbor. */
+      SUCCESSORS,
+      /** Predecessors, whose edges run from the neighbor to the node. */
+      PREDECESSORS
+    }
+
+    /**
+     * Returns the neighbors in {@code s} whose edge with {@code node} is not ignored.
+     *
+     * <p>An edge's direction depends on the kind of neighbor: it runs from {@code node} to a
+     * successor, and from a predecessor to {@code node}. The ignored-edge relation is checked in
+     * that direction.
+     *
+     * @param node the node whose neighbors are filtered
+     * @param s the numbers of {@code node}'s neighbors in the delegate graph
+     * @param direction whether {@code s} holds successors or predecessors of {@code node}
+     * @return the numbers of the neighbors whose edge with {@code node} is not ignored
+     */
+    private IntSet getFilteredNodeNumbers(@Nullable T node, IntSet s, Direction direction) {
+      int x = getNumber(node);
       MutableIntSet result = MutableSparseIntSet.makeEmpty();
       for (IntIterator it = s.intIterator(); it.hasNext(); ) {
         int y = it.next();
-        if (!ignoreEdges.contains(y, getNumber(node))) {
+        boolean ignored =
+            switch (direction) {
+              case SUCCESSORS -> ignoreEdges.contains(x, y);
+              case PREDECESSORS -> ignoreEdges.contains(y, x);
+            };
+        if (!ignored) {
           result.add(y);
         }
       }
@@ -111,7 +138,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
     @Override
     public IntSet getSuccNodeNumbers(@Nullable T node) {
-      return getFilteredNodeNumbers(node, delegate.getSuccNodeNumbers(node));
+      return getFilteredNodeNumbers(node, delegate.getSuccNodeNumbers(node), Direction.SUCCESSORS);
     }
 
     @Override
