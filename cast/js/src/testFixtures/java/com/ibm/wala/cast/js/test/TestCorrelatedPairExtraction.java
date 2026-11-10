@@ -111,7 +111,7 @@ public abstract class TestCorrelatedPairExtraction {
           for(var p in src) {
             dest[p] = src[p];
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -120,7 +120,7 @@ public abstract class TestCorrelatedPairExtraction {
               dest[p] = src[p];
              })(p);
           }
-        }\
+        }
         """);
   }
 
@@ -132,7 +132,7 @@ public abstract class TestCorrelatedPairExtraction {
         function extend(dest, src) {
           for(var p in src)
             dest[p] = src[p];
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -140,7 +140,7 @@ public abstract class TestCorrelatedPairExtraction {
             (function _forin_body_0(p) {
               dest[p] = src[p];
              })(p);
-        }\
+        }
         """);
   }
 
@@ -154,7 +154,7 @@ public abstract class TestCorrelatedPairExtraction {
         function extend(dest, src) {
           for(p in src)
             dest[p] = src[p];
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -162,7 +162,7 @@ public abstract class TestCorrelatedPairExtraction {
             (function _forin_body_0(p) {
               dest[p] = src[p];
              })(p);
-        }\
+        }
         """);
   }
 
@@ -175,7 +175,7 @@ public abstract class TestCorrelatedPairExtraction {
           var p;
           for(p in src)
             dest[p] = src[p];
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -184,7 +184,7 @@ public abstract class TestCorrelatedPairExtraction {
             (function _forin_body_0(p) {
               dest[p] = src[p];
              })(p);
-        }\
+        }
         """);
   }
 
@@ -198,7 +198,7 @@ public abstract class TestCorrelatedPairExtraction {
             var p;
             dest[p] = src[p];
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -208,7 +208,7 @@ public abstract class TestCorrelatedPairExtraction {
               dest[p] = src[p];
              })(p);
           }
-        }\
+        }
         """);
   }
 
@@ -222,7 +222,7 @@ public abstract class TestCorrelatedPairExtraction {
             dest[p] = src[p];
             var p;
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -232,7 +232,7 @@ public abstract class TestCorrelatedPairExtraction {
               dest[p] = src[p];
              })(p);
           }
-        }\
+        }
         """);
   }
 
@@ -249,7 +249,7 @@ public abstract class TestCorrelatedPairExtraction {
             p = true;
           }
           return p;
-        }\
+        }
         """,
         null);
   }
@@ -262,7 +262,7 @@ public abstract class TestCorrelatedPairExtraction {
         Object.prototype.extend = function(src) {
           for(var p in src)
             this[p] = src[p];
-        }\
+        }
         """,
         """
         Object.prototype.extend = function(src) {
@@ -270,7 +270,7 @@ public abstract class TestCorrelatedPairExtraction {
             (function _forin_body_0(p, thi$) {
               thi$[p] = src[p];
             })(p, this);
-        }\
+        }
         """);
   }
 
@@ -288,7 +288,7 @@ public abstract class TestCorrelatedPairExtraction {
               this[p] = globals[p];
             })();
           }
-        }\
+        }
         """,
         """
         function defGlobals(globals) {
@@ -299,7 +299,7 @@ public abstract class TestCorrelatedPairExtraction {
               })(p, this)
             })();
           }
-        }\
+        }
         """);
   }
 
@@ -314,7 +314,7 @@ public abstract class TestCorrelatedPairExtraction {
               break;
             dest[p] = src[p];
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -325,7 +325,7 @@ public abstract class TestCorrelatedPairExtraction {
               dest[p] = src[p];
             })(p);
           }
-        }\
+        }
         """);
   }
 
@@ -341,7 +341,7 @@ public abstract class TestCorrelatedPairExtraction {
               break;
             }
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -353,7 +353,7 @@ public abstract class TestCorrelatedPairExtraction {
               break;
             }
           }
-        }\
+        }
         """);
   }
 
@@ -369,7 +369,7 @@ public abstract class TestCorrelatedPairExtraction {
               break outer;
             }
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -381,7 +381,7 @@ public abstract class TestCorrelatedPairExtraction {
               break outer;
             }
           }
-        }\
+        }
         """);
   }
 
@@ -396,7 +396,7 @@ public abstract class TestCorrelatedPairExtraction {
               throw new Exception('huh?');
             dest[p] = src[p];
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -407,7 +407,7 @@ public abstract class TestCorrelatedPairExtraction {
               dest[p] = src[p];
              })(p);
           }
-        }\
+        }
         """);
   }
 
@@ -423,7 +423,7 @@ public abstract class TestCorrelatedPairExtraction {
               dest[p] = src[p];
             }
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -435,7 +435,7 @@ public abstract class TestCorrelatedPairExtraction {
               })(p);
             }
           }
-        }\
+        }
         """);
   }
 
@@ -475,14 +475,14 @@ public abstract class TestCorrelatedPairExtraction {
           for(var p in src)
             do_ext(dest, p, src);
         }
-        function do_ext(x, p, y) { x[p] = y[p]; }\
+        function do_ext(x, p, y) { x[p] = y[p]; }
         """,
         """
         function ext(dest, src) {
           for(var p in src)
             do_ext(dest, p, src);
         }
-        function do_ext(x, p, y) { x[p] = y[p]; }\
+        function do_ext(x, p, y) { x[p] = y[p]; }
         """);
   }
 
@@ -494,7 +494,7 @@ public abstract class TestCorrelatedPairExtraction {
           for(var p in src) {
             dest.prototype[p] = src[p];
           }
-        }\
+        }
         """,
         """
         function implement(dest, src) {
@@ -503,7 +503,7 @@ public abstract class TestCorrelatedPairExtraction {
               dest.prototype[p] = src[p];
              })(p);
           }
-        }\
+        }
         """);
   }
 
@@ -520,7 +520,7 @@ public abstract class TestCorrelatedPairExtraction {
             this.prototype[property] = value;
           }
           return this;
-        }\
+        }
         """,
         """
         function addMethods(source) {
@@ -530,7 +530,7 @@ public abstract class TestCorrelatedPairExtraction {
             thi$.prototype[property] = value; return value; })(property, this);
           }
           return this;
-        }\
+        }
         """);
   }
 
@@ -546,7 +546,7 @@ public abstract class TestCorrelatedPairExtraction {
             this.prototype[property] = value;
           }
           return this;
-        }\
+        }
         """,
         """
         function addMethods(source) {
@@ -556,7 +556,7 @@ public abstract class TestCorrelatedPairExtraction {
             thi$.prototype[property] = value; return value; })(property, this);
           }
           return this;
-        }\
+        }
         """);
   }
 
@@ -573,7 +573,7 @@ public abstract class TestCorrelatedPairExtraction {
             this.prototype[property] = value;
           }
           return this;
-        }\
+        }
         """,
         """
         function addMethods(source) {
@@ -583,7 +583,7 @@ public abstract class TestCorrelatedPairExtraction {
             thi$.prototype[property] = value; return value; }(property, this);
           }
           return this;
-        }\
+        }
         """);
   }
 
@@ -595,14 +595,14 @@ public abstract class TestCorrelatedPairExtraction {
           for(var p in src)
             if(foo(p)) write.call(dest, p, src[p]);
         }
-        function write(p, v) { this[p] = v; }\
+        function write(p, v) { this[p] = v; }
         """,
         """
         function extend(dest, src) {
           for(var p in src)
               (function _forin_body_0(p) { if(foo(p)) write.call(dest, p, src[p]); })(p);
         }
-        function write(p, v) { this[p] = v; }\
+        function write(p, v) { this[p] = v; }
         """);
   }
 
@@ -615,7 +615,7 @@ public abstract class TestCorrelatedPairExtraction {
         function every(object, fn, bind) {
           for(var key in object)
             if(hasOwnProperty.call(object, key) && !fn.call(bind, object[key], key)) return false;
-        }\
+        }
         """,
         """
         function every(object, fn, bind) {
@@ -625,7 +625,7 @@ public abstract class TestCorrelatedPairExtraction {
             })(key);
             if(re$) { if(re$.type == 'return') return re$.value; }
           }
-        }\
+        }
         """);
   }
 
@@ -640,7 +640,7 @@ public abstract class TestCorrelatedPairExtraction {
             y = src[name];
             dest[name] = join(x,y);
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -650,7 +650,7 @@ public abstract class TestCorrelatedPairExtraction {
             y = src[name];
             dest[name] = join(x,y); })(name);
           }
-        }\
+        }
         """);
   }
 
@@ -665,7 +665,7 @@ public abstract class TestCorrelatedPairExtraction {
             if (k in object) results[k] = object[k];
           }
           return results;
-        }\
+        }
         """,
         """
         function(object, keys){
@@ -675,7 +675,7 @@ public abstract class TestCorrelatedPairExtraction {
             (function _forin_body_0(k) { if (k in object) results[k] = object[k]; })(k);
           }
           return results;
-        }\
+        }
         """);
   }
 
@@ -690,7 +690,7 @@ public abstract class TestCorrelatedPairExtraction {
             s = src[p];
             dest[p] = s;
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -703,7 +703,7 @@ public abstract class TestCorrelatedPairExtraction {
               return s;\
              })(p);
           }
-        }\
+        }
         """);
   }
 
@@ -716,14 +716,14 @@ public abstract class TestCorrelatedPairExtraction {
           for(var p in src) {
             arguments[0][p] = src[p];
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
           for(var p in src) {
             arguments[0][p] = src[p];
           }
-        }\
+        }
         """);
   }
 
@@ -740,7 +740,7 @@ public abstract class TestCorrelatedPairExtraction {
                }
               }
           }
-        }\
+        }
         """,
         """
         function eachProp(obj, func) {
@@ -752,7 +752,7 @@ public abstract class TestCorrelatedPairExtraction {
                }
               }
           }
-        }\
+        }
         """,
         """
         function eachProp(obj, func) {
@@ -768,7 +768,7 @@ public abstract class TestCorrelatedPairExtraction {
                }
               }
           }
-        }\
+        }
         """);
   }
 }

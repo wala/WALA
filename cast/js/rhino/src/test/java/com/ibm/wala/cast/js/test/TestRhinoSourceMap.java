@@ -54,7 +54,7 @@ public class TestRhinoSourceMap {
                 }
             }
             return true;
-        }\
+        }
         """),
     new Assertion(
         "Ltests/jquery_spec_test.js/anonymous__0/anonymous__59/anonymous__62/anonymous__63/anonymous__64/anonymous__65",
@@ -66,7 +66,7 @@ public class TestRhinoSourceMap {
             } else {
                 newDefer[action](returned);
             }
-        }\
+        }
         """),
     new Assertion(
         "Ltests/jquery_spec_test.js/anonymous__0/anonymous__386/anonymous__392",
@@ -84,14 +84,14 @@ public class TestRhinoSourceMap {
                 }
             }
             return this;
-        }\
+        }
         """),
     new Assertion(
         "Ltests/jquery_spec_test.js/anonymous__0/getWindow",
         """
         function getWindow(elem) {
             return jQuery.isWindow(elem) ? elem : elem.nodeType === 9 ? elem.defaultView || elem.parentWindow : false;
-        }\
+        }
         """),
     new Assertion(
         "Ltests/jquery_spec_test.js/anonymous__0/anonymous__1/anonymous__7",
@@ -111,7 +111,7 @@ public class TestRhinoSourceMap {
                 ret.selector = this.selector + "." + name + "(" + selector + ")";
             }
             return ret;
-        }\
+        }
         """),
     new Assertion(
         "Ltests/jquery_spec_test.js/anonymous__0/anonymous__1/anonymous__17",
@@ -153,7 +153,7 @@ public class TestRhinoSourceMap {
                 }
             }
             return target;
-        }\
+        }
         """)
   };
 

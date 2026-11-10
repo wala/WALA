@@ -89,7 +89,7 @@ public abstract class TestForInBodyExtraction {
           for(var p in src) {
             dest[p] = src[p];
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -98,7 +98,7 @@ public abstract class TestForInBodyExtraction {
               dest[p] = src[p];
              })(p);
           }
-        }\
+        }
         """);
   }
 
@@ -110,7 +110,7 @@ public abstract class TestForInBodyExtraction {
         function extend(dest, src) {
           for(var p in src)
             dest[p] = src[p];
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -118,7 +118,7 @@ public abstract class TestForInBodyExtraction {
             (function _forin_body_0(p) {
               dest[p] = src[p];
              })(p);
-        }\
+        }
         """);
   }
 
@@ -130,7 +130,7 @@ public abstract class TestForInBodyExtraction {
         function extend(dest, src) {
           for(p in src)
             dest[p] = src[p];
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -138,7 +138,7 @@ public abstract class TestForInBodyExtraction {
             (function _forin_body_0(p) {
               dest[p] = src[p];
              })(p);
-        }\
+        }
         """);
   }
 
@@ -151,7 +151,7 @@ public abstract class TestForInBodyExtraction {
           var p;
           for(p in src)
             dest[p] = src[p];
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -160,7 +160,7 @@ public abstract class TestForInBodyExtraction {
             (function _forin_body_0(p) {
               dest[p] = src[p];
              })(p);
-        }\
+        }
         """);
   }
 
@@ -174,7 +174,7 @@ public abstract class TestForInBodyExtraction {
             var p;
             dest[p] = src[p];
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -184,7 +184,7 @@ public abstract class TestForInBodyExtraction {
               dest[p] = src[p];
              })(p);
           }
-        }\
+        }
         """);
   }
 
@@ -198,7 +198,7 @@ public abstract class TestForInBodyExtraction {
             dest[p] = src[p];
             var p;
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -208,7 +208,7 @@ public abstract class TestForInBodyExtraction {
               dest[p] = src[p];
              })(p);
           }
-        }\
+        }
         """);
   }
 
@@ -225,7 +225,7 @@ public abstract class TestForInBodyExtraction {
             p = true;
           }
           return p;
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -242,7 +242,7 @@ public abstract class TestForInBodyExtraction {
                p = _let_parm_0;
              })(p);
           return p;
-        }\
+        }
         """);
   }
 
@@ -254,7 +254,7 @@ public abstract class TestForInBodyExtraction {
         Object.prototype.extend = function(src) {
           for(var p in src)
             this[p] = src[p];
-        }\
+        }
         """,
         """
         Object.prototype.extend = function(src) {
@@ -262,7 +262,7 @@ public abstract class TestForInBodyExtraction {
             (function _forin_body_0(p, thi$) {
               thi$[p] = src[p];
             })(p, this);
-        }\
+        }
         """);
   }
 
@@ -277,7 +277,7 @@ public abstract class TestForInBodyExtraction {
               this[p] = globals[p];
             })();
           }
-        }\
+        }
         """,
         """
         function defGlobals(globals) {
@@ -288,7 +288,7 @@ public abstract class TestForInBodyExtraction {
               })()
             })(p);
           }
-        }\
+        }
         """);
   }
 
@@ -303,7 +303,7 @@ public abstract class TestForInBodyExtraction {
               break;
             dest[p] = src[p];
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -320,7 +320,7 @@ public abstract class TestForInBodyExtraction {
               }
             }
           }
-        }\
+        }
         """);
   }
 
@@ -336,7 +336,7 @@ public abstract class TestForInBodyExtraction {
               break;
             }
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -348,7 +348,7 @@ public abstract class TestForInBodyExtraction {
               }
             })(p);
           }
-        }\
+        }
         """);
   }
 
@@ -364,7 +364,7 @@ public abstract class TestForInBodyExtraction {
               break outer;
             }
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -382,7 +382,7 @@ public abstract class TestForInBodyExtraction {
               }
             }
           }
-        }\
+        }
         """);
   }
 
@@ -397,7 +397,7 @@ public abstract class TestForInBodyExtraction {
               throw new Exception('huh?');
             dest[p] = src[p];
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -408,7 +408,7 @@ public abstract class TestForInBodyExtraction {
               dest[p] = src[p];
              })(p);
           }
-        }\
+        }
         """);
   }
 
@@ -500,7 +500,7 @@ public abstract class TestForInBodyExtraction {
               dest[p] = src[p];
             }
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
@@ -512,7 +512,7 @@ public abstract class TestForInBodyExtraction {
               })(p);
             }
           }
-        }\
+        }
         """);
   }
 
@@ -524,7 +524,7 @@ public abstract class TestForInBodyExtraction {
         var o = {x:23};
         for(x in o) {
           o[x] += 19;
-        }\
+        }
         """,
         """
         var o = {x:23};
@@ -532,7 +532,7 @@ public abstract class TestForInBodyExtraction {
           (function _forin_body_0(x) {
             o[x] += 19;
           })(x);
-        }\
+        }
         """);
   }
 
@@ -546,7 +546,7 @@ public abstract class TestForInBodyExtraction {
           for(y in o[x]) {
             o[x][y] += 19;
           }
-        }\
+        }
         """,
         """
         var o = {x:{y:23}};
@@ -558,7 +558,7 @@ public abstract class TestForInBodyExtraction {
               })(y);
             }
           })(x);
-        }\
+        }
         """);
   }
 
@@ -573,7 +573,7 @@ public abstract class TestForInBodyExtraction {
               return x[p];
             x[p]++;
           }
-        }\
+        }
         """,
         """
         function foo(x) {
@@ -588,7 +588,7 @@ public abstract class TestForInBodyExtraction {
                 return re$.value;
             }
           }
-        }\
+        }
         """);
   }
 
@@ -633,7 +633,7 @@ public abstract class TestForInBodyExtraction {
               result.push(this.getStyle(s));
             }
           }
-        }\
+        }
         """,
         """
         function foo() {
@@ -648,7 +648,7 @@ public abstract class TestForInBodyExtraction {
               }
             })(style, this);
           }
-        }\
+        }
         """);
   }
 
@@ -665,7 +665,7 @@ public abstract class TestForInBodyExtraction {
               ;
             }
           }
-        }\
+        }
         """,
         """
         function foo(property) {
@@ -687,7 +687,7 @@ public abstract class TestForInBodyExtraction {
               }
             }
           }
-        }\
+        }
         """);
   }
 
@@ -701,7 +701,7 @@ public abstract class TestForInBodyExtraction {
               continue;
             return obj[p];
           }
-        }\
+        }
         """,
         """
         function foo(obj) {
@@ -720,7 +720,7 @@ public abstract class TestForInBodyExtraction {
               }
             }
           }
-        }\
+        }
         """);
   }
 
@@ -734,7 +734,7 @@ public abstract class TestForInBodyExtraction {
             if(pseudos.hasOwnProperty(name)) {
               ;
             }
-        }\
+        }
         """,
         """
         var addSlickPseudos = function() {
@@ -744,7 +744,7 @@ public abstract class TestForInBodyExtraction {
                 ;
               }
             })(name);
-        }\
+        }
         """);
   }
 
@@ -756,7 +756,7 @@ public abstract class TestForInBodyExtraction {
           for(var p in src)
             do_ext(dest, p, src);
         }
-        function do_ext(x, p, y) { x[p] = y[p]; }\
+        function do_ext(x, p, y) { x[p] = y[p]; }
         """,
         """
         function ext(dest, src) {
@@ -765,7 +765,7 @@ public abstract class TestForInBodyExtraction {
               do_ext(dest, p, src);
             })(p);
         }
-        function do_ext(x, p, y) { x[p] = y[p]; }\
+        function do_ext(x, p, y) { x[p] = y[p]; }
         """);
   }
 
@@ -780,7 +780,7 @@ public abstract class TestForInBodyExtraction {
                 return 23;
             }
           }
-        }\
+        }
         """,
         """
         function foo(x) {
@@ -801,7 +801,7 @@ public abstract class TestForInBodyExtraction {
                 return re$.value;
             }
           }
-        }\
+        }
         """);
   }
 
@@ -817,7 +817,7 @@ public abstract class TestForInBodyExtraction {
               if(s != style) continue outer;
             }
           }
-        }\
+        }
         """,
         """
         function foo(property) {
@@ -841,7 +841,7 @@ public abstract class TestForInBodyExtraction {
               }
             }
           }
-        }\
+        }
         """);
   }
 
@@ -857,7 +857,7 @@ public abstract class TestForInBodyExtraction {
               if(s != style) continue;
             }
           }
-        }\
+        }
         """,
         """
         function foo(property) {
@@ -878,7 +878,7 @@ public abstract class TestForInBodyExtraction {
               }
             })(style);
           }
-        }\
+        }
         """);
   }
 
@@ -920,7 +920,7 @@ public abstract class TestForInBodyExtraction {
           for(var i in {}) {
             f();
           }
-        } catch(_) {}\
+        } catch(_) {}
         """,
         """
         try {
@@ -929,7 +929,7 @@ public abstract class TestForInBodyExtraction {
               f();
             })(i);
           }
-        } catch(_) {}\
+        } catch(_) {}
         """);
   }
 
@@ -942,14 +942,14 @@ public abstract class TestForInBodyExtraction {
           for(var p in src) {
             arguments[0][p] = src[p];
           }
-        }\
+        }
         """,
         """
         function extend(dest, src) {
           for(var p in src) {
             arguments[0][p] = src[p];
           }
-        }\
+        }
         """);
   }
 }
