@@ -796,8 +796,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
 
   public static ISSABasicBlock returnNode(ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg) {
     Collection<ISSABasicBlock> returnNodes = cfg.getNormalPredecessors(cfg.exit());
-    assertThat(returnNodes).hasSize(1);
-    return (ISSABasicBlock) returnNodes.toArray()[0];
+    return assertThat(returnNodes).singleElement().actual();
   }
 
   public static int returnVal(ISSABasicBlock returnNode) {
