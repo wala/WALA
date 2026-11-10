@@ -65,7 +65,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -96,10 +95,9 @@ public abstract class JavaIRTests extends IRTests {
 
             final Collection<? extends IClass> interfaces = iClass.getDirectInterfaces();
 
-            assertThat(interfaces).hasSize(1);
-
-            Assertions.<IClass>assertThatCollection(interfaces)
-                .contains(
+            assertThat(interfaces)
+                .singleElement()
+                .isEqualTo(
                     cg.getClassHierarchy()
                         .lookupClass(
                             findOrCreateTypeReference("Source", "IFoo", cg.getClassHierarchy())));
