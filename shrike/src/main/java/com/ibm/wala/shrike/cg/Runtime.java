@@ -51,12 +51,11 @@ public class Runtime {
 
   private static StackTraceElement[] fullStackTrace() {
     // Drop this helper's frame so Runtime.execution/termination/addToCallStack is at index 0.
-    return stackWalker.walk(
-        frames ->
-            frames
-                .skip(1)
-                .map(StackWalker.StackFrame::toStackTraceElement)
-                .toArray(StackTraceElement[]::new));
+    return stackWalker.walk(frames ->
+        frames
+            .skip(1)
+            .map(StackWalker.StackFrame::toStackTraceElement)
+            .toArray(StackTraceElement[]::new));
   }
 
   private static final Runtime runtime =
@@ -86,12 +85,11 @@ public class Runtime {
   }
 
   private final ThreadLocal<ArrayDeque<CallFrame>> callStacks =
-      ThreadLocal.withInitial(
-          () -> {
-            ArrayDeque<CallFrame> callStack = new ArrayDeque<>();
-            callStack.push(new CallFrame("root", null, null, -1));
-            return callStack;
-          });
+      ThreadLocal.withInitial(() -> {
+        ArrayDeque<CallFrame> callStack = new ArrayDeque<>();
+        callStack.push(new CallFrame("root", null, null, -1));
+        return callStack;
+      });
 
   private void discardExitedConstructors(StackTraceElement[] stack, int firstActiveIndex) {
     // A verified constructor cannot catch failure of its initializing super/this call.

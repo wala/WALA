@@ -137,8 +137,6 @@ public class AnnotationsReader extends AttributeReader {
   }
 
   /**
-   *
-   *
    * <pre>
    * param_annotations {
    *   u2 attribute_name_index;
@@ -171,8 +169,6 @@ public class AnnotationsReader extends AttributeReader {
   }
 
   /**
-   *
-   *
    * <pre>
    * annotation {
    *   u2 type_index;
@@ -230,8 +226,6 @@ public class AnnotationsReader extends AttributeReader {
   }
 
   /**
-   *
-   *
    * <pre>
    * element_value {
    *   u1 tag;

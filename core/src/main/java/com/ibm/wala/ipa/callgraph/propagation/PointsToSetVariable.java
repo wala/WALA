@@ -116,18 +116,17 @@ public final class PointsToSetVariable extends IntSetVariable<PointsToSetVariabl
     if (cha.isAssignableFrom(cha.lookupClass(TypeReference.JavaLangThrowable), type)) {
       return;
     }
-    b.foreach(
-        x -> {
-          InstanceKey ik = instanceKeys.getMappedObject(x);
-          IClass concreteType = ik.concreteType();
-          if (!cha.isAssignableFrom(type, concreteType)) {
-            System.err.println("BOOM");
-            System.err.println(ir);
-            System.err.println(lpk + " type " + type);
-            System.err.println(ik + " type " + concreteType);
-            Assertions.UNREACHABLE();
-          }
-        });
+    b.foreach(x -> {
+      InstanceKey ik = instanceKeys.getMappedObject(x);
+      IClass concreteType = ik.concreteType();
+      if (!cha.isAssignableFrom(type, concreteType)) {
+        System.err.println("BOOM");
+        System.err.println(ir);
+        System.err.println(lpk + " type " + type);
+        System.err.println(ik + " type " + concreteType);
+        Assertions.UNREACHABLE();
+      }
+    });
   }
 
   @Override

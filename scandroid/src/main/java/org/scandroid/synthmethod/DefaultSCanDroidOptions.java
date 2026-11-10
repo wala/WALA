@@ -198,10 +198,8 @@ public abstract class DefaultSCanDroidOptions implements ISCanDroidOptions {
    */
   public static String dumpString(ISCanDroidOptions options) {
     return AccessorsHolder.ACCESSORS_BY_NAME.entrySet().stream()
-        .map(
-            namedAccessor ->
-                "%s()=%s"
-                    .formatted(namedAccessor.getKey(), namedAccessor.getValue().apply(options)))
+        .map(namedAccessor ->
+            "%s()=%s".formatted(namedAccessor.getKey(), namedAccessor.getValue().apply(options)))
         .collect(Collectors.joining(", ", "DefaultSCanDroidOptions [", "]"));
   }
 }

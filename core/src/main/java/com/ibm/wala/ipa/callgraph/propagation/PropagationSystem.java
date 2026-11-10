@@ -599,12 +599,11 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       PointsToSetVariable rhs = (PointsToSetVariable) u.getRightHandSide();
       IntSet value = rhs.getValue();
       final int[] topFive = new int[5];
-      value.foreach(
-          x -> {
-            //noinspection SuspiciousSystemArraycopy
-            System.arraycopy(topFive, 1, topFive, 0, 4);
-            topFive[4] = x;
-          });
+      value.foreach(x -> {
+        //noinspection SuspiciousSystemArraycopy
+        System.arraycopy(topFive, 1, topFive, 0, 4);
+        topFive[4] = x;
+      });
       StringBuilder result = new StringBuilder();
       for (int i = 0; i < 5; i++) {
         int p = topFive[i];

@@ -188,13 +188,12 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     }
     IntSet pred = predecessors.getRelated(number);
     if (pred != null) {
-      pred.foreach(
-          x -> {
-            successors.remove(x, number);
-            if (successors.getRelatedCount(x) == 0) {
-              hasSuccessor.clear(x);
-            }
-          });
+      pred.foreach(x -> {
+        successors.remove(x, number);
+        if (successors.getRelatedCount(x) == 0) {
+          hasSuccessor.clear(x);
+        }
+      });
     }
     successors.removeAll(number);
     hasSuccessor.clear(number);
@@ -212,13 +211,12 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     }
     IntSet pred = predecessors.getRelated(number);
     if (pred != null) {
-      pred.foreach(
-          x -> {
-            successors.remove(x, number);
-            if (successors.getRelatedCount(x) == 0) {
-              hasSuccessor.clear(x);
-            }
-          });
+      pred.foreach(x -> {
+        successors.remove(x, number);
+        if (successors.getRelatedCount(x) == 0) {
+          hasSuccessor.clear(x);
+        }
+      });
     }
     predecessors.removeAll(number);
   }

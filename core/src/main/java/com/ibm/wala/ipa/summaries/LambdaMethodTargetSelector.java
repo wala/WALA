@@ -82,7 +82,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
             try {
               return methodSummaries.computeIfAbsent(
                   bootstrap,
-                  (b) -> {
+                  b -> {
                     MethodSummary summary = getLambdaFactorySummary(caller, site, target, invoke);
                     return new SummarizedMethod(
                         summary.getMethod(), summary, cha.lookupClass(target.getDeclaringClass()));
@@ -147,7 +147,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
     int index = 0;
     IClass lambda =
         classSummaries.computeIfAbsent(
-            invoke.getBootstrap(), (b) -> LambdaSummaryClass.create(caller, invoke));
+            invoke.getBootstrap(), b -> LambdaSummaryClass.create(caller, invoke));
     SSAInstructionFactory insts = JavaLanguage.get().instructionFactory();
     // allocate an anonymous class object.
     // v is a value number beyond the value numbers used for the invokedynamic arguments

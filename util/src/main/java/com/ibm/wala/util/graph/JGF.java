@@ -38,14 +38,13 @@ public class JGF {
     jgf.put("edges", edges);
     for (T from : G) {
       G.getSuccNodeNumbers(from)
-          .foreach(
-              to -> {
-                JSONObject edge = new JSONObject();
-                edges.put(edge);
-                edge.put("source", "" + G.getNumber(from));
-                edge.put("target", "" + to);
-                edge.put("label", labels.label(from, G.getNode(to)));
-              });
+          .foreach(to -> {
+            JSONObject edge = new JSONObject();
+            edges.put(edge);
+            edge.put("source", "" + G.getNumber(from));
+            edge.put("target", "" + to);
+            edge.put("label", labels.label(from, G.getNode(to)));
+          });
     }
 
     return jgf;

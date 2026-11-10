@@ -116,7 +116,6 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
     final CGNode callNode = assertThat(cg.getNodes(mr)).singleElement().actual();
-    ;
 
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);

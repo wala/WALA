@@ -518,12 +518,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       this.getParamObjects = getParamObjects;
       MutableIntSet indices = IntSetUtil.makeMutableCopy(getRelevantParameters(caller, site));
       getRelevantParameters(caller, site)
-          .foreach(
-              (i) -> {
-                if (i >= call.getNumberOfUses()) {
-                  indices.remove(i);
-                }
-              });
+          .foreach(i -> {
+            if (i >= call.getNumberOfUses()) {
+              indices.remove(i);
+            }
+          });
       this.params = IntSetUtil.toArray(indices);
       this.keys = new InstanceKey[params.length];
     }
@@ -549,11 +548,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           assert getParamObjects != null;
           IntSet s = getParamObjects.apply(pi, rhsi);
           if (s != null && !s.isEmpty()) {
-            s.foreach(
-                x -> {
-                  keys[pi] = system.getInstanceKey(x);
-                  rec(pi + 1, rhsi + 1);
-                });
+            s.foreach(x -> {
+              keys[pi] = system.getInstanceKey(x);
+              rec(pi + 1, rhsi + 1);
+            });
           }
         }
       }
@@ -1133,10 +1131,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
       if (!params.isEmpty() && params.max() >= instruction.getNumberOfUses()) {
         MutableIntSet trimmedParams = IntSetUtil.makeMutableCopy(params);
-        params.foreach(
-            (i) -> {
-              if (i >= instruction.getNumberOfUses()) trimmedParams.remove(i);
-            });
+        params.foreach(i -> {
+          if (i >= instruction.getNumberOfUses()) trimmedParams.remove(i);
+        });
         params = trimmedParams;
       }
 
@@ -1154,12 +1151,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
 
         final List<PointerKey> pks = new ArrayList<>(params.size());
-        params.foreach(
-            x -> {
-              if (!contentsAreInvariant(symbolTable, du, instruction.getUse(x))) {
-                pks.add(getBuilder().getPointerKeyForLocal(node, instruction.getUse(x)));
-              }
-            });
+        params.foreach(x -> {
+          if (!contentsAreInvariant(symbolTable, du, instruction.getUse(x))) {
+            pks.add(getBuilder().getPointerKeyForLocal(node, instruction.getUse(x)));
+          }
+        });
 
         DispatchOperator dispatchOperator =
             getBuilder()

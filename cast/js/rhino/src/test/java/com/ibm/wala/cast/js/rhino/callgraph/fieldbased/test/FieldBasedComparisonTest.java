@@ -22,12 +22,11 @@ public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
   @Test
   public void testSkeletonPessimistic() {
     assertThatExceptionOfType(AssertionError.class)
-        .isThrownBy(
-            () ->
-                test(
-                    "pages/skeleton.html",
-                    TestSimplePageCallGraphShape.assertionsForSkeleton,
-                    BuilderType.PESSIMISTIC));
+        .isThrownBy(() ->
+            test(
+                "pages/skeleton.html",
+                TestSimplePageCallGraphShape.assertionsForSkeleton,
+                BuilderType.PESSIMISTIC));
   }
 
   @Test
@@ -49,12 +48,11 @@ public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
   @Test
   public void testSkeleton2Pessimistic() {
     assertThatExceptionOfType(AssertionError.class)
-        .isThrownBy(
-            () ->
-                test(
-                    "pages/skeleton2.html",
-                    TestSimplePageCallGraphShape.assertionsForSkeleton2,
-                    BuilderType.PESSIMISTIC));
+        .isThrownBy(() ->
+            test(
+                "pages/skeleton2.html",
+                TestSimplePageCallGraphShape.assertionsForSkeleton2,
+                BuilderType.PESSIMISTIC));
   }
 
   @Test

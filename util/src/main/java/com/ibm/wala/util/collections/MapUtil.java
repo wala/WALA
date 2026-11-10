@@ -122,14 +122,13 @@ public class MapUtil {
   public static <K, V> Map<V, K> invertOneToOneMap(Map<K, V> m) {
     checkArgument(m != null, "m is null");
     Map<V, K> result = HashMapFactory.make(m.size());
-    m.forEach(
-        (key, value) ->
-            result.merge(
-                value,
-                key,
-                (oldValue, newValue) -> {
-                  throw new IllegalArgumentException("input map not one-to-one");
-                }));
+    m.forEach((key, value) ->
+        result.merge(
+            value,
+            key,
+            (oldValue, newValue) -> {
+              throw new IllegalArgumentException("input map not one-to-one");
+            }));
     return result;
   }
 

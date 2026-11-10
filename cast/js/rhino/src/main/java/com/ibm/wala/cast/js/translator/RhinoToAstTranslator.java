@@ -1209,11 +1209,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
           // expressions
           boolean nameExists =
               context.getScopedEntities().keySet().stream()
-                  .filter(
-                      n ->
-                          n != null
-                              && n.getKind() == CAstNode.FUNCTION_EXPR
-                              && n.getChildCount() == 1)
+                  .filter(n ->
+                      n != null && n.getKind() == CAstNode.FUNCTION_EXPR && n.getChildCount() == 1)
                   .map(n -> n.getChild(0))
                   .filter(
                       n -> n.getKind() == CAstNode.CONSTANT && n.getValue() instanceof CAstEntity)

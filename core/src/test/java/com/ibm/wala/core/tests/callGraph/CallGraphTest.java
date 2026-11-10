@@ -236,11 +236,10 @@ public class CallGraphTest extends WalaTestCase {
         Util.makeZeroCFABuilder(JavaLanguage.get(), options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options);
     assertThat(cg)
-        .filteredOn(
-            n ->
-                n.toString()
-                    .equals(
-                        "Node: < Application, LstaticInit/TestSystemProperties, main([Ljava/lang/String;)V > Context: Everywhere"))
+        .filteredOn(n ->
+            n.toString()
+                .equals(
+                    "Node: < Application, LstaticInit/TestSystemProperties, main([Ljava/lang/String;)V > Context: Everywhere"))
         .first()
         .extracting(cg::getSuccNodes, iterator(CGNode.class))
         .toIterable()

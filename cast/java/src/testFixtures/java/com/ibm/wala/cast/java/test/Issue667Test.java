@@ -39,16 +39,15 @@ public abstract class Issue667Test extends IRTests {
     result
         .fst
         .getNodes(cm)
-        .forEach(
-            n -> {
-              try {
-                ControlDependenceGraph<ISSABasicBlock> cdg =
-                    new ControlDependenceGraph<>(n.getIR().getControlFlowGraph());
-                assertThat(cdg).isNotNull();
-              } catch (IllegalArgumentException e) {
-                System.err.println(n.getIR());
-                throw e;
-              }
-            });
+        .forEach(n -> {
+          try {
+            ControlDependenceGraph<ISSABasicBlock> cdg =
+                new ControlDependenceGraph<>(n.getIR().getControlFlowGraph());
+            assertThat(cdg).isNotNull();
+          } catch (IllegalArgumentException e) {
+            System.err.println(n.getIR());
+            throw e;
+          }
+        });
   }
 }

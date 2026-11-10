@@ -515,4 +515,4 @@ tasks.withType<JavaCompileUsingEcj>().configureEach {
   options.compilerArgs.remove("-Werror")
 }
 
-spotless { java { googleJavaFormat(catalogVersion("google-java-format")) } }
+spotless { java { googleJavaFormat() } }

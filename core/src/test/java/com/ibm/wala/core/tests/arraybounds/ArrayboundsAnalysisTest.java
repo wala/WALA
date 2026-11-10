@@ -131,12 +131,11 @@ public class ArrayboundsAnalysisTest {
           UnnecessaryCheck unnecessary = analysis.getBoundsCheckNecessary().get(key);
           softly
               .assertThat(unnecessary)
-              .as(
-                  () ->
-                      "Unexpected necessity for bounds check in "
-                          + identifier
-                          + ":"
-                          + method.getLineNumber(key.iIndex()))
+              .as(() ->
+                  "Unexpected necessity for bounds check in "
+                      + identifier
+                      + ":"
+                      + method.getLineNumber(key.iIndex()))
               .satisfies(condition);
         }
       }
@@ -155,10 +154,8 @@ public class ArrayboundsAnalysisTest {
      */
     softly
         .assertThat(numberOfArrayAccesses)
-        .as(
-            () ->
-                "Number of found array accesses is not as expected for "
-                    + iClass.getName().toString())
+        .as(() ->
+            "Number of found array accesses is not as expected for " + iClass.getName().toString())
         .isEqualTo(expectedNumberOfArrayAccesses);
   }
 

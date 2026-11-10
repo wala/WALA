@@ -184,12 +184,11 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
               public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
                 if (rhs.getValue() != null) {
                   rhs.getValue()
-                      .foreach(
-                          ptr -> {
-                            InstanceKey iKey = system.getInstanceKey(ptr);
-                            PointerKey enclosing = new EnclosingObjectReferenceKey(iKey, cls);
-                            system.newConstraint(lvalKey, assignOperator, enclosing);
-                          });
+                      .foreach(ptr -> {
+                        InstanceKey iKey = system.getInstanceKey(ptr);
+                        PointerKey enclosing = new EnclosingObjectReferenceKey(iKey, cls);
+                        system.newConstraint(lvalKey, assignOperator, enclosing);
+                      });
                 }
                 return NOT_CHANGED;
               }

@@ -107,19 +107,21 @@ public abstract class TestCorrelatedPairExtraction {
   public void test1() {
     testRewriter(
         """
-            function extend(dest, src) {
-              for(var p in src) {
-                dest[p] = src[p];
-              }
-            }""",
+        function extend(dest, src) {
+          for(var p in src) {
+            dest[p] = src[p];
+          }
+        }
+        """,
         """
-            function extend(dest, src) {
-              for(var p in src) {
-                (function _forin_body_0(p) {
-                  dest[p] = src[p];
-                 })(p);
-              }
-            }""");
+        function extend(dest, src) {
+          for(var p in src) {
+            (function _forin_body_0(p) {
+              dest[p] = src[p];
+             })(p);
+          }
+        }
+        """);
   }
 
   // example from the paper, but with single-statement loop body
@@ -127,17 +129,19 @@ public abstract class TestCorrelatedPairExtraction {
   public void test2() {
     testRewriter(
         """
-            function extend(dest, src) {
-              for(var p in src)
-                dest[p] = src[p];
-            }""",
+        function extend(dest, src) {
+          for(var p in src)
+            dest[p] = src[p];
+        }
+        """,
         """
-            function extend(dest, src) {
-              for(var p in src)
-                (function _forin_body_0(p) {
-                  dest[p] = src[p];
-                 })(p);
-            }""");
+        function extend(dest, src) {
+          for(var p in src)
+            (function _forin_body_0(p) {
+              dest[p] = src[p];
+             })(p);
+        }
+        """);
   }
 
   // example from the paper, but without var decl
@@ -147,17 +151,19 @@ public abstract class TestCorrelatedPairExtraction {
   public void test3() {
     testRewriter(
         """
-            function extend(dest, src) {
-              for(p in src)
-                dest[p] = src[p];
-            }""",
+        function extend(dest, src) {
+          for(p in src)
+            dest[p] = src[p];
+        }
+        """,
         """
-            function extend(dest, src) {
-              for(p in src)
-                (function _forin_body_0(p) {
-                  dest[p] = src[p];
-                 })(p);
-            }""");
+        function extend(dest, src) {
+          for(p in src)
+            (function _forin_body_0(p) {
+              dest[p] = src[p];
+             })(p);
+        }
+        """);
   }
 
   // example from the paper, but with separate var decl
@@ -165,19 +171,21 @@ public abstract class TestCorrelatedPairExtraction {
   public void test4() {
     testRewriter(
         """
-            function extend(dest, src) {
-              var p;
-              for(p in src)
-                dest[p] = src[p];
-            }""",
+        function extend(dest, src) {
+          var p;
+          for(p in src)
+            dest[p] = src[p];
+        }
+        """,
         """
-            function extend(dest, src) {
-              var p;
-              for(p in src)
-                (function _forin_body_0(p) {
-                  dest[p] = src[p];
-                 })(p);
-            }""");
+        function extend(dest, src) {
+          var p;
+          for(p in src)
+            (function _forin_body_0(p) {
+              dest[p] = src[p];
+             })(p);
+        }
+        """);
   }
 
   // example from the paper, but with weirdly placed var decl
@@ -185,21 +193,23 @@ public abstract class TestCorrelatedPairExtraction {
   public void test5() {
     testRewriter(
         """
-            function extend(dest, src) {
-              for(p in src) {
-                var p;
-                dest[p] = src[p];
-              }
-            }""",
+        function extend(dest, src) {
+          for(p in src) {
+            var p;
+            dest[p] = src[p];
+          }
+        }
+        """,
         """
-            function extend(dest, src) {
-              for(p in src) {
-                var p;
-                (function _forin_body_0(p) {
-                  dest[p] = src[p];
-                 })(p);
-              }
-            }""");
+        function extend(dest, src) {
+          for(p in src) {
+            var p;
+            (function _forin_body_0(p) {
+              dest[p] = src[p];
+             })(p);
+          }
+        }
+        """);
   }
 
   // example from the paper, but with weirdly placed var decl in a different place
@@ -207,21 +217,23 @@ public abstract class TestCorrelatedPairExtraction {
   public void test6() {
     testRewriter(
         """
-            function extend(dest, src) {
-              for(p in src) {
-                dest[p] = src[p];
-                var p;
-              }
-            }""",
+        function extend(dest, src) {
+          for(p in src) {
+            dest[p] = src[p];
+            var p;
+          }
+        }
+        """,
         """
-            function extend(dest, src) {
-              for(p in src) {
-                var p;
-                (function _forin_body_0(p) {
-                  dest[p] = src[p];
-                 })(p);
-              }
-            }""");
+        function extend(dest, src) {
+          for(p in src) {
+            var p;
+            (function _forin_body_0(p) {
+              dest[p] = src[p];
+             })(p);
+          }
+        }
+        """);
   }
 
   // example where loop variable is referenced after the loop
@@ -231,13 +243,14 @@ public abstract class TestCorrelatedPairExtraction {
   public void test7() {
     testRewriter(
         """
-            function extend(dest, src) {
-              for(var p in src) {
-                dest[p] = src[p];
-                p = true;
-              }
-              return p;
-            }""",
+        function extend(dest, src) {
+          for(var p in src) {
+            dest[p] = src[p];
+            p = true;
+          }
+          return p;
+        }
+        """,
         null);
   }
 
@@ -246,17 +259,19 @@ public abstract class TestCorrelatedPairExtraction {
   public void test8() {
     testRewriter(
         """
-            Object.prototype.extend = function(src) {
-              for(var p in src)
-                this[p] = src[p];
-            }""",
+        Object.prototype.extend = function(src) {
+          for(var p in src)
+            this[p] = src[p];
+        }
+        """,
         """
-            Object.prototype.extend = function(src) {
-              for(var p in src)
-                (function _forin_body_0(p, thi$) {
-                  thi$[p] = src[p];
-                })(p, this);
-            }""");
+        Object.prototype.extend = function(src) {
+          for(var p in src)
+            (function _forin_body_0(p, thi$) {
+              thi$[p] = src[p];
+            })(p, this);
+        }
+        """);
   }
 
   // another example with "this"
@@ -267,23 +282,25 @@ public abstract class TestCorrelatedPairExtraction {
   public void test9() {
     testRewriter(
         """
-            function defGlobals(globals) {
-              for(var p in globals) {
-                (function() {
-                  this[p] = globals[p];
-                })();
-              }
-            }""",
+        function defGlobals(globals) {
+          for(var p in globals) {
+            (function() {
+              this[p] = globals[p];
+            })();
+          }
+        }
+        """,
         """
-            function defGlobals(globals) {
-              for(var p in globals) {
-                (function() {
-                  (function _forin_body_0(p, thi$) {
-                    thi$[p] = globals[p];
-                  })(p, this)
-                })();
-              }
-            }""");
+        function defGlobals(globals) {
+          for(var p in globals) {
+            (function() {
+              (function _forin_body_0(p, thi$) {
+                thi$[p] = globals[p];
+              })(p, this)
+            })();
+          }
+        }
+        """);
   }
 
   // an example with "break"
@@ -291,23 +308,25 @@ public abstract class TestCorrelatedPairExtraction {
   public void test10() {
     testRewriter(
         """
-            function extend(dest, src) {
-              for(var p in src) {
-                if(p == "stop")
-                  break;
-                dest[p] = src[p];
-              }
-            }""",
+        function extend(dest, src) {
+          for(var p in src) {
+            if(p == "stop")
+              break;
+            dest[p] = src[p];
+          }
+        }
+        """,
         """
-            function extend(dest, src) {
-              for(var p in src) {
-                if(p == "stop")
-                  break;\
-                (function _forin_body_0(p) {
-                  dest[p] = src[p];
-                })(p);
-              }
-            }""");
+        function extend(dest, src) {
+          for(var p in src) {
+            if(p == "stop")
+              break;\
+            (function _forin_body_0(p) {
+              dest[p] = src[p];
+            })(p);
+          }
+        }
+        """);
   }
 
   // another example with "break"
@@ -315,25 +334,27 @@ public abstract class TestCorrelatedPairExtraction {
   public void test11() {
     testRewriter(
         """
-            function extend(dest, src) {
-              for(var p in src) {
-                while(true) {
-                  dest[p] = src[p];
-                  break;
-                }
-              }
-            }""",
+        function extend(dest, src) {
+          for(var p in src) {
+            while(true) {
+              dest[p] = src[p];
+              break;
+            }
+          }
+        }
+        """,
         """
-            function extend(dest, src) {
-              for(var p in src) {
-                while(true) {
-                  (function _forin_body_0(p) {
-                    dest[p] = src[p];
-                  })(p);
-                  break;
-                }
-              }
-            }""");
+        function extend(dest, src) {
+          for(var p in src) {
+            while(true) {
+              (function _forin_body_0(p) {
+                dest[p] = src[p];
+              })(p);
+              break;
+            }
+          }
+        }
+        """);
   }
 
   // an example with labelled "break"
@@ -341,25 +362,27 @@ public abstract class TestCorrelatedPairExtraction {
   public void test12() {
     testRewriter(
         """
-            function extend(dest, src) {
-              outer: for(var p in src) {
-                while(true) {
-                  dest[p] = src[p];
-                  break outer;
-                }
-              }
-            }""",
+        function extend(dest, src) {
+          outer: for(var p in src) {
+            while(true) {
+              dest[p] = src[p];
+              break outer;
+            }
+          }
+        }
+        """,
         """
-            function extend(dest, src) {
-              outer: for(var p in src) {
-                while(true) {
-                  (function _forin_body_0(p) {
-                    dest[p] = src[p];
-                  })(p);\
-                  break outer;
-                }
-              }
-            }""");
+        function extend(dest, src) {
+          outer: for(var p in src) {
+            while(true) {
+              (function _forin_body_0(p) {
+                dest[p] = src[p];
+              })(p);\
+              break outer;
+            }
+          }
+        }
+        """);
   }
 
   // an example with exceptions
@@ -367,23 +390,25 @@ public abstract class TestCorrelatedPairExtraction {
   public void test13() {
     testRewriter(
         """
-            function extend(dest, src) {
-              for(var p in src) {
-                if(p == '__proto__')
-                  throw new Exception('huh?');
-                dest[p] = src[p];
-              }
-            }""",
+        function extend(dest, src) {
+          for(var p in src) {
+            if(p == '__proto__')
+              throw new Exception('huh?');
+            dest[p] = src[p];
+          }
+        }
+        """,
         """
-            function extend(dest, src) {
-              for(var p in src) {
-                if(p == '__proto__')
-                  throw new Exception('huh?');
-                (function _forin_body_0(p) {
-                  dest[p] = src[p];
-                 })(p);
-              }
-            }""");
+        function extend(dest, src) {
+          for(var p in src) {
+            if(p == '__proto__')
+              throw new Exception('huh?');
+            (function _forin_body_0(p) {
+              dest[p] = src[p];
+             })(p);
+          }
+        }
+        """);
   }
 
   // an example with a "with" block
@@ -391,25 +416,27 @@ public abstract class TestCorrelatedPairExtraction {
   public void test14() {
     testRewriter(
         """
-            function extend(dest, src) {
-              var o = { dest: dest };
-              with(o) {
-                for(var p in src) {
-                  dest[p] = src[p];
-                }
-              }
-            }""",
+        function extend(dest, src) {
+          var o = { dest: dest };
+          with(o) {
+            for(var p in src) {
+              dest[p] = src[p];
+            }
+          }
+        }
+        """,
         """
-            function extend(dest, src) {
-              var o = { dest: dest };
-              with(o) {
-                for(var p in src) {
-                  (function _forin_body_0(p) {
-                    dest[p] = src[p];
-                  })(p);
-                }
-              }
-            }""");
+        function extend(dest, src) {
+          var o = { dest: dest };
+          with(o) {
+            for(var p in src) {
+              (function _forin_body_0(p) {
+                dest[p] = src[p];
+              })(p);
+            }
+          }
+        }
+        """);
   }
 
   // example with two functions
@@ -417,61 +444,67 @@ public abstract class TestCorrelatedPairExtraction {
   public void test15() {
     testRewriter(
         """
-            function extend(dest, src) {
-              for(var p in src)
-                dest[p] = src[p];
-            }
-            function foo() {
-              extend({}, {});
-            }
-            foo();""",
+        function extend(dest, src) {
+          for(var p in src)
+            dest[p] = src[p];
+        }
+        function foo() {
+          extend({}, {});
+        }
+        foo();\
+        """,
         """
-            function extend(dest, src) {
-              for(var p in src)
-                (function _forin_body_0(p) {
-                  dest[p] = src[p];
-                })(p);
-            }
-            function foo() {
-              extend({}, {});
-            }
-            foo();""");
+        function extend(dest, src) {
+          for(var p in src)
+            (function _forin_body_0(p) {
+              dest[p] = src[p];
+            })(p);
+        }
+        function foo() {
+          extend({}, {});
+        }
+        foo();\
+        """);
   }
 
   @Test
   public void test16() {
     testRewriter(
         """
-            function ext(dest, src) {
-              for(var p in src)
-                do_ext(dest, p, src);
-            }
-            function do_ext(x, p, y) { x[p] = y[p]; }""",
+        function ext(dest, src) {
+          for(var p in src)
+            do_ext(dest, p, src);
+        }
+        function do_ext(x, p, y) { x[p] = y[p]; }
+        """,
         """
-            function ext(dest, src) {
-              for(var p in src)
-                do_ext(dest, p, src);
-            }
-            function do_ext(x, p, y) { x[p] = y[p]; }""");
+        function ext(dest, src) {
+          for(var p in src)
+            do_ext(dest, p, src);
+        }
+        function do_ext(x, p, y) { x[p] = y[p]; }
+        """);
   }
 
   @Test
   public void test17() {
     testRewriter(
         """
-            function implement(dest, src) {
-              for(var p in src) {
-                dest.prototype[p] = src[p];
-              }
-            }""",
+        function implement(dest, src) {
+          for(var p in src) {
+            dest.prototype[p] = src[p];
+          }
+        }
+        """,
         """
-            function implement(dest, src) {
-              for(var p in src) {
-                (function _forin_body_0(p) {
-                  dest.prototype[p] = src[p];
-                 })(p);
-              }
-            }""");
+        function implement(dest, src) {
+          for(var p in src) {
+            (function _forin_body_0(p) {
+              dest.prototype[p] = src[p];
+             })(p);
+          }
+        }
+        """);
   }
 
   // fails since the assignment to "value" in the extracted version gets a (spurious) reference
@@ -480,23 +513,25 @@ public abstract class TestCorrelatedPairExtraction {
   public void test18() {
     testRewriter(
         """
-            function addMethods(source) {
-              var properties = Object.keys(source);
-              for (var i = 0, length = properties.length; i < length; i++) {
-                var property = properties[i], value = source[property];
-                this.prototype[property] = value;
-              }
-              return this;
-            }""",
+        function addMethods(source) {
+          var properties = Object.keys(source);
+          for (var i = 0, length = properties.length; i < length; i++) {
+            var property = properties[i], value = source[property];
+            this.prototype[property] = value;
+          }
+          return this;
+        }
+        """,
         """
-            function addMethods(source) {
-              var properties = Object.keys(source);
-              for (var i = 0, length = properties.length; i < length; i++) {
-                var property, value; property = properties[i]; value = (function _forin_body_0(property, thi$) { var value = source[property];\s
-                thi$.prototype[property] = value; return value; })(property, this);
-              }
-              return this;
-            }""");
+        function addMethods(source) {
+          var properties = Object.keys(source);
+          for (var i = 0, length = properties.length; i < length; i++) {
+            var property, value; property = properties[i]; value = (function _forin_body_0(property, thi$) { var value = source[property];\s
+            thi$.prototype[property] = value; return value; })(property, this);
+          }
+          return this;
+        }
+        """);
   }
 
   // slight variation of test18
@@ -504,23 +539,25 @@ public abstract class TestCorrelatedPairExtraction {
   public void test18_b() {
     testRewriter(
         """
-            function addMethods(source) {
-              var properties = Object.keys(source);
-              for (var i = 0, length = properties.length; i < length; i++) {
-                var property = properties[i], foo = 23, value = source[property];
-                this.prototype[property] = value;
-              }
-              return this;
-            }""",
+        function addMethods(source) {
+          var properties = Object.keys(source);
+          for (var i = 0, length = properties.length; i < length; i++) {
+            var property = properties[i], foo = 23, value = source[property];
+            this.prototype[property] = value;
+          }
+          return this;
+        }
+        """,
         """
-            function addMethods(source) {
-              var properties = Object.keys(source);
-              for (var i = 0, length = properties.length; i < length; i++) {
-                var property, foo, value; property = properties[i]; foo = 23; value = (function _forin_body_0(property, thi$) { var value = source[property];
-                thi$.prototype[property] = value; return value; })(property, this);
-              }
-              return this;
-            }""");
+        function addMethods(source) {
+          var properties = Object.keys(source);
+          for (var i = 0, length = properties.length; i < length; i++) {
+            var property, foo, value; property = properties[i]; foo = 23; value = (function _forin_body_0(property, thi$) { var value = source[property];
+            thi$.prototype[property] = value; return value; })(property, this);
+          }
+          return this;
+        }
+        """);
   }
 
   // fails since the assignment to "value" in the extracted version gets a (spurious) reference
@@ -529,40 +566,44 @@ public abstract class TestCorrelatedPairExtraction {
   public void test18_c() {
     testRewriter(
         """
-            function addMethods(source) {
-              var properties = Object.keys(source);
-              for (var i = 0, length = properties.length; i < length; i++) {
-                var property = properties[i], foo = 23, value = source[property], bar = 42;
-                this.prototype[property] = value;
-              }
-              return this;
-            }""",
+        function addMethods(source) {
+          var properties = Object.keys(source);
+          for (var i = 0, length = properties.length; i < length; i++) {
+            var property = properties[i], foo = 23, value = source[property], bar = 42;
+            this.prototype[property] = value;
+          }
+          return this;
+        }
+        """,
         """
-            function addMethods(source) {
-              var properties = Object.keys(source);
-              for (var i = 0, length = properties.length; i < length; i++) {
-                var property, foo, value, bar; property = properties[i]; foo = 23; value = function _forin_body_0(property, thi$) { var value = source[property]; bar = 42;
-                thi$.prototype[property] = value; return value; }(property, this);
-              }
-              return this;
-            }""");
+        function addMethods(source) {
+          var properties = Object.keys(source);
+          for (var i = 0, length = properties.length; i < length; i++) {
+            var property, foo, value, bar; property = properties[i]; foo = 23; value = function _forin_body_0(property, thi$) { var value = source[property]; bar = 42;
+            thi$.prototype[property] = value; return value; }(property, this);
+          }
+          return this;
+        }
+        """);
   }
 
   @Test
   public void test19() {
     testRewriter(
         """
-            function extend(dest, src) {
-              for(var p in src)
-                if(foo(p)) write.call(dest, p, src[p]);
-            }
-            function write(p, v) { this[p] = v; }""",
+        function extend(dest, src) {
+          for(var p in src)
+            if(foo(p)) write.call(dest, p, src[p]);
+        }
+        function write(p, v) { this[p] = v; }
+        """,
         """
-            function extend(dest, src) {
-              for(var p in src)
-                  (function _forin_body_0(p) { if(foo(p)) write.call(dest, p, src[p]); })(p);
-            }
-            function write(p, v) { this[p] = v; }""");
+        function extend(dest, src) {
+          for(var p in src)
+              (function _forin_body_0(p) { if(foo(p)) write.call(dest, p, src[p]); })(p);
+        }
+        function write(p, v) { this[p] = v; }
+        """);
   }
 
   // fails due to a missing LOCAL_SCOPE node
@@ -571,65 +612,71 @@ public abstract class TestCorrelatedPairExtraction {
   public void test20() {
     testRewriter(
         """
-            function every(object, fn, bind) {
-              for(var key in object)
-                if(hasOwnProperty.call(object, key) && !fn.call(bind, object[key], key)) return false;
-            }""",
+        function every(object, fn, bind) {
+          for(var key in object)
+            if(hasOwnProperty.call(object, key) && !fn.call(bind, object[key], key)) return false;
+        }
+        """,
         """
-            function every(object, fn, bind) {
-              for(var key in object) {
-                re$ = (function _forin_body_0(key) {
-                  if (hasOwnProperty.call(object, key) && !fn.call(bind, object[key], key)) return { type: 'return', value: false };
-                })(key);
-                if(re$) { if(re$.type == 'return') return re$.value; }
-              }
-            }""");
+        function every(object, fn, bind) {
+          for(var key in object) {
+            re$ = (function _forin_body_0(key) {
+              if (hasOwnProperty.call(object, key) && !fn.call(bind, object[key], key)) return { type: 'return', value: false };
+            })(key);
+            if(re$) { if(re$.type == 'return') return re$.value; }
+          }
+        }
+        """);
   }
 
   @Test
   public void test21() {
     testRewriter(
         """
-            function extend(dest, src) {
-              var x, y;
-              for(var name in src) {
-                x = dest[name];
-                y = src[name];
-                dest[name] = join(x,y);
-              }
-            }""",
+        function extend(dest, src) {
+          var x, y;
+          for(var name in src) {
+            x = dest[name];
+            y = src[name];
+            dest[name] = join(x,y);
+          }
+        }
+        """,
         """
-            function extend(dest, src) {
-              var x, y;
-              for(var name in src) {
-                (function _forin_body_0(name) { x = dest[name];
-                y = src[name];
-                dest[name] = join(x,y); })(name);
-              }
-            }""");
+        function extend(dest, src) {
+          var x, y;
+          for(var name in src) {
+            (function _forin_body_0(name) { x = dest[name];
+            y = src[name];
+            dest[name] = join(x,y); })(name);
+          }
+        }
+        """);
   }
 
   @Test
   public void test22() {
     testRewriter(
         """
-            function(object, keys){
-              var results = {};
-              for (var i = 0, l = keys.length; i < l; i++){
-                var k = keys[i];
-                if (k in object) results[k] = object[k];
-              }
-              return results;
-            }""",
+        function(object, keys){
+          var results = {};
+          for (var i = 0, l = keys.length; i < l; i++){
+            var k = keys[i];
+            if (k in object) results[k] = object[k];
+          }
+          return results;
+        }
+        """,
         """
-            function(object, keys){
-              var results = {};
-              for (var i = 0, l = keys.length; i < l; i++){
-                var k = keys[i];
-                (function _forin_body_0(k) { if (k in object) results[k] = object[k]; })(k);
-              }
-              return results;
-            }""");
+        function(object, keys){
+          var results = {};
+          for (var i = 0, l = keys.length; i < l; i++){
+            var k = keys[i];
+            (function _forin_body_0(k) { if (k in object) results[k] = object[k]; })(k);
+          }
+          return results;
+        }
+        """);
   }
 
   // variant of test1
@@ -637,25 +684,27 @@ public abstract class TestCorrelatedPairExtraction {
   public void test23() {
     testRewriter(
         """
-            function extend(dest, src) {
-              var s;
-              for(var p in src) {
-                s = src[p];
-                dest[p] = s;
-              }
-            }""",
+        function extend(dest, src) {
+          var s;
+          for(var p in src) {
+            s = src[p];
+            dest[p] = s;
+          }
+        }
+        """,
         """
-            function extend(dest, src) {
-              var s;
-              for(var p in src) {
-                s = (function _forin_body_0(p) {
-                  var s;\
-                  s = src[p];
-                  dest[p] = s;
-                  return s;\
-                 })(p);
-              }
-            }""");
+        function extend(dest, src) {
+          var s;
+          for(var p in src) {
+            s = (function _forin_body_0(p) {
+              var s;\
+              s = src[p];
+              dest[p] = s;
+              return s;\
+             })(p);
+          }
+        }
+        """);
   }
 
   // cannot extract for-in body referring to "arguments"
@@ -663,58 +712,63 @@ public abstract class TestCorrelatedPairExtraction {
   public void test24() {
     testRewriter(
         """
-            function extend(dest, src) {
-              for(var p in src) {
-                arguments[0][p] = src[p];
-              }
-            }""",
+        function extend(dest, src) {
+          for(var p in src) {
+            arguments[0][p] = src[p];
+          }
+        }
+        """,
         """
-            function extend(dest, src) {
-              for(var p in src) {
-                arguments[0][p] = src[p];
-              }
-            }""");
+        function extend(dest, src) {
+          for(var p in src) {
+            arguments[0][p] = src[p];
+          }
+        }
+        """);
   }
 
   @Test
   public void test25() {
     testRewriter(
         """
-            function eachProp(obj, func) {
-               var prop;
-               for (prop in obj) {
-                 if (hasProp(obj, prop)) {
-                   if (func(obj[prop], prop)) {
-                     break;
-                   }
-                  }
+        function eachProp(obj, func) {
+           var prop;
+           for (prop in obj) {
+             if (hasProp(obj, prop)) {
+               if (func(obj[prop], prop)) {
+                 break;
+               }
               }
-            }""",
+          }
+        }
+        """,
         """
-            function eachProp(obj, func) {
-               var prop;
-               for (prop in obj) {
-                 if (hasProp(obj, prop)) {
-                   if (func(obj[prop], prop)) {
-                     break;
-                   }
-                  }
+        function eachProp(obj, func) {
+           var prop;
+           for (prop in obj) {
+             if (hasProp(obj, prop)) {
+               if (func(obj[prop], prop)) {
+                 break;
+               }
               }
-            }""",
+          }
+        }
+        """,
         """
-            function eachProp(obj, func) {
-               var prop;
-               for (prop in obj) {
-                 if (hasProp(obj, prop)) {
-                   re$ = (function _forin_body_0 (prop) { if (func(obj[prop], prop)) { return { type: "goto", target: 0 }; } })(prop);
-                   if (re$) {
-                     if (re$.type == "goto") {
-                       if (re$.target == 0)
-                         break;
-                     }
-                   }
-                  }
+        function eachProp(obj, func) {
+           var prop;
+           for (prop in obj) {
+             if (hasProp(obj, prop)) {
+               re$ = (function _forin_body_0 (prop) { if (func(obj[prop], prop)) { return { type: "goto", target: 0 }; } })(prop);
+               if (re$) {
+                 if (re$.type == "goto") {
+                   if (re$.target == 0)
+                     break;
+                 }
+               }
               }
-            }""");
+          }
+        }
+        """);
   }
 }

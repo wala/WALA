@@ -255,10 +255,9 @@ public final class InterprocNullPointerAnalysis {
 
       // collect nodes not named for exclusion
       final HashSet<CGNode> nodes = new HashSet<>();
-      fullCG.forEach(
-          node -> {
-            if (!filter.contains(node.getMethod().getName())) nodes.add(node);
-          });
+      fullCG.forEach(node -> {
+        if (!filter.contains(node.getMethod().getName())) nodes.add(node);
+      });
 
       final Set<CGNode> partialRoots = Collections.singleton(fullCG.getFakeRootNode());
 

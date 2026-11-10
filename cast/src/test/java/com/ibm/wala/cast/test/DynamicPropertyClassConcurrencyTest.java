@@ -91,35 +91,31 @@ public class DynamicPropertyClassConcurrencyTest {
       for (int w = 0; w < WRITERS; w++) {
         int writer = w;
         writers.add(
-            executor.submit(
-                () -> {
-                  try {
-                    start.await();
-                    for (int i = 0; i < NAMES_PER_WRITER; i++)
-                      sub.getField(Atom.findOrCreateUnicodeAtom("w" + writer + "_" + i));
-                  } catch (Throwable t) {
-                    failures.add(t);
-                  }
-                }));
+            executor.submit(() -> {
+              try {
+                start.await();
+                for (int i = 0; i < NAMES_PER_WRITER; i++)
+                  sub.getField(Atom.findOrCreateUnicodeAtom("w" + writer + "_" + i));
+              } catch (Throwable t) {
+                failures.add(t);
+              }
+            }));
       }
 
       for (int r = 0; r < READERS; r++) {
         readers.add(
-            executor.submit(
-                () -> {
-                  try {
-                    start.await();
-                    while (writing.get()) {
-                      Set<Atom> seen = new HashSet<>();
-                      for (IField field : root.getDeclaredInstanceFields())
-                        seen.add(field.getName());
-                      for (Atom name : existing)
-                        if (!seen.contains(name)) missing.add(name.toString());
-                    }
-                  } catch (Throwable t) {
-                    failures.add(t);
-                  }
-                }));
+            executor.submit(() -> {
+              try {
+                start.await();
+                while (writing.get()) {
+                  Set<Atom> seen = new HashSet<>();
+                  for (IField field : root.getDeclaredInstanceFields()) seen.add(field.getName());
+                  for (Atom name : existing) if (!seen.contains(name)) missing.add(name.toString());
+                }
+              } catch (Throwable t) {
+                failures.add(t);
+              }
+            }));
       }
 
       start.countDown();
@@ -154,11 +150,10 @@ public class DynamicPropertyClassConcurrencyTest {
         List<Future<IField>> lookups = new ArrayList<>();
         for (int w = 0; w < WRITERS; w++)
           lookups.add(
-              executor.submit(
-                  () -> {
-                    start.await();
-                    return sub.getField(name);
-                  }));
+              executor.submit(() -> {
+                start.await();
+                return sub.getField(name);
+              }));
         start.countDown();
         IField first = lookups.get(0).get(1, TimeUnit.MINUTES);
         for (Future<IField> lookup : lookups)

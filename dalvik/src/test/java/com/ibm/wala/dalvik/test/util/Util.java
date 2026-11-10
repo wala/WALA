@@ -100,12 +100,11 @@ public class Util {
       assertThat(System.getProperty("java.vm.name")).isEqualTo("Dalvik");
       for (File f :
           new File("/system/framework/")
-              .listFiles(
-                  pathname -> {
-                    String name = pathname.getName();
-                    return (name.startsWith("core") || name.startsWith("framework"))
-                        && (name.endsWith("jar") || name.endsWith("apk"));
-                  })) {
+              .listFiles(pathname -> {
+                String name = pathname.getName();
+                return (name.startsWith("core") || name.startsWith("framework"))
+                    && (name.endsWith("jar") || name.endsWith("apk"));
+              })) {
         System.out.println("adding " + f);
         libs.add(f.toURI());
       }

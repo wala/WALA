@@ -283,16 +283,14 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
   @Override
   public void foreach(IntSetAction action) {
     final Set<Integer> bits = HashSetFactory.make();
-    primaryImpl.foreach(
-        x -> {
-          assert !bits.contains(x);
-          bits.add(x);
-        });
-    secondaryImpl.foreach(
-        x -> {
-          assert bits.contains(x);
-          bits.remove(x);
-        });
+    primaryImpl.foreach(x -> {
+      assert !bits.contains(x);
+      bits.add(x);
+    });
+    secondaryImpl.foreach(x -> {
+      assert bits.contains(x);
+      bits.remove(x);
+    });
     assert bits.isEmpty();
 
     primaryImpl.foreach(action);
