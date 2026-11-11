@@ -22,6 +22,7 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
+import com.ibm.wala.core.util.CancelRuntimeException;
 import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.core.util.warnings.Warnings;
@@ -529,6 +530,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     private void rec(final int pi, final int rhsi) {
       if (pi == params.length) {
+        // The cross product can be very large, so check for cancellation at each combination.
+        try {
+          MonitorUtil.throwExceptionIfCanceled(monitor);
+        } catch (CancelException e) {
+          throw new CancelRuntimeException(e);
+        }
         IClass recv = null;
         if (site.isDispatch()) {
           recv = keys[0].concreteType();
