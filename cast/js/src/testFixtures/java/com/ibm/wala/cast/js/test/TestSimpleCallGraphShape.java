@@ -17,7 +17,6 @@ import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
-import com.ibm.wala.core.util.ProgressMaster;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
@@ -31,6 +30,7 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
@@ -873,12 +873,23 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     SSAPropagationCallGraphBuilder B =
         JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "many-strings.js");
     B.getOptions().setTraceStringConstants(true);
-    IProgressMonitor monitor = ProgressMaster.make(new NullProgressMonitor(), 10000, false);
+    // Cancel ten seconds after construction starts, however much progress is being made.
+    long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10);
+    IProgressMonitor monitor =
+        new NullProgressMonitor() {
+          @Override
+          public boolean isCanceled() {
+            return System.nanoTime() > deadline;
+          }
+
+          @Override
+          public String getCancelMessage() {
+            return "timed out";
+          }
+        };
     assertThatThrownBy(
             () -> {
-              monitor.beginTask("build CG", 1);
               CallGraph CG = B.makeCallGraph(B.getOptions(), monitor);
-              monitor.done();
               CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
             })
         .isInstanceOf(CallGraphBuilderCancelException.class);
