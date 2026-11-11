@@ -34,6 +34,7 @@ dependencies {
   testFixturesApi(testFixtures(projects.cast))
   testFixturesImplementation(libs.assertj.core)
   testFixturesImplementation(libs.jetbrains.annotations)
+  testFixturesImplementation(testFixtures(projects.core))
   testFixturesImplementation(testFixtures(projects.util))
   testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
