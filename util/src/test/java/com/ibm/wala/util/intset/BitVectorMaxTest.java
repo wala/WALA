@@ -1,5 +1,6 @@
 package com.ibm.wala.util.intset;
 
+import static com.ibm.wala.util.intset.BitVectorBaseConditions.max;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Random;
@@ -40,7 +41,7 @@ class BitVectorMaxTest {
 
   @Test
   void emptyVectorHasNoMax() {
-    assertThat(new BitVector(64).max()).isEqualTo(-1);
+    assertThat(new BitVector(64)).has(max(-1));
     assertThat(referenceMax(new BitVector(64))).isEqualTo(-1);
   }
 
@@ -48,7 +49,7 @@ class BitVectorMaxTest {
   void singleBitAtEveryPosition() {
     for (int b = 0; b < 64; b++) {
       BitVector v = withBits(b);
-      assertThat(v.max()).as("single set bit at %d", b).isEqualTo(b);
+      assertThat(v).as("single set bit at %d", b).has(max(b));
     }
   }
 
@@ -56,12 +57,11 @@ class BitVectorMaxTest {
   void topBitOnly() {
     BitVector v = new BitVector(64);
     v.set(31);
-    assertThat(v.max()).isEqualTo(31);
+    assertThat(v).has(max(31));
     // the top word of a wider vector, so the word-level scan is exercised too
     BitVector wide = new BitVector(256);
     wide.set(224);
-    assertThat(wide.max()).isEqualTo(224);
-    assertThat(wide.max()).isEqualTo(referenceMax(wide));
+    assertThat(wide).has(max(224)).has(max(referenceMax(wide)));
   }
 
   @Test
@@ -72,8 +72,7 @@ class BitVectorMaxTest {
       for (int i = k; i < 64; i++) {
         v.set(i);
       }
-      assertThat(v.max()).as("bits %d..63", k).isEqualTo(63);
-      assertThat(v.max()).isEqualTo(referenceMax(v));
+      assertThat(v).has(max(63)).has(max(referenceMax(v)));
     }
   }
 
@@ -85,8 +84,7 @@ class BitVectorMaxTest {
       for (int i = 0; i <= k; i++) {
         v.set(i);
       }
-      assertThat(v.max()).as("bits 0..%d", k).isEqualTo(k);
-      assertThat(v.max()).isEqualTo(referenceMax(v));
+      assertThat(v).has(max(k)).has(max(referenceMax(v)));
     }
   }
 
@@ -97,8 +95,7 @@ class BitVectorMaxTest {
     for (int bit : new int[] {0, 31, 32, 33, 63, 64, 95, 127, 128, 200, 255}) {
       BitVector v = new BitVector(256);
       v.set(bit);
-      assertThat(v.max()).as("single set bit at %d", bit).isEqualTo(bit);
-      assertThat(v.max()).isEqualTo(referenceMax(v));
+      assertThat(v).has(max(bit)).has(max(referenceMax(v)));
     }
   }
 
@@ -107,8 +104,7 @@ class BitVectorMaxTest {
     BitVector v = new BitVector(512);
     v.set(300);
     v.set(400);
-    assertThat(v.max()).isEqualTo(400);
-    assertThat(v.max()).isEqualTo(referenceMax(v));
+    assertThat(v).has(max(400)).has(max(referenceMax(v)));
   }
 
   @Test
@@ -123,7 +119,7 @@ class BitVectorMaxTest {
           v.set(b);
         }
       }
-      assertThat(v.max()).as("trial %d", trial).isEqualTo(referenceMax(v));
+      assertThat(v).as("trial %d", trial).has(max(referenceMax(v)));
     }
   }
 
@@ -145,8 +141,7 @@ class BitVectorMaxTest {
     OffsetBitVector v = new OffsetBitVector(128, 64);
     v.set(150);
     v.set(180);
-    assertThat(v.max()).isEqualTo(180);
-    assertThat(v.max()).isEqualTo(referenceMax(v));
+    assertThat(v).has(max(180)).has(max(referenceMax(v)));
 
     // NOTE: an empty OffsetBitVector reports offset - 1, not -1, because OffsetBitVector.max()
     // adds the offset to super.max() unconditionally. That predates this change and is left alone

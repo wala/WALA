@@ -10,7 +10,9 @@
  */
 package com.ibm.wala.core.tests.basic;
 
+import static com.ibm.wala.util.intset.BitVectorBaseConditions.bitSet;
 import static com.ibm.wala.util.intset.BitVectorBaseConditions.emptyIntersectionWith;
+import static com.ibm.wala.util.intset.BitVectorBaseConditions.max;
 import static com.ibm.wala.util.intset.BitVectorBaseConditions.sameBitsAs;
 import static com.ibm.wala.util.intset.BitVectorBaseConditions.subsetOf;
 import static com.ibm.wala.util.intset.IntSetAssert.assertThat;
@@ -880,17 +882,15 @@ public class PrimitivesTest extends WalaTestCase {
     testSingleBitVector(new OffsetBitVector(100, 10));
   }
 
-  private static void testSingleBitVector(BitVectorBase<?> bv) {
+  private static <T extends BitVectorBase<T>> void testSingleBitVector(T bv) {
     // does the following not automatically scale the bitvector to
     // a reasonable size?
     bv.set(55);
 
-    assertThat(bv.max()).isEqualTo(55);
-    assertThat(bv).matches(v -> v.get(55)).matches(v -> v.get(55));
+    assertThat(bv).has(max(55)).has(bitSet(55));
 
     bv.set(59);
-    assertThat(bv.max()).isEqualTo(59);
-    assertThat(bv).matches(v -> v.get(55)).matches(v -> v.get(59));
+    assertThat(bv).has(max(59)).has(bitSet(55)).has(bitSet(59));
 
     {
       boolean[] gets = {false, true, true};
@@ -903,7 +903,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     bv.set(77);
 
-    assertThat(bv.max()).isEqualTo(77);
+    assertThat(bv).has(max(77));
     {
       boolean[] gets = {false, true, true, true};
       int[] bits = {0, 55, 59, 77};
@@ -914,7 +914,7 @@ public class PrimitivesTest extends WalaTestCase {
     }
 
     bv.set(3);
-    assertThat(bv.max()).isEqualTo(77);
+    assertThat(bv).has(max(77));
     {
       boolean[] gets = {false, true, true, true, true};
       int[] bits = {0, 3, 55, 59, 77};
@@ -956,12 +956,12 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(100);
     v1.set(101);
     v1.set(102);
-    assertThat(v1.max()).isEqualTo(102);
+    assertThat(v1).has(max(102));
 
     v2.set(200);
     v2.set(201);
     v2.set(202);
-    assertThat(v2.max()).isEqualTo(202);
+    assertThat(v2).has(max(202));
 
     assertThat(v1).has(emptyIntersectionWith(v2));
     assertThat(v2).has(emptyIntersectionWith(v1));
@@ -971,7 +971,7 @@ public class PrimitivesTest extends WalaTestCase {
     System.err.println("v1 = " + v1 + ", v2 = " + v2);
     assertThat(v1).doesNotHave(emptyIntersectionWith(v2));
     assertThat(v2).doesNotHave(emptyIntersectionWith(v1));
-    assertThat(v1.max()).isEqualTo(202);
+    assertThat(v1).has(max(202));
 
     {
       boolean[] gets = {false, true, true, true, true, true, true};
@@ -991,16 +991,16 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(103);
     v1.set(104);
     v1.set(105);
-    assertThat(v1.max()).isEqualTo(105);
+    assertThat(v1).has(max(105));
 
     v2.set(103);
     v2.set(104);
     v2.set(200);
     v2.set(201);
-    assertThat(v2.max()).isEqualTo(201);
+    assertThat(v2).has(max(201));
 
     v1.and(v2);
-    assertThat(v1.max()).isEqualTo(104);
+    assertThat(v1).has(max(104));
 
     {
       boolean[] gets = {false, true, true};
@@ -1015,7 +1015,7 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(101);
     v1.set(102);
     v1.set(105);
-    assertThat(v1.max()).isEqualTo(105);
+    assertThat(v1).has(max(105));
 
     {
       boolean[] gets = {false, true, true, true, true, true, true};
