@@ -28,11 +28,12 @@ and so on), as listed in `settings.gradle.kts`.
 
 The full build is slow: the JavaScript call-graph tests in `:cast:js:rhino` and
 the core call-graph tests take many minutes. Prefer running the affected
-subproject's tests while iterating. `:core` tests run with the
-`com.ibm.wala.junit.profile=short` system property; tests check it with
-`WalaTestCase.useShortProfile()` to skip or shrink long-running cases. On Linux,
-CI runs Gradle under `xvfb-run`, so tests that need a display may fail in a
-headless shell without it (see `xvfb-gradle.sh`).
+subproject's tests while iterating, and add `-PexcludeSlowTests` (for example
+`./gradlew build -PexcludeSlowTests`) to skip tests tagged `@Tag("slow")`.
+`:core` tests run with the `com.ibm.wala.junit.profile=short` system property;
+tests check it with `WalaTestCase.useShortProfile()` to skip or shrink
+long-running cases. On Linux, CI runs Gradle under `xvfb-run`, so tests that
+need a display may fail in a headless shell without it (see `xvfb-gradle.sh`).
 
 ## Checks Beyond Tests
 
