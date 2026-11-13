@@ -204,12 +204,13 @@ want to build tasks only in specific sub-projects, you have two options:
 
 1. Give the fully qualified name of the sub-project task.  For
    example, to assemble only the Dalvik jar, you could run `./gradlew
-   :com.ibm.wala.dalvik:assemble`.
+   :dalvik:assemble`.  A nested sub-project's name follows its directory
+   path, such as `:cast:js:rhino` for `cast/js/rhino`.
 
 1. Run Gradle from within some sub-project directory.  For example, to
-   assemble only the Dalvik jar, you could `cd com.ibm.wala.dalvik`
-   and then run `../gradlew assemble`.  Note the proper relative path
-   to the top-level Gradle script: `../gradle` instead of `./gradlew`.
+   assemble only the Dalvik jar, you could `cd dalvik` and then run
+   `../gradlew assemble`.  Note the proper relative path to the
+   top-level Gradle script: `../gradlew` instead of `./gradlew`.
 
 #### Task Name Abbreviation
 
