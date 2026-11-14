@@ -24,7 +24,7 @@ class DataflowSolverTest {
 
     solver.solve(null);
 
-    assertThat(solver.getOut("c").getValue()).toCollection().containsExactly(0);
+    assertThat(solver.getOut("c").getValue()).containsExactly(0);
   }
 
   @Test
@@ -33,7 +33,7 @@ class DataflowSolverTest {
 
     solver.solve(null);
 
-    assertThat(solver.getOut("c").getValue()).toCollection().containsExactlyInAnyOrder(0, 1);
+    assertThat(solver.getOut("c").getValue()).containsExactly(0, 1);
   }
 
   @Test
@@ -42,7 +42,7 @@ class DataflowSolverTest {
 
     solver.solve(null);
 
-    assertThat(solver.getIn("c").getValue()).toCollection().containsExactlyInAnyOrder(1, 2);
+    assertThat(solver.getIn("c").getValue()).containsExactly(1, 2);
   }
 
   @Test
