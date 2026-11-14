@@ -126,3 +126,9 @@ test inputs are resources under `cast/js/src/test/resources` (and
 - Agent skills for Gradle are managed with APM (`apm.yml`, `apm.lock.yaml`). Run
   `./refresh-agent-skills.sh` to install them for your agent. See
   `CONTRIBUTING.md`.
+
+## Commit Messages
+
+Always end commit messages, including drafts, with
+`Assisted-by: <tool> (<model-id>)`, never `Co-Authored-By:`. Keep existing
+trailers, and add yours when amending someone else's commit.
