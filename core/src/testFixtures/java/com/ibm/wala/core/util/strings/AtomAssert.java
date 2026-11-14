@@ -140,76 +140,12 @@ public class AtomAssert extends AbstractObjectAssert<AtomAssert, Atom> {
     return this;
   }
 
-  public AtomAssert isReservedMemberName() {
-    isNotNull();
-    if (!actual.isReservedMemberName()) {
-      failWithMessage("\nExpecting atom `%s` to be a reserved member name but it is not.", actual);
-    }
-    return this;
-  }
-
-  public AtomAssert isNotReservedMemberName() {
-    isNotNull();
-    if (actual.isReservedMemberName()) {
-      failWithMessage("\nExpecting atom `%s` not to be a reserved member name but it is.", actual);
-    }
-    return this;
-  }
-
-  public AtomAssert isClassDescriptor() {
-    isNotNull();
-    if (!actual.isClassDescriptor()) {
-      failWithMessage("\nExpecting atom `%s` to be a class descriptor but it is not.", actual);
-    }
-    return this;
-  }
-
-  public AtomAssert isNotClassDescriptor() {
-    isNotNull();
-    if (actual.isClassDescriptor()) {
-      failWithMessage("\nExpecting atom `%s` not to be a class descriptor but it is.", actual);
-    }
-    return this;
-  }
-
-  public AtomAssert isArrayDescriptor() {
-    isNotNull();
-    if (!actual.isArrayDescriptor()) {
-      failWithMessage("\nExpecting atom `%s` to be an array descriptor but it is not.", actual);
-    }
-    return this;
-  }
-
-  public AtomAssert isNotArrayDescriptor() {
-    isNotNull();
-    if (actual.isArrayDescriptor()) {
-      failWithMessage("\nExpecting atom `%s` not to be an array descriptor but it is.", actual);
-    }
-    return this;
-  }
-
   public AtomAssert hasArrayDimensionality(int expected) {
     isNotNull();
     if (actual.parseForArrayDimensionality() != expected) {
       failWithMessage(
           "\nExpecting atom `%s` to have array dimensionality %d but has %d.",
           actual, expected, actual.parseForArrayDimensionality());
-    }
-    return this;
-  }
-
-  public AtomAssert isMethodDescriptor() {
-    isNotNull();
-    if (!actual.isMethodDescriptor()) {
-      failWithMessage("\nExpecting atom `%s` to be a method descriptor but it is not.", actual);
-    }
-    return this;
-  }
-
-  public AtomAssert isNotMethodDescriptor() {
-    isNotNull();
-    if (actual.isMethodDescriptor()) {
-      failWithMessage("\nExpecting atom `%s` not to be a method descriptor but it is.", actual);
     }
     return this;
   }
