@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.cha;
 
+import static com.ibm.wala.ipa.cha.ClassHierarchyAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -121,7 +122,7 @@ public class SummaryClassShellTest extends WalaTestCase {
 
     // The opt-out class did not get a shell.
     TypeReference notAShell = TypeReference.findOrCreate(scope.getSyntheticLoader(), "LNotAShell");
-    assertThat(cha.lookupClass(notAShell)).isNull();
+    assertThat(cha).lookupClass(notAShell).isNull();
   }
 
   /** A shell carries no members; its only role is to occupy a place in the hierarchy. */
@@ -218,7 +219,8 @@ public class SummaryClassShellTest extends WalaTestCase {
     // The summary declares its shell under the Primordial loader, not the Synthetic one.
     Util.addSummaryClassShells(synthetic, read(scope, XML_PRIMORDIAL));
 
-    assertThat(cha.lookupClass(TypeReference.findOrCreate(scope.getSyntheticLoader(), "LForeign")))
+    assertThat(cha)
+        .lookupClass(TypeReference.findOrCreate(scope.getSyntheticLoader(), "LForeign"))
         .isNull();
   }
 }

@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.cha;
 
+import static com.ibm.wala.ipa.cha.ClassHierarchyAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.InstanceOfAssertFactories.iterable;
@@ -30,6 +31,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import java.io.IOException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class MissingSuperTest extends WalaTestCase {
@@ -51,7 +53,7 @@ public class MissingSuperTest extends WalaTestCase {
 
     // without phantom classes, won't be able to resolve
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    assertThat(cha.lookupClass(ref)).isNull();
+    assertThat(cha).lookupClass(ref).isNull();
 
     // with makeWithRoot lookup should succeed and
     // unresolvable super class "Super" should be replaced by hierarchy root
@@ -69,7 +71,7 @@ public class MissingSuperTest extends WalaTestCase {
         .allSatisfy(m -> assertThatCode(() -> cache.getIR(m)).doesNotThrowAnyException());
 
     // there should be one PhantomClass in the Application class loader
-    assertThat(cha)
+    Assertions.assertThat(cha)
         .filteredOn(klass2 ->
             klass2 instanceof PhantomClass
                 && klass2.getReference().getClassLoader().equals(ClassLoaderReference.Application))
