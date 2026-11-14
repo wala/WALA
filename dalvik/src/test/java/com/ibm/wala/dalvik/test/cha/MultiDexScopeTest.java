@@ -1,8 +1,8 @@
 package com.ibm.wala.dalvik.test.cha;
 
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatObject;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import com.ibm.wala.classLoader.IClass;
@@ -208,7 +208,7 @@ public class MultiDexScopeTest {
     Set<CGNode> calleeNodes = cg.getNodes(calleeRef);
     assertThat(calleeNodes).isNotEmpty();
     CGNode calleeNode = calleeNodes.iterator().next();
-    assertThatObject(cg).has(edge(callerNode, calleeNode));
+    assertThat(cg).has(edge(callerNode, calleeNode));
   }
 
   private static void extractFile(ZipInputStream zipIn, String outFileName) throws IOException {

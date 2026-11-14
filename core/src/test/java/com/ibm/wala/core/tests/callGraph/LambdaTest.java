@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -30,10 +31,8 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -159,11 +158,11 @@ public class LambdaTest extends WalaTestCase {
                 Atom.findOrCreateUnicodeAtom("target"),
                 Descriptor.findOrCreateUTF8("()V"));
 
-    assertThat(cg.getNodes(getTargetRef.apply("C1"))).hasSize(1);
-    assertThat(cg.getNodes(getTargetRef.apply("C2"))).hasSize(1);
-    assertThat(cg.getNodes(getTargetRef.apply("C3"))).hasSize(1);
-    assertThat(cg.getNodes(getTargetRef.apply("C4"))).hasSize(1);
-    assertThat(cg.getNodes(getTargetRef.apply("C5"))).isEmpty();
+    assertThat(cg).nodes(getTargetRef.apply("C1")).hasSize(1);
+    assertThat(cg).nodes(getTargetRef.apply("C2")).hasSize(1);
+    assertThat(cg).nodes(getTargetRef.apply("C3")).hasSize(1);
+    assertThat(cg).nodes(getTargetRef.apply("C4")).hasSize(1);
+    assertThat(cg).nodes(getTargetRef.apply("C5")).isEmpty();
   }
 
   @Test
@@ -190,13 +189,10 @@ public class LambdaTest extends WalaTestCase {
 
     Consumer<String> checkCalledFromOneSite =
         klassName -> {
-          Set<CGNode> nodes = cg.getNodes(getTargetRef.apply(klassName));
-          CGNode node = assertThat(nodes).singleElement().actual();
-          List<CGNode> predNodes = Iterator2Collection.toList(cg.getPredNodes(node));
-          CGNode pred = assertThat(predNodes).singleElement().actual();
-          List<CallSiteReference> sites =
-              Iterator2Collection.toList(cg.getPossibleSites(pred, node));
-          assertThat(sites).hasSize(1);
+          CGNode node =
+              assertThat(cg).nodes(getTargetRef.apply(klassName)).singleElement().actual();
+          CGNode pred = assertThat(cg).predecessorsOf(node).singleElement().actual();
+          assertThat(cg).possibleSites(pred, node).hasSize(1);
         };
 
     checkCalledFromOneSite.accept("C1");

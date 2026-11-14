@@ -1,5 +1,6 @@
 package com.ibm.wala.core.tests.ir;
 
+import static com.ibm.wala.util.graph.GraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IMethod;
@@ -26,8 +27,10 @@ public class PrunedCFGTest extends WalaTestCase {
 
     PrunedCFG<SSAInstruction, ISSABasicBlock> pruned = ExceptionPrunedCFG.make(cfg);
 
-    assertThat(pruned).containsExactlyInAnyOrder(cfg.entry(), cfg.exit());
-    assertThat(pruned).allSatisfy(block -> assertThat(pruned.getSuccNodeCount(block)).isZero());
+    assertThat(pruned).nodes().containsExactlyInAnyOrder(cfg.entry(), cfg.exit());
+    assertThat(pruned)
+        .nodes()
+        .allSatisfy(block -> assertThat(pruned).successorCountOf(block).isZero());
   }
 
   @Test
@@ -36,8 +39,9 @@ public class PrunedCFGTest extends WalaTestCase {
 
     PrunedCFG<SSAInstruction, ISSABasicBlock> pruned = ExceptionPrunedCFG.make(cfg);
 
-    assertThat(pruned).containsExactlyInAnyOrderElementsOf(cfg);
+    assertThat(pruned).nodes().containsExactlyInAnyOrderElementsOf(cfg);
     assertThat(pruned)
+        .nodes()
         .allSatisfy(block -> {
           assertThat(pruned.getNormalSuccessors(block))
               .containsExactlyInAnyOrderElementsOf(cfg.getNormalSuccessors(block));

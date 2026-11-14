@@ -1,8 +1,8 @@
 package com.ibm.wala.util.graph;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
+import static com.ibm.wala.util.graph.GraphAssert.*;
 
-import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import org.junit.jupiter.api.Test;
@@ -52,19 +52,17 @@ public class EdgeFilteredNumberedGraphTest {
   @Test
   public void ignoredEdgeIsRemovedInBothDirections() {
     EdgeFilteredNumberedGraph<String> f = ignoring(makeGraph(), "a", "b");
-    assertThat(f.hasEdge("a", "b")).isFalse();
-    assertThat(Iterator2Collection.toSet(f.getSuccNodes("a"))).containsExactly("c");
-    assertThat(f.getSuccNodeCount("a")).isEqualTo(1);
-    assertThat(Iterator2Collection.toSet(f.getPredNodes("b"))).isEmpty();
+    assertThat(f).doesNotHave(edge("a", "b")).successorsOf("a").containsExactly("c");
+    assertThat(f).successorCountOf("a").isEqualTo(1);
+    assertThat(f).predecessorsOf("b").isEmpty();
   }
 
   /** Tests that ignoring {@code b -> a}, which is not an edge, leaves the edge {@code a -> b}. */
   @Test
   public void reverseOfIgnoredPairIsKept() {
     EdgeFilteredNumberedGraph<String> f = ignoring(makeGraph(), "b", "a");
-    assertThat(f.hasEdge("a", "b")).isTrue();
-    assertThat(Iterator2Collection.toSet(f.getSuccNodes("a"))).containsExactlyInAnyOrder("b", "c");
-    assertThat(f.getSuccNodeCount("a")).isEqualTo(2);
-    assertThat(Iterator2Collection.toSet(f.getPredNodes("b"))).containsExactly("a");
+    assertThat(f).has(edge("a", "b")).successorsOf("a").containsExactlyInAnyOrder("b", "c");
+    assertThat(f).successorCountOf("a").isEqualTo(2);
+    assertThat(f).predecessorsOf("b").containsExactly("a");
   }
 }
