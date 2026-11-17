@@ -113,8 +113,8 @@ public class StringTable extends Table<String> implements Cloneable {
     return result;
   }
 
-  public static String readNextNonCommentLine(LineNumberReader reader, Character commentToken)
-      throws IOException {
+  public static @Nullable String readNextNonCommentLine(
+      LineNumberReader reader, Character commentToken) throws IOException {
     checkArgument(reader != null, "reader is null");
     String line = reader.readLine();
     while (line != null && isCommented(line, commentToken)) {

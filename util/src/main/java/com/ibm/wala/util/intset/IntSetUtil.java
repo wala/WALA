@@ -31,7 +31,7 @@ public class IntSetUtil {
     MutableIntSetFactory<?> defaultFactory = new MutableSharedBitVectorIntSetFactory();
     if (System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME) != null) {
       try {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({"unchecked", "NullAway"}) // to enable JSpecifyExperimental
         Class<? extends MutableIntSetFactory<?>> intSetFactoryClass =
             (Class<? extends MutableIntSetFactory<?>>)
                 Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));

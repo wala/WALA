@@ -19,6 +19,7 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A debugging aid. When HashSetFactory.DEBUG is set, this class creates ParanoidHashMaps.
@@ -29,7 +30,7 @@ public class HashMapFactory {
   /**
    * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
-  public static <K, V> HashMap<K, V> make(int size) {
+  public static <K extends @Nullable Object, V> HashMap<K, V> make(int size) {
     if (HashSetFactory.DEBUG) {
       return new ParanoidHashMap<>(size);
     } else {
@@ -40,7 +41,7 @@ public class HashMapFactory {
   /**
    * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
-  public static <K, V> HashMap<K, V> make() {
+  public static <K extends @Nullable Object, V> HashMap<K, V> make() {
     if (HashSetFactory.DEBUG) {
       return new ParanoidHashMap<>();
     } else {
@@ -51,7 +52,8 @@ public class HashMapFactory {
   /**
    * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
-  public static <K, V> HashMap<K, V> make(Map<? extends K, ? extends V> t) {
+  public static <K extends @Nullable Object, V> HashMap<K, V> make(
+      Map<? extends K, ? extends V> t) {
     checkArgument(t != null, "null t");
     if (HashSetFactory.DEBUG) {
       return new ParanoidHashMap<>(t);

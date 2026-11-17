@@ -247,6 +247,7 @@ public class JavaLauncher extends Launcher {
   }
 
   /** Compute the classpath for the spawned process */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public String makeClasspath() {
     final StringBuilder cp =
         inheritClasspath

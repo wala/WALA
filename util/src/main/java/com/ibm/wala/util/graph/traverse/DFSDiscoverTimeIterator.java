@@ -151,6 +151,7 @@ public abstract class DFSDiscoverTimeIterator<T> implements Iterator<T>, Seriali
     stack.push(elt);
   }
 
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   private T peek() {
     return stack.peek();
   }

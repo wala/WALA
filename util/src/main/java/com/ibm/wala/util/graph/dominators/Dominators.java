@@ -131,7 +131,7 @@ public abstract class Dominators<T> {
 
       private final EdgeManager<T> edges =
           new EdgeManager<>() {
-            private final Map<T, Set<T>> nextMap = HashMapFactory.make();
+            private final Map<@Nullable T, Set<T>> nextMap = HashMapFactory.make();
 
             {
               for (T n : G) {

@@ -27,6 +27,7 @@ public class Iterator2Iterable<T> implements Iterable<T> {
   }
 
   @Override
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public @Nullable Iterator<T> iterator() {
     return iter;
   }

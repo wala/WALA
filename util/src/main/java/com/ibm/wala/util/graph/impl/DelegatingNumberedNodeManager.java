@@ -88,7 +88,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
       }
 
       @Override
-      @SuppressWarnings("unchecked")
+      @SuppressWarnings({"unchecked", "NullAway"}) // to enable JSpecifyExperimental
       public @Nullable T next() {
         if (hasNext()) {
           int r = nextCounter;

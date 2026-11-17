@@ -21,6 +21,7 @@ tasks.withType<JavaCompile>().configureEach {
       errorproneArgs.addAll(
           "-XepOpt:NullAway:OnlyNullMarked=true",
           "-XepOpt:NullAway:JSpecifyMode=true",
+          "-XepOpt:NullAway:JSpecifyExperimental=true",
           "-XepOpt:NullAway:CastToNonNullMethod=com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull",
       )
     }

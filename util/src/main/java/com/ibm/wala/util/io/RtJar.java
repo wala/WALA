@@ -24,6 +24,7 @@ public class RtJar {
    * @param x an iterator over jar files
    * @return the file holding the classes for the core Java standard library, or null if not found
    */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public static @Nullable JarFile getRtJar(Iterator<JarFile> x) {
     while (x.hasNext()) {
       JarFile JF = x.next();
@@ -42,7 +43,7 @@ public class RtJar {
     return null;
   }
 
-  @SuppressWarnings("resource")
+  @SuppressWarnings({"resource", "NullAway"}) // to enable JSpecifyExperimental
   public static void main(String[] args) {
     JarFile rt =
         getRtJar(

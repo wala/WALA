@@ -73,6 +73,7 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
     data[index] = value;
   }
 
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   private void ensureCapacity(int capacity) {
     if (data.length < capacity + 1) {
       data = Arrays.copyOf(data, 1 + (int) (capacity * indices.getExpansionFactor()));

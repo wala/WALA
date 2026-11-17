@@ -112,6 +112,7 @@ public class HeapTracer {
   /**
    * @return the name of each class that's in the classpath
    */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   private static String[] generateRootClassesFromWorkspace() {
     String classpath = System.getProperty("java.class.path");
     String[] binDirectories = extractBinDirectories(classpath);
@@ -128,6 +129,7 @@ public class HeapTracer {
    * @param f a File or directory
    * @return {@link Collection}&lt;{@link String}&gt; representing the class names in f
    */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   private static Collection<String> findClassNames(String rootDir, File f) {
     HashSet<String> result = HashSetFactory.make();
     if (f.isDirectory()) {
@@ -164,6 +166,7 @@ public class HeapTracer {
   }
 
   /** Trace the heap and return the results */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public Result perform()
       throws ClassNotFoundException, IllegalArgumentException, IllegalAccessException {
     Result result = new Result();
@@ -303,6 +306,7 @@ public class HeapTracer {
     }
   }
 
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   private void traverseArray(
       Field root,
       Object array,

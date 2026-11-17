@@ -254,6 +254,7 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
   }
 
   /** change the variables to account for short circuit optimizations */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   private void fixShortCircuits(UnionFind uf) {
     if (uf.didSomething) {
       for (int i = 0; i < uf.size(); i++) {

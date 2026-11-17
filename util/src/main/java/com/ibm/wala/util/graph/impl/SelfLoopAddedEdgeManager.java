@@ -28,6 +28,7 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
     }
 
     @Override
+    @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
     public @Nullable T next() {
       if (!usedFirst) {
         T tmp = first;

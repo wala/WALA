@@ -46,6 +46,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A set implementation backed by an array. This implementation is space-efficient for small sets,
@@ -141,7 +142,7 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
   }
 
   @Override
-  public boolean contains(Object obj_) {
+  public boolean contains(@Nullable Object obj_) {
     for (int i = 0; i < _curIndex; i++) {
       if (_elems[i].equals(obj_)) return true;
     }
@@ -177,7 +178,7 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
   }
 
   @Override
-  public boolean remove(Object obj_) {
+  public boolean remove(@Nullable Object obj_) {
     int ind;
     for (ind = 0; ind < _curIndex && !_elems[ind].equals(obj_); ind++) {}
     // check if object was never there

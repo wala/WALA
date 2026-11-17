@@ -70,7 +70,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
 
   @Deprecated(forRemoval = true, since = "1.8.0")
   @Override
-  public Object[] toArray() {
+  public @Nullable Object[] toArray() {
     return getDelegate().toArray();
   }
 
@@ -82,13 +82,13 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
 
   @Deprecated(forRemoval = true, since = "1.8.0")
   @Override
-  public boolean contains(Object arg0) {
+  public boolean contains(@Nullable Object arg0) {
     return getDelegate().contains(arg0);
   }
 
   @Deprecated(forRemoval = true, since = "1.8.0")
   @Override
-  public boolean remove(Object arg0) {
+  public boolean remove(@Nullable Object arg0) {
     return getDelegate().remove(arg0);
   }
 
@@ -124,7 +124,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
 
   @Deprecated(forRemoval = true, since = "1.8.0")
   @Override
-  public <U> U[] toArray(U[] a) {
+  public <U extends @Nullable Object> U[] toArray(U[] a) {
     return getDelegate().toArray(a);
   }
 
