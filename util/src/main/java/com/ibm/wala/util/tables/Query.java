@@ -42,6 +42,7 @@ public class Query {
   }
 
   /** SELECT attribute FROM t where column=value */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public static <T> Collection<T> selectWhereEquals(
       Table<T> t, String attribute, String column, T value) {
     Collection<Map<String, T>> rows = selectStarWhereEquals(t, column, value);
@@ -53,6 +54,7 @@ public class Query {
   }
 
   /** SELECT attribute FROM t where P(column) */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public static <T> Collection<Map<String, T>> selectStarWhere(
       Table<T> t, String column, Predicate<T> P) {
     checkArgument(t != null, "t == null");

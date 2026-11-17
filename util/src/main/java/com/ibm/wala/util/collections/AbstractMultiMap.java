@@ -64,6 +64,7 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
   }
 
   @Override
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public Set<V> get(@Nullable K key) {
     Set<V> ret = map.get(key);
     if (ret == null) {
@@ -78,6 +79,7 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
   }
 
   @Override
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public boolean put(K key, @Nullable V val) {
     Set<V> vals = map.get(key);
     if (vals == null) {

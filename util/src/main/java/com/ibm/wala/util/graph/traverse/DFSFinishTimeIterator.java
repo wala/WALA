@@ -78,6 +78,7 @@ public abstract class DFSFinishTimeIterator<T> implements Iterator<T>, Serializa
     stack.push(elt);
   }
 
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   private T peek() {
     return stack.peek();
   }

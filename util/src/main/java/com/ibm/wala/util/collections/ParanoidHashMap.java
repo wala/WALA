@@ -17,12 +17,13 @@ import java.io.Serial;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.jspecify.annotations.Nullable;
 
 /**
  * a debugging aid. This implementation complains if you stick an object in here which appears to
  * use System.identityHashCode()
  */
-public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
+public class ParanoidHashMap<K extends @Nullable Object, V> extends LinkedHashMap<K, V> {
   @Serial private static final long serialVersionUID = 909018793791787198L;
 
   /**
@@ -40,12 +41,12 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
   public ParanoidHashMap() {}
 
   @Override
-  public V put(K arg0, V arg1) {
+  public @Nullable V put(K arg0, V arg1) {
     assertOverridesHashCode(arg0);
     return super.put(arg0, arg1);
   }
 
-  public static void assertOverridesHashCode(Object o) throws UnimplementedError {
+  public static void assertOverridesHashCode(@Nullable Object o) throws UnimplementedError {
     if (o != null && o.hashCode() == System.identityHashCode(o)) {
       try {
         Method method = o.getClass().getMethod("hashCode");

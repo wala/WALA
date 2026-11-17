@@ -29,6 +29,7 @@ public class PlatformUtil {
   private static final FileSystem JRT_FILE_SYSTEM = initJrtFileSystem();
 
   /** are we running on Mac OS X? */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public static boolean onMacOSX() {
     String osname = System.getProperty("os.name");
     return osname.toLowerCase().contains("mac");
@@ -36,12 +37,14 @@ public class PlatformUtil {
   }
 
   /** are we running on Linux? */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public static boolean onLinux() {
     String osname = System.getProperty("os.name");
     return osname.equalsIgnoreCase("linux");
   }
 
   /** are we running on Windows? */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public static boolean onWindows() {
     String osname = System.getProperty("os.name");
     return osname.toLowerCase().contains("windows");
@@ -58,6 +61,7 @@ public class PlatformUtil {
    * @param justBase if {@code true}, only include {@code java.base}
    * @return array of module names from the {@code jrt:/modules} filesystem
    */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public static String[] getJDKModuleNames(boolean justBase) {
     List<String> modules;
     try {
@@ -78,6 +82,7 @@ public class PlatformUtil {
   /**
    * @return the major version of the Java runtime we are running on.
    */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public static int getJavaRuntimeVersion() {
     String version = System.getProperty("java.version");
     if (version.startsWith("1.")) {

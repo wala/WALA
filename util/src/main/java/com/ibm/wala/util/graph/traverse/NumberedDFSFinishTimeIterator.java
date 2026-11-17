@@ -27,7 +27,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
   @Serial private static final long serialVersionUID = 8737376661L;
 
   /** An iterator of child nodes for each node being searched */
-  private Iterator<T>[] pendingChildren;
+  private @Nullable Iterator<T>[] pendingChildren;
 
   /** The Graph being traversed */
   private final NumberedGraph<T> G;

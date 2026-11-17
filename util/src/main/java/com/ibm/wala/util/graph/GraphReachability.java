@@ -56,6 +56,7 @@ public class GraphReachability<T, S> {
    * @param filter "interesting" node definition
    * @throws IllegalArgumentException if g is null
    */
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   public GraphReachability(Graph<T> g, Predicate<? super T> filter) {
     checkArgument(g != null, "g is null");
     this.g = g;

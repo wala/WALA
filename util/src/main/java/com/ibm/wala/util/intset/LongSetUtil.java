@@ -29,6 +29,7 @@ public class LongSetUtil {
     MutableLongSetFactory defaultFactory = new MutableSparseLongSetFactory();
     if (System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME) != null) {
       try {
+        @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
         Class<?> intSetFactoryClass =
             Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
         MutableLongSetFactory intSetFactory =

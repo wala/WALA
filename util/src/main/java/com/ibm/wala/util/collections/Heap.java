@@ -75,6 +75,7 @@ public abstract class Heap<T> {
     return index * 2 + 2;
   }
 
+  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   private void ensureCapacity(int min) {
     if (backingStore.length < min) {
       backingStore = Arrays.copyOf(backingStore, 2 * min);

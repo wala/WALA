@@ -202,7 +202,7 @@ public class Util {
    *
    * @throws IllegalArgumentException if obj == null
    */
-  @SuppressWarnings("removal")
+  @SuppressWarnings({"removal", "NullAway"}) // to enable JSpecifyExperimental
   public static String objectFieldsToString(Object obj) throws IllegalArgumentException {
     checkArgument(obj != null, "obj == null");
     // Temporarily disable the security manager
