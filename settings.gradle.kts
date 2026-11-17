@@ -13,6 +13,7 @@ buildscript { dependencies.classpath("com.diffplug.spotless:spotless-lib-extra:4
 plugins {
   id("com.diffplug.configuration-cache-for-platform-specific-build") version "4.4.1"
   id("com.gradle.develocity") version "4.6.1"
+  id("io.github.cribro-dev.cribro") version "1.1.1"
   id("org.gradle.toolchains.foojay-resolver-convention")
 }
 
