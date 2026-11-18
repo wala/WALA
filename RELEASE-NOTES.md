@@ -2,6 +2,24 @@
 
 ## Version 1.10.0
 
+### Functionality changes
+
+#### `DataflowSolver.getIn` and `getOut` now reject missing variables
+
+`com.ibm.wala.dataflow.graph.DataflowSolver.getIn(Object)` and
+`getOut(Object)` now throw `NullPointerException` if the supplied node has no
+initialized IN or OUT variable, respectively, including when the node is
+`null`. These checks run regardless of whether JVM assertions are enabled.
+
+Previously, `getIn` returned `null` for a missing variable. `getOut` threw
+`AssertionError` when assertions were enabled and returned `null` when they
+were disabled.
+
+Callers must ensure that the solver's variables have been initialized and
+that the requested node belongs to the problem's flow graph. `getOut` also
+requires the problem to provide node transfer functions. Code that relied
+on a `null` result or caught `AssertionError` must be updated accordingly.
+
 ### Deprecated APIs removed
 
 Deprecated APIs marked for removal since 1.7.2 have now been removed across
