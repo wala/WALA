@@ -11,6 +11,7 @@
 package com.ibm.wala.dataflow.graph;
 
 import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
+import static java.util.Objects.requireNonNull;
 
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
 import com.ibm.wala.fixpoint.IVariable;
@@ -23,7 +24,6 @@ import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntegerUnionFind;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
 /** Iterative solver for a Killdall dataflow framework */
@@ -85,17 +85,31 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
     buildEquations(true, false);
   }
 
-  @NullUnmarked
+  /**
+   * Returns the OUT variable for a node in the problem's flow graph.
+   *
+   * <p>The solver must have initialized its variables, and the problem must provide node transfer
+   * functions.
+   *
+   * @param node a node in the problem's flow graph
+   * @return the node's OUT variable
+   * @throws NullPointerException if the node has no initialized OUT variable
+   */
   public V getOut(Object node) {
-    assert node != null;
-    V v = node2Out.get(node);
-    assert v != null : "no out set for " + node;
-    return v;
+    return requireNonNull(node2Out.get(node), "node has no initialized OUT variable");
   }
 
-  @NullUnmarked
+  /**
+   * Returns the IN variable for a node in the problem's flow graph.
+   *
+   * <p>The solver must have initialized its variables.
+   *
+   * @param node a node in the problem's flow graph
+   * @return the node's IN variable
+   * @throws NullPointerException if the node has no initialized IN variable
+   */
   public V getIn(Object node) {
-    return node2In.get(node);
+    return requireNonNull(node2In.get(node), "node has no initialized IN variable");
   }
 
   public @Nullable V getEdge(Object key) {
@@ -254,7 +268,6 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
   }
 
   /** change the variables to account for short circuit optimizations */
-  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   private void fixShortCircuits(UnionFind uf) {
     if (uf.didSomething) {
       for (int i = 0; i < uf.size(); i++) {
@@ -262,30 +275,21 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
         if (i != rep) {
           Object x = uf.getKey(i);
           Object y = uf.getKey(rep);
-          if (uf.isIn(i)) {
-            if (uf.isIn(rep)) {
-              node2In.put(x, getIn(y));
-            } else if (uf.isOut(rep)) {
-              node2In.put(x, getOut(y));
-            } else {
-              node2In.put(x, getEdge(y));
-            }
-          } else if (uf.isOut(i)) {
-            if (uf.isIn(rep)) {
-              node2Out.put(x, getIn(y));
-            } else if (uf.isOut(rep)) {
-              node2Out.put(x, getOut(y));
-            } else {
-              node2Out.put(x, getEdge(y));
-            }
+          // Every representative comes from an existing variable in one of these maps.
+          V v;
+          if (uf.isIn(rep)) {
+            v = getIn(y);
+          } else if (uf.isOut(rep)) {
+            v = getOut(y);
           } else {
-            if (uf.isIn(rep)) {
-              edge2Var.put(x, getIn(y));
-            } else if (uf.isOut(rep)) {
-              edge2Var.put(x, getOut(y));
-            } else {
-              edge2Var.put(x, getEdge(y));
-            }
+            v = castToNonNull(getEdge(y));
+          }
+          if (uf.isIn(i)) {
+            node2In.put(x, v);
+          } else if (uf.isOut(i)) {
+            node2Out.put(x, v);
+          } else {
+            edge2Var.put(x, v);
           }
         }
       }
