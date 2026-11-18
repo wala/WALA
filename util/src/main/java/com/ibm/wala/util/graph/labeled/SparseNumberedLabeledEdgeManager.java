@@ -94,7 +94,7 @@ public class SparseNumberedLabeledEdgeManager<T, U>
   }
 
   @Override
-  public void addEdge(T src, T dst, @Nullable U label) {
+  public void addEdge(T src, T dst, U label) {
     nodeToSuccLabels.put(src, label);
     nodeToPredLabels.put(dst, label);
     getManagerForLabel(label).addEdge(src, dst);
@@ -186,9 +186,14 @@ public class SparseNumberedLabeledEdgeManager<T, U>
     return labels;
   }
 
+  /**
+   * Adds an edge with the configured default label.
+   *
+   * @throws IllegalArgumentException if no default label was configured
+   */
   @Override
   public void addEdge(T src, T dst) {
-    assert defaultLabel != null;
+    checkArgument(defaultLabel != null, "no default label configured");
     addEdge(src, dst, defaultLabel);
   }
 
