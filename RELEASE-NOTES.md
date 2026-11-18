@@ -4,6 +4,36 @@
 
 ### Functionality changes
 
+#### `MultiMap.get(null)` never creates a mapping
+
+**Breaking:** `com.ibm.wala.util.collections.MultiMap.get` now explicitly
+accepts a nullable key and returns an empty set for `null`. In
+`HashSetMultiMap` and `ArraySetMultiMap`, this lookup never creates a mapping,
+including when the
+map was constructed with `create = true`. Previously, those maps could create
+a mapping for `null` and return its live value set. Callers that use lookup
+to create a mapping must supply a non-null key.
+
+`MultiMap` now explicitly requires non-null keys and values, including values
+added through returned sets. The `put` methods inherited by `HashSetMultiMap`
+and `ArraySetMultiMap` no longer annotate their value parameter as nullable.
+Code checked by a nullness analyzer must supply non-null values.
+
+#### `SparseNumberedLabeledEdgeManager.addEdge` requires a default or explicit label
+
+**Breaking:**
+`com.ibm.wala.util.graph.labeled.SparseNumberedLabeledEdgeManager.addEdge(src, dst)`
+now throws `IllegalArgumentException` with the message
+`no default label configured` when no default label was configured,
+regardless of whether JVM assertions are enabled. Previously, this case
+threw `AssertionError` with assertions enabled; with assertions disabled,
+it threw `IllegalArgumentException` with the message `null o`.
+
+Callers must configure a non-null default label in the constructor or use
+`addEdge(src, dst, label)` with an explicit non-null label. The explicit-label
+overload no longer annotates its label parameter as nullable, so nullness
+analyzers now reject null labels.
+
 #### `DataflowSolver.getIn` and `getOut` now reject missing variables
 
 `com.ibm.wala.dataflow.graph.DataflowSolver.getIn(Object)` and
