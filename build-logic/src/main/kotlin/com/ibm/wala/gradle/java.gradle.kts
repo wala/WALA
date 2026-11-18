@@ -24,6 +24,12 @@ java.toolchain {
   languageVersion = JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
 }
 
+sourceSets.test {
+  // Cribro's PIT configuration requires main class directories on the runtime classpath;
+  // test fixtures supply the main code as a JAR.
+  runtimeClasspath = files(sourceSets.main.map { it.output.classesDirs }) + runtimeClasspath
+}
+
 base.archivesName = "com.ibm.wala${path.replace(':', '.')}"
 
 configurations {

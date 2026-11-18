@@ -35,6 +35,32 @@ tests check it with `WalaTestCase.useShortProfile()` to skip or shrink
 long-running cases. On Linux, CI runs Gradle under `xvfb-run`, so tests that
 need a display may fail in a headless shell without it (see `xvfb-gradle.sh`).
 
+After changing Java sources under a module's `src/main`, run its tests and
+inspect Cribro's diff coverage report. A filtered test run reports
+only that selection's coverage. `./gradlew -q cribro` prints the full guide.
+If an uncovered line is intentionally unreachable or not worth testing,
+acknowledge the reviewed exception with
+`// diff-coverage: ignore -- <reason>`; it remains counted as uncovered but is
+removed from the actionable list.
+
+Mutation testing is opt-in; select the relevant test classes explicitly to
+avoid rerunning the whole core suite:
+
+```shell
+./gradlew :core:pitestDiff \
+  -Pcribro.pitestTargetTests=com.ibm.wala.core.tests.callGraph.CPATest \
+  -Pcribro.pitestThreads=2
+```
+
+`pitestDiff` mutates only changed main-source lines and skips modules without
+such changes. It does not inherit `test --tests` filters or excluded tags,
+including `-PexcludeSlowTests`. Check
+`core/build/reports/pitest-diff/pit.log` for baseline tests PIT skipped before
+trusting the results; surviving mutants do not fail the build. Use
+`-Pcribro.diffBase=<ref>` to override the comparison base and
+`-Pcribro.diffCoverageEnabled=false` to disable diff coverage instrumentation
+and reports for a test run.
+
 ## Checks Beyond Tests
 
 `check` (and so `build`) fails on more than test failures:

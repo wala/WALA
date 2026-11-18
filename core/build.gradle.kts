@@ -20,6 +20,7 @@ import org.gradle.api.plugins.JavaPlugin.PROCESS_TEST_RESOURCES_TASK_NAME
 import org.gradle.api.plugins.JavaPlugin.TEST_TASK_NAME
 import org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry
 import org.gradle.plugins.ide.eclipse.model.Classpath
+import org.gradle.testing.jacoco.tasks.JacocoReport
 
 plugins {
   id("com.ibm.wala.gradle.java")
@@ -377,6 +378,12 @@ tasks.named<Test>(TEST_TASK_NAME) {
   exclude("**/cha/LibraryVersionTest.class")
 
   outputs.file(layout.buildDirectory.file("report"))
+}
+
+tasks.named<JacocoReport>("jacocoTestReport") {
+  // primordial.jar.model contains a different version of com.ibm.wala.model.SyntheticFactory
+  // than the main class output. JaCoCo rejects both versions in one report, so omit resources.
+  classDirectories.setFrom(sourceSets.main.map { it.output.classesDirs })
 }
 
 val testResources =
