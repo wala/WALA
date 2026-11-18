@@ -39,10 +39,25 @@ package com.ibm.wala.util.collections;
 
 import java.util.Collection;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
+/**
+ * A map from non-null keys to sets of non-null values.
+ *
+ * <p>Callers must not add null values to the sets returned by this map.
+ *
+ * @param <K> the type of keys
+ * @param <V> the type of values
+ */
 public interface MultiMap<K, V> {
 
-  Set<V> get(K key);
+  /**
+   * Returns the values associated with {@code key}, or an empty set if {@code key} is null.
+   *
+   * <p>For a missing non-null key, implementations may create and return a mutable set, or return
+   * an empty set without changing the map. A null lookup never creates a mapping.
+   */
+  Set<V> get(@Nullable K key);
 
   boolean put(K key, V val);
 
