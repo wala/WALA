@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -30,7 +29,8 @@ public class HashMapFactory {
   /**
    * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
-  public static <K extends @Nullable Object, V> HashMap<K, V> make(int size) {
+  public static <K extends @Nullable Object, V extends @Nullable Object> HashMap<K, V> make(
+      int size) {
     if (HashSetFactory.DEBUG) {
       return new ParanoidHashMap<>(size);
     } else {
@@ -41,7 +41,7 @@ public class HashMapFactory {
   /**
    * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
-  public static <K extends @Nullable Object, V> HashMap<K, V> make() {
+  public static <K extends @Nullable Object, V extends @Nullable Object> HashMap<K, V> make() {
     if (HashSetFactory.DEBUG) {
       return new ParanoidHashMap<>();
     } else {
@@ -52,7 +52,7 @@ public class HashMapFactory {
   /**
    * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
-  public static <K extends @Nullable Object, V> HashMap<K, V> make(
+  public static <K extends @Nullable Object, V extends @Nullable Object> HashMap<K, V> make(
       Map<? extends K, ? extends V> t) {
     checkArgument(t != null, "null t");
     if (HashSetFactory.DEBUG) {
@@ -71,9 +71,8 @@ public class HashMapFactory {
    * @param <V> the type of the result map's values
    * @return a {@link Collector} that collects all the input elements into a {@link HashMap}
    */
-  public static <T, K, V> @NotNull Collector<T, ?, HashMap<K, V>> toMap(
-      @NotNull Function<? super T, ? extends K> keyMapper,
-      @NotNull Function<? super T, ? extends V> valueMapper) {
+  public static <T, K extends @Nullable Object, V> Collector<T, ?, HashMap<K, V>> toMap(
+      Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends V> valueMapper) {
     return Collectors.toMap(
         keyMapper,
         valueMapper,
