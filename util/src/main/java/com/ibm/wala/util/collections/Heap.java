@@ -75,10 +75,14 @@ public abstract class Heap<T> {
     return index * 2 + 2;
   }
 
-  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   private void ensureCapacity(int min) {
     if (backingStore.length < min) {
-      backingStore = Arrays.copyOf(backingStore, 2 * min);
+      // Arrays.copyOf pads unused slots with null. Heap operations read elements only
+      // from initialized slots, whose non-nullness is preserved by insertion and removal.
+      // So treat the array returned by copyOf as if its contents are non-null.
+      @SuppressWarnings("NullAway")
+      T[] expandedStore = Arrays.copyOf(backingStore, 2 * min);
+      backingStore = expandedStore;
     }
   }
 
