@@ -38,19 +38,28 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 /**
- * A pruned view of a {@link ControlFlowGraph}. Use this class along with an {@link EdgeFilter} to
- * produce a custom view of a CFG.
+ * A view of a {@link ControlFlowGraph} restricted to paths from entry to exit that use edges
+ * accepted by an {@link EdgeFilter}.
  *
- * <p>For example, you can use this class to produce a CFG view that ignores certain types of
- * exceptional edges.
+ * <p>A block is retained only if it is both reachable from entry and able to reach exit using
+ * accepted edges. The entry and exit blocks are always retained, even if no path connects them.
+ * Edges are retained only when accepted by the filter and both endpoints are retained.
+ *
+ * <p>For example, filtering all exceptional exits from a method that always throws can remove its
+ * entire body from the view, leaving only disconnected entry and exit blocks. Removed blocks may
+ * contain instructions that execute before the filtered exception is thrown; removal does not imply
+ * that those instructions are unreachable in the original CFG. This also removes reachable loops
+ * that have no path to exit.
  */
 public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGraph<T>
     implements ControlFlowGraph<I, T> {
 
   /**
+   * Creates a view with the edge and block restrictions described by {@link PrunedCFG}.
+   *
    * @param cfg the original CFG that you want a view of
    * @param filter an object that selectively filters edges in the original CFG
-   * @return a view of cfg that includes only edges accepted by the filter.
+   * @return a view containing blocks on accepted paths from entry to exit, plus entry and exit
    * @throws IllegalArgumentException if cfg is null
    */
   public static <I, T extends IBasicBlock<I>> PrunedCFG<I, T> make(
