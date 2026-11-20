@@ -23,7 +23,8 @@ import org.jspecify.annotations.Nullable;
  * a debugging aid. This implementation complains if you stick an object in here which appears to
  * use System.identityHashCode()
  */
-public class ParanoidHashMap<K extends @Nullable Object, V> extends LinkedHashMap<K, V> {
+public class ParanoidHashMap<K extends @Nullable Object, V extends @Nullable Object>
+    extends LinkedHashMap<K, V> {
   @Serial private static final long serialVersionUID = 909018793791787198L;
 
   /**
