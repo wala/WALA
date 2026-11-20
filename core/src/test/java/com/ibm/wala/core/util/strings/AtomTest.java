@@ -6,6 +6,10 @@ import static com.ibm.wala.core.util.strings.Atom.findOrCreateAsciiAtom;
 import static com.ibm.wala.core.util.strings.Atom.findOrCreateUnicodeAtom;
 import static com.ibm.wala.core.util.strings.Atom.isArrayDescriptor;
 import static com.ibm.wala.core.util.strings.AtomAssert.assertThat;
+import static com.ibm.wala.core.util.strings.AtomConditions.arrayDescriptor;
+import static com.ibm.wala.core.util.strings.AtomConditions.classDescriptor;
+import static com.ibm.wala.core.util.strings.AtomConditions.methodDescriptor;
+import static com.ibm.wala.core.util.strings.AtomConditions.reservedMemberName;
 import static java.lang.Integer.MAX_VALUE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,6 +24,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UTFDataFormatException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /** Unit tests of the {@link Atom} class. */
@@ -104,10 +109,10 @@ public final class AtomTest {
         .isEmpty()
         .hasToString("")
         .hasValArray()
-        .isNotReservedMemberName()
-        .isNotClassDescriptor()
-        .isNotArrayDescriptor()
-        .isNotMethodDescriptor()
+        .isNot(reservedMemberName)
+        .isNot(classDescriptor)
+        .isNot(arrayDescriptor)
+        .isNot(methodDescriptor)
         .doesNotContain((byte) 'a')
         .hasRIndex((byte) 'a', -1)
         .startsWith(empty);
@@ -362,34 +367,42 @@ public final class AtomTest {
 
   @Test
   public void testIsReservedMemberName() {
-    assertThat(Atom.findOrCreateUnicodeAtom("<init>")).isReservedMemberName();
-    assertThat(Atom.findOrCreateUnicodeAtom("<clinit>")).isReservedMemberName();
-    assertThat(Atom.findOrCreateUnicodeAtom("foo")).isNotReservedMemberName();
-    assertThat(Atom.findOrCreate(new byte[0])).isNotReservedMemberName();
+    assertThat(Atom.findOrCreateUnicodeAtom("<init>")).is(reservedMemberName);
+    assertThat(Atom.findOrCreateUnicodeAtom("<clinit>")).is(reservedMemberName);
+    assertThat(Atom.findOrCreateUnicodeAtom("foo")).isNot(reservedMemberName);
+    assertThat(Atom.findOrCreate(new byte[0])).isNot(reservedMemberName);
   }
 
   @Test
   public void testIsClassDescriptor() {
-    assertThat(Atom.findOrCreateUnicodeAtom("Ljava/lang/Object;")).isClassDescriptor();
-    assertThat(Atom.findOrCreateUnicodeAtom("I")).isNotClassDescriptor();
-    assertThat(Atom.findOrCreateUnicodeAtom("[I")).isNotClassDescriptor();
-    assertThat(Atom.findOrCreate(new byte[0])).isNotClassDescriptor();
+    assertThat(Atom.findOrCreateUnicodeAtom("Ljava/lang/Object;")).is(classDescriptor);
+    assertThat(Atom.findOrCreateUnicodeAtom("I")).isNot(classDescriptor);
+    assertThat(Atom.findOrCreateUnicodeAtom("[I")).isNot(classDescriptor);
+    assertThat(Atom.findOrCreate(new byte[0])).isNot(classDescriptor);
   }
 
   @Test
   public void testIsArrayDescriptorInstance() {
-    assertThat(Atom.findOrCreateUnicodeAtom("[I")).isArrayDescriptor();
-    assertThat(Atom.findOrCreateUnicodeAtom("[[I")).isArrayDescriptor();
-    assertThat(Atom.findOrCreateUnicodeAtom("I")).isNotArrayDescriptor();
-    assertThat(Atom.findOrCreate(new byte[0])).isNotArrayDescriptor();
+    assertThat(Atom.findOrCreateUnicodeAtom("[I")).is(arrayDescriptor);
+    assertThat(Atom.findOrCreateUnicodeAtom("[[I")).is(arrayDescriptor);
+    assertThat(Atom.findOrCreateUnicodeAtom("I")).isNot(arrayDescriptor);
+    assertThat(Atom.findOrCreate(new byte[0])).isNot(arrayDescriptor);
   }
 
   @Test
   public void testIsMethodDescriptor() {
-    assertThat(Atom.findOrCreateUnicodeAtom("(I)V")).isMethodDescriptor();
-    assertThat(Atom.findOrCreateUnicodeAtom("()V")).isMethodDescriptor();
-    assertThat(Atom.findOrCreateUnicodeAtom("V")).isNotMethodDescriptor();
-    assertThat(Atom.findOrCreate(new byte[0])).isNotMethodDescriptor();
+    assertThat(Atom.findOrCreateUnicodeAtom("(I)V")).is(methodDescriptor);
+    assertThat(Atom.findOrCreateUnicodeAtom("()V")).is(methodDescriptor);
+    assertThat(Atom.findOrCreateUnicodeAtom("V")).isNot(methodDescriptor);
+    assertThat(Atom.findOrCreate(new byte[0])).isNot(methodDescriptor);
+  }
+
+  @Test
+  public void testAtomConditions() {
+    assertThat(
+            List.of(
+                Atom.findOrCreateUnicodeAtom("<init>"), Atom.findOrCreateUnicodeAtom("<clinit>")))
+        .are(reservedMemberName);
   }
 
   @Test
