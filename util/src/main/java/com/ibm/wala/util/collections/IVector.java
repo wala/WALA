@@ -19,7 +19,8 @@ import org.jspecify.annotations.Nullable;
  */
 public interface IVector<T extends @Nullable Object> extends Iterable<T> {
   /**
-   * @see com.ibm.wala.util.intset.IntVector#get(int)
+   * @param x an index value
+   * @return the stored data at the given index, or {@code null} if the index is unmapped.
    */
   @Nullable T get(int x);
 

@@ -42,8 +42,7 @@ class SparseVectorTest {
 
     assertSoftly(softly -> {
       softly.assertThat(vector.get(7)).isNull();
-      softly.assertThat(vector).isEmpty();
-      softly.assertThat(vector.size()).isZero();
+      softly.assertThat(vector).hasSize(0).isEmpty();
     });
   }
 }
