@@ -141,7 +141,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
   }
 
   @Override
-  public T getSuccessor(T node, int i) throws IllegalArgumentException {
+  public @Nullable T getSuccessor(T node, int i) throws IllegalArgumentException {
     SimpleVector<T> s = successorEdges.get(node);
     if (s == null) {
       throw new IllegalArgumentException("no successors for node " + node);

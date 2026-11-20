@@ -35,14 +35,15 @@ public class BasicTree<T> {
   }
 
   public @Nullable T getChildValue(int i) {
-    if (children.get(i) == null) {
+    BasicTree<T> child = children.get(i);
+    if (child == null) {
       return null;
     } else {
-      return children.get(i).getRootValue();
+      return child.getRootValue();
     }
   }
 
-  public BasicTree<T> getChild(int i) {
+  public @Nullable BasicTree<T> getChild(int i) {
     return children.get(i);
   }
 

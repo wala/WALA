@@ -13,7 +13,6 @@ package com.ibm.wala.util.collections;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
 /** simple implementation of IVector */
@@ -27,15 +26,14 @@ public class SimpleVector<T> implements IVector<@Nullable T> {
 
   int maxIndex = -1;
 
-  @NullUnmarked
   @Override
   @SuppressWarnings("unchecked")
-  public T get(int x) {
+  public @Nullable T get(int x) {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x: " + x);
     }
     if (x < store.length) {
-      return (T) store[x];
+      return (@Nullable T) store[x];
     } else {
       return null;
     }

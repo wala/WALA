@@ -16,6 +16,28 @@ the `Iterable.iterator()` contract. These changes tighten the nullness
 annotations without adding runtime argument validation.
 See [#2174](https://github.com/wala/WALA/pull/2174).
 
+#### `SimpleVector` and dependent lookup APIs expose nullable results
+
+**Breaking for nullness-checked code:** `SimpleVector.get(int)` now explicitly
+returns a nullable value for an unset position. The following dependent APIs
+also declare their existing nullable results:
+
+* `BasicTree.getChild(int)` returns null for an unset child.
+* `OrderedMultiGraph.getSuccessor(T, int)`, including the
+  `BasicOrderedMultiGraph` implementation, may return null for an unassigned
+  successor position.
+* `Table.getElement(int, int)` and `getColumnHeading(int)` may return null for
+  missing cells and headings, respectively.
+* `Table.row2Map(int)`, `Query.selectStarWhereEquals`, and
+  `Query.selectStarWhere` return maps whose values may be null.
+  `Query.selectWhereEquals` returns a collection whose elements may be null.
+
+Callers must handle nullable lookup results and use nullable value or element
+types for returned maps and collections. Predicates passed to
+`Query.selectStarWhere` must accept null for missing cells. `Table.addRow` and
+`removeRow` now accept maps with nullable values. Lookup and query results at
+runtime are unchanged.
+
 #### `MultiMap.get(null)` never creates a mapping
 
 **Breaking:** `com.ibm.wala.util.collections.MultiMap.get` now explicitly

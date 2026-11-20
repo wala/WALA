@@ -11,12 +11,14 @@
 package com.ibm.wala.util.tables;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.requireNonNull;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.intset.BitVector;
 import java.util.ArrayList;
 import java.util.Map;
+import org.jspecify.annotations.Nullable;
 
 public class Table<T> {
 
@@ -61,7 +63,7 @@ public class Table<T> {
     int[] format = computeColumnWidths();
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < getNumberOfColumns(); i++) {
-      StringBuilder heading = new StringBuilder(getColumnHeading(i));
+      StringBuilder heading = new StringBuilder(requireNonNull(getColumnHeading(i)));
       padWithSpaces(heading, format[i]);
       result.append(heading);
     }
@@ -78,7 +80,7 @@ public class Table<T> {
     return result.toString();
   }
 
-  public synchronized T getElement(int row, int column) {
+  public synchronized @Nullable T getElement(int row, int column) {
     try {
       SimpleVector<T> r = rows.get(row);
       return r.get(column);
@@ -88,14 +90,15 @@ public class Table<T> {
   }
 
   /** Note that column indices start at zero */
-  public synchronized String getColumnHeading(int i) {
+  public synchronized @Nullable String getColumnHeading(int i) {
     return columnHeadings.get(i);
   }
 
   public int[] computeColumnWidths() {
     int[] result = new int[getNumberOfColumns()];
     for (int i = 0; i < getNumberOfColumns(); i++) {
-      result[i] = columnHeadings.get(i).length() + 1;
+      // Every column counted by getNumberOfColumns() has a heading.
+      result[i] = requireNonNull(columnHeadings.get(i)).length() + 1;
     }
     for (int j = 0; j < getNumberOfRows(); j++) {
       for (int i = 0; i < getNumberOfColumns(); i++) {
@@ -115,15 +118,15 @@ public class Table<T> {
     return rows.size();
   }
 
-  public synchronized Map<String, T> row2Map(int row) {
-    Map<String, T> result = HashMapFactory.make();
+  public synchronized Map<String, @Nullable T> row2Map(int row) {
+    Map<String, @Nullable T> result = HashMapFactory.make();
     for (int j = 0; j < getNumberOfColumns(); j++) {
-      result.put(getColumnHeading(j), getElement(row, j));
+      result.put(requireNonNull(getColumnHeading(j)), getElement(row, j));
     }
     return result;
   }
 
-  public synchronized void addRow(Map<String, T> p) {
+  public synchronized void addRow(Map<String, ? extends @Nullable T> p) {
     if (p == null) {
       throw new IllegalArgumentException("null p " + p);
     }
@@ -134,11 +137,11 @@ public class Table<T> {
     }
   }
 
-  public synchronized void removeRow(Map<String, T> p) {
+  public synchronized void removeRow(Map<String, ? extends @Nullable T> p) {
     checkArgument(p != null, "p is null");
     BitVector toRemove = new BitVector();
     for (int i = 0; i < rows.size(); i++) {
-      Map<String, T> row = row2Map(i);
+      Map<String, @Nullable T> row = row2Map(i);
       if (row.equals(p)) {
         toRemove.set(i);
       }

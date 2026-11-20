@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Predicate;
 import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /** Misc SQL-like support for queries on tables */
 public class Query {
@@ -28,12 +29,12 @@ public class Query {
    * @throws IllegalArgumentException if t == null
    */
   @NullUnmarked
-  public static <T> Collection<Map<String, T>> selectStarWhereEquals(
+  public static <T> Collection<Map<String, @Nullable T>> selectStarWhereEquals(
       Table<T> t, String column, T value) throws IllegalArgumentException {
     checkArgument(t != null, "t == null");
-    Collection<Map<String, T>> result = new ArrayList<>();
+    Collection<Map<String, @Nullable T>> result = new ArrayList<>();
     for (int i = 0; i < t.getNumberOfRows(); i++) {
-      Map<String, T> p = t.row2Map(i);
+      Map<String, @Nullable T> p = t.row2Map(i);
       if (p.get(column).equals(value)) {
         result.add(p);
       }
@@ -43,11 +44,11 @@ public class Query {
 
   /** SELECT attribute FROM t where column=value */
   @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
-  public static <T> Collection<T> selectWhereEquals(
+  public static <T> Collection<@Nullable T> selectWhereEquals(
       Table<T> t, String attribute, String column, T value) {
-    Collection<Map<String, T>> rows = selectStarWhereEquals(t, column, value);
-    Collection<T> result = HashSetFactory.make();
-    for (Map<String, T> p : rows) {
+    Collection<Map<String, @Nullable T>> rows = selectStarWhereEquals(t, column, value);
+    Collection<@Nullable T> result = HashSetFactory.make();
+    for (Map<String, @Nullable T> p : rows) {
       result.add(p.get(attribute));
     }
     return result;
@@ -55,12 +56,12 @@ public class Query {
 
   /** SELECT attribute FROM t where P(column) */
   @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
-  public static <T> Collection<Map<String, T>> selectStarWhere(
-      Table<T> t, String column, Predicate<T> P) {
+  public static <T> Collection<Map<String, @Nullable T>> selectStarWhere(
+      Table<T> t, String column, Predicate<@Nullable T> P) {
     checkArgument(t != null, "t == null");
-    Collection<Map<String, T>> c = new ArrayList<>();
+    Collection<Map<String, @Nullable T>> c = new ArrayList<>();
     for (int i = 0; i < t.getNumberOfRows(); i++) {
-      Map<String, T> p = t.row2Map(i);
+      Map<String, @Nullable T> p = t.row2Map(i);
       T s = p.get(column);
       if (P.test(s)) {
         c.add(p);
@@ -70,18 +71,18 @@ public class Query {
   }
 
   public static <T> Table<T> viewWhereEquals(Table<T> t, String column, T value) {
-    Collection<Map<String, T>> c = selectStarWhereEquals(t, column, value);
+    Collection<Map<String, @Nullable T>> c = selectStarWhereEquals(t, column, value);
     Table<T> result = new Table<>(t);
-    for (Map<String, T> p : c) {
+    for (Map<String, @Nullable T> p : c) {
       result.addRow(p);
     }
     return result;
   }
 
   public static StringTable viewWhereEquals(StringTable t, String column, String value) {
-    Collection<Map<String, String>> c = selectStarWhereEquals(t, column, value);
+    Collection<Map<String, @Nullable String>> c = selectStarWhereEquals(t, column, value);
     StringTable result = new StringTable(t);
-    for (Map<String, String> p : c) {
+    for (Map<String, @Nullable String> p : c) {
       result.addRow(p);
     }
     return result;
