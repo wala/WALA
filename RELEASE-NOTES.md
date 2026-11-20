@@ -4,6 +4,18 @@
 
 ### Functionality changes
 
+#### `Iterator2Iterable` requires a non-null iterator
+
+**Breaking for nullness-checked code:** The constructor and `make(Iterator)`
+factory of `com.ibm.wala.util.collections.Iterator2Iterable` no longer accept
+a nullable iterator parameter. Callers must supply a non-null iterator; use
+`Collections.emptyIterator()` when there are no elements to iterate over.
+
+`Iterator2Iterable.iterator()` now declares a non-null return type, matching
+the `Iterable.iterator()` contract. These changes tighten the nullness
+annotations without adding runtime argument validation.
+See [#2174](https://github.com/wala/WALA/pull/2174).
+
 #### `MultiMap.get(null)` never creates a mapping
 
 **Breaking:** `com.ibm.wala.util.collections.MultiMap.get` now explicitly
