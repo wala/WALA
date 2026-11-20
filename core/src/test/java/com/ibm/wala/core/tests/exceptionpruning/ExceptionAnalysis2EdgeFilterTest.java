@@ -196,7 +196,8 @@ public class ExceptionAnalysis2EdgeFilterTest {
       ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg,
       ISSABasicBlock block,
       ISSABasicBlock normalSucc) {
-    if (!block.getLastInstruction().isPEI()
+    if (block.getLastInstructionIndex() < 0
+        || !block.getLastInstruction().isPEI()
         || !filter.getFilter(node).alwaysThrowsException(block.getLastInstruction())) {
       specialCaseThrowFiltered(cfg, normalSucc);
     } else {
