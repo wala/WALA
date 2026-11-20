@@ -40,10 +40,12 @@ class UtilTest {
   }
 
   static class Parent {
+    // An inherited field makes the reflection test exercise superclass traversal.
     public int count = 7;
   }
 
   static class Child extends Parent {
+    // An unset field makes the reflection test exercise rendering a null value.
     public @Nullable String label;
   }
 }
