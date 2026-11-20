@@ -11,12 +11,24 @@
 package com.ibm.wala.util.intset;
 
 import org.assertj.core.api.Condition;
+import org.assertj.core.condition.VerboseCondition;
 
 public class BitVectorBaseConditions {
+
+  public static <T extends BitVectorBase<T>> Condition<T> bitSet(int bit) {
+    return new Condition<>(actual -> actual.get(bit), "bit %s set", bit);
+  }
 
   public static <T extends BitVectorBase<T>> Condition<T> emptyIntersectionWith(T other) {
     return new Condition<>(
         actual -> actual.intersectionEmpty(other), "empty intersection with %s", other);
+  }
+
+  public static <T extends BitVectorBase<T>> Condition<T> max(int expectedMax) {
+    return VerboseCondition.verboseCondition(
+        actual -> actual.max() == expectedMax,
+        "max bit %s".formatted(expectedMax),
+        actual -> " instead of %s".formatted(actual.max()));
   }
 
   public static <T extends BitVectorBase<T>> Condition<T> sameBitsAs(T other) {
