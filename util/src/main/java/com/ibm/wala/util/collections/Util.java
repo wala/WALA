@@ -38,6 +38,7 @@
 package com.ibm.wala.util.collections;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -55,6 +56,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 /** Miscellaneous utility functions. */
@@ -202,7 +204,7 @@ public class Util {
    *
    * @throws IllegalArgumentException if obj == null
    */
-  @SuppressWarnings({"removal", "NullAway"}) // to enable JSpecifyExperimental
+  @SuppressWarnings("removal")
   public static String objectFieldsToString(Object obj) throws IllegalArgumentException {
     checkArgument(obj != null, "obj == null");
     // Temporarily disable the security manager
@@ -244,7 +246,8 @@ public class Util {
 
         buf = buf.append(i + 1 >= fields.length ? ")" : ",");
       }
-      c = c.getSuperclass();
+      // A runtime object's class other than Object always has a superclass.
+      c = castToNonNull(c.getSuperclass());
     }
     // Reinstate the security manager
     System.setSecurityManager(oldsecurity);
@@ -253,7 +256,8 @@ public class Util {
   }
 
   /** Remove the package name from a fully qualified class name */
-  public static @Nullable String removePackageName(String fully_qualified_name_) {
+  @Contract("!null -> !null")
+  public static @Nullable String removePackageName(@Nullable String fully_qualified_name_) {
     if (fully_qualified_name_ == null) return null;
 
     int lastdot = fully_qualified_name_.lastIndexOf('.');
