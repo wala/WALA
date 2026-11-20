@@ -16,6 +16,18 @@ the `Iterable.iterator()` contract. These changes tighten the nullness
 annotations without adding runtime argument validation.
 See [#2174](https://github.com/wala/WALA/pull/2174).
 
+#### `IVector` and `SparseVector` expose nullable lookup results
+
+**Breaking for nullness-checked code:**
+`com.ibm.wala.util.collections.IVector.get(int)` and
+`SparseVector.get(int)` now explicitly return a nullable value, even when
+the element type `T` is non-null. Callers must handle a possible `null`
+result for an unset index before using the value as non-null.
+
+Lookup and iteration behavior at runtime are unchanged. Iteration still
+returns stored values of type `T`, including stored nulls when `T` permits
+them.
+
 #### `SimpleVector` and dependent lookup APIs expose nullable results
 
 **Breaking for nullness-checked code:** `SimpleVector.get(int)` now explicitly
