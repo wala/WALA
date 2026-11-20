@@ -107,7 +107,8 @@ public abstract class DFSFinishTimeIterator<T> implements Iterator<T>, Serializa
     recurse:
     while (!empty()) {
       T v = peek();
-      Iterator<? extends T> pc = getPendingChildren(v);
+      // Every node on the stack has its pending children initialized before it is pushed.
+      Iterator<? extends T> pc = requireNonNull(getPendingChildren(v));
       for (T n : Iterator2Iterable.make(pc)) {
         assert n != null : "null node in pc";
         Iterator<T> nChildren = getPendingChildren(n);
