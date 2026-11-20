@@ -12,6 +12,7 @@
 package com.ibm.wala.util.graph.traverse;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.requireNonNull;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -155,7 +156,8 @@ public class DFSPathFinder<T> extends ArrayList<T> {
     assert getPendingChildren(currentNode) != null;
     do {
       T stackTop = peek();
-      for (T child : Iterator2Iterable.make(getPendingChildren(stackTop))) {
+      // Every node on the stack has its pending children initialized before traversal resumes.
+      for (T child : Iterator2Iterable.make(requireNonNull(getPendingChildren(stackTop)))) {
         if (getPendingChildren(child) == null) {
           // found a new child.
           push(child);
