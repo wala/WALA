@@ -21,7 +21,7 @@ public interface IVector<T extends @Nullable Object> extends Iterable<T> {
   /**
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
-  T get(int x);
+  @Nullable T get(int x);
 
   /**
    * TODO: this can be optimized

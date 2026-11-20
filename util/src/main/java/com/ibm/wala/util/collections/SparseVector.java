@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedNull;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
@@ -19,7 +21,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -37,23 +38,22 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
   /** if indices[i] = x, then data[i] == get(x) */
   private MutableSparseIntSet indices;
 
-  private T[] data;
+  private @Nullable T[] data;
 
   @SuppressWarnings("unchecked")
   public SparseVector() {
-    data = (T[]) new Object[DEF_INITIAL_SIZE];
+    data = (@Nullable T[]) new Object[DEF_INITIAL_SIZE];
     indices = MutableSparseIntSet.makeEmpty();
   }
 
   @SuppressWarnings("unchecked")
   public SparseVector(int initialSize, float expansion) {
-    data = (T[]) new Object[DEF_INITIAL_SIZE];
+    data = (@Nullable T[]) new Object[DEF_INITIAL_SIZE];
     indices = new TunedMutableSparseIntSet(initialSize, expansion);
   }
 
-  @NullUnmarked
   @Override
-  public T get(int x) {
+  public @Nullable T get(int x) {
     int index = indices.getIndex(x);
     return index == -1 ? null : data[index];
   }
@@ -73,7 +73,6 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
     data[index] = value;
   }
 
-  @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
   private void ensureCapacity(int capacity) {
     if (data.length < capacity + 1) {
       data = Arrays.copyOf(data, 1 + (int) (capacity * indices.getExpansionFactor()));
@@ -106,7 +105,9 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
         if (!hasNext()) {
           throw new NoSuchElementException();
         }
-        return data[i++];
+        T value = data[i++];
+        // Active slots contain values passed to set(), so null is valid only when T permits it.
+        return value == null ? uncheckedNull() : value;
       }
 
       @Override
@@ -143,7 +144,7 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
 
   @SuppressWarnings("unchecked")
   public void clear() {
-    data = (T[]) new Object[DEF_INITIAL_SIZE];
+    data = (@Nullable T[]) new Object[DEF_INITIAL_SIZE];
     indices = MutableSparseIntSet.makeEmpty();
   }
 
