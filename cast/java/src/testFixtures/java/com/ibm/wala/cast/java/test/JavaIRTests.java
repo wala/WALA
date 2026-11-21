@@ -14,6 +14,7 @@
 package com.ibm.wala.cast.java.test;
 
 import static com.ibm.wala.ipa.slicer.SlicerUtil.dumpSlice;
+import static com.ibm.wala.ipa.slicer.StatementSliceAssert.assertThatSlice;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
@@ -573,8 +574,7 @@ public abstract class JavaIRTests extends IRTests {
         AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     Collection<Statement> slice = y.fst;
     dumpSlice(slice);
-    assertThat(SlicerUtil.countAllocations(slice, false)).isEqualTo(0);
-    assertThat(SlicerUtil.countPutfields(slice)).isEqualTo(1);
+    assertThatSlice(slice).hasAllocationCount(0).hasPutfieldCount(1);
 
     // test slice from main
     sliceRootRef = getSliceRootReference("MiniaturSliceBug", "main", "([Ljava/lang/String;)V");
@@ -582,8 +582,7 @@ public abstract class JavaIRTests extends IRTests {
     y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     slice = y.fst;
     // SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countAllocations(slice, false)).isEqualTo(2);
-    assertThat(SlicerUtil.countPutfields(slice)).isEqualTo(2);
+    assertThatSlice(slice).hasAllocationCount(2).hasPutfieldCount(2);
   }
 
   @Test

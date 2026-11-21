@@ -20,4 +20,5 @@ dependencies {
   testFixturesImplementation(libs.assertj.core)
   testFixturesImplementation(projects.cast)
   testFixturesImplementation(projects.shrike)
+  testFixturesImplementation(testFixtures(projects.core))
 }

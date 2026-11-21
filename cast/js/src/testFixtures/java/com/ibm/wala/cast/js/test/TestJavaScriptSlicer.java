@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.ibm.wala.ipa.slicer.StatementSliceAssert.assertThatSlice;
 
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.modref.JavaScriptModRef;
@@ -24,7 +24,6 @@ import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
-import com.ibm.wala.ipa.slicer.SlicerUtil;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -46,7 +45,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
       System.err.println(r);
     }
 
-    assertThat(SlicerUtil.countConditionals(result)).isEqualTo(0);
+    assertThatSlice(result).hasConditionalCount(0);
   }
 
   @Test
@@ -59,7 +58,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
       System.err.println(r);
     }
 
-    assertThat(SlicerUtil.countConditionals(result)).isEqualTo(2);
+    assertThatSlice(result).hasConditionalCount(2);
   }
 
   @Test
@@ -72,7 +71,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
       System.err.println(r);
     }
 
-    assertThat(SlicerUtil.countConditionals(result)).isEqualTo(1);
+    assertThatSlice(result).hasConditionalCount(1);
   }
 
   private Collection<Statement> slice(

@@ -10,10 +10,7 @@
  */
 package com.ibm.wala.core.tests.slicer;
 
-import static com.ibm.wala.ipa.slicer.SlicerUtil.countAllocations;
-import static com.ibm.wala.ipa.slicer.SlicerUtil.countGetfields;
-import static com.ibm.wala.ipa.slicer.SlicerUtil.countPutfields;
-import static com.ibm.wala.ipa.slicer.SlicerUtil.countThrows;
+import static com.ibm.wala.ipa.slicer.StatementSliceAssert.assertThatSlice;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.JavaLanguage;
@@ -186,7 +183,7 @@ public class SlicerTest {
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
 
-    assertThat(SlicerUtil.countNormals(slice)).as(slice::toString).isEqualTo(9);
+    assertThatSlice(slice).hasNormalCount(9);
   }
 
   @Test
@@ -212,7 +209,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countAllocations(slice, false)).as(slice::toString).isEqualTo(1);
+    assertThatSlice(slice).hasAllocationCount(1);
   }
 
   @Test
@@ -325,7 +322,7 @@ public class SlicerTest {
             DataDependenceOptions.FULL,
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countInvokes(slice)).isEqualTo(4);
+    assertThatSlice(slice).hasInvokeCount(4);
     // should only get 4 statements total when ignoring control dependencies completely
     slice =
         Slicer.computeBackwardSlice(
@@ -361,7 +358,7 @@ public class SlicerTest {
             DataDependenceOptions.FULL,
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     // dumpSlice(slice);
-    assertThat(SlicerUtil.countApplicationNormals(slice)).isEqualTo(5);
+    assertThatSlice(slice).hasApplicationNormalCount(5);
   }
 
   @Test
@@ -388,7 +385,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countConditionals(slice)).as(slice::toString).isEqualTo(2);
+    assertThatSlice(slice).hasConditionalCount(2);
   }
 
   @Test
@@ -415,7 +412,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countConditionals(slice)).as(slice::toString).isEqualTo(1);
+    assertThatSlice(slice).hasConditionalCount(1);
   }
 
   @Test
@@ -442,7 +439,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countConditionals(slice)).as(slice::toString).isEqualTo(0);
+    assertThatSlice(slice).hasConditionalCount(0);
   }
 
   @Test
@@ -470,7 +467,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countConditionals(slice)).isEqualTo(0);
+    assertThatSlice(slice).hasConditionalCount(0);
 
     // compute a full slice
     slice =
@@ -478,7 +475,7 @@ public class SlicerTest {
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     SlicerUtil.dumpSlice(slice);
     Collection<Statement> finalSlice = slice;
-    assertThat(SlicerUtil.countConditionals(finalSlice)).as(finalSlice::toString).isEqualTo(1);
+    assertThatSlice(finalSlice).hasConditionalCount(1);
   }
 
   @Test
@@ -511,7 +508,7 @@ public class SlicerTest {
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     SlicerUtil.dumpSlice(slice);
     assertThat(slice).hasSize(10);
-    assertThat(SlicerUtil.countReturns(slice)).isEqualTo(3);
+    assertThatSlice(slice).hasReturnCount(3);
   }
 
   @Test
@@ -544,7 +541,7 @@ public class SlicerTest {
             ControlDependenceOptions.NO_INTERPROC_NO_EXCEPTION);
     SlicerUtil.dumpSlice(slice);
     assertThat(slice).hasSize(8);
-    assertThat(SlicerUtil.countReturns(slice)).isEqualTo(2);
+    assertThatSlice(slice).hasReturnCount(2);
   }
 
   @Test
@@ -576,7 +573,7 @@ public class SlicerTest {
             DataDependenceOptions.NONE,
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countInvokes(slice)).as(slice::toString).isEqualTo(2);
+    assertThatSlice(slice).hasInvokeCount(2);
   }
 
   @Test
@@ -603,7 +600,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countAllocations(slice, false)).as(slice::toString).isEqualTo(1);
+    assertThatSlice(slice).hasAllocationCount(1);
   }
 
   @Test
@@ -631,8 +628,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countAllocations(slice, false)).as(slice::toString).isEqualTo(2);
-    assertThat(SlicerUtil.countAloads(slice)).as(slice::toString).isEqualTo(1);
+    assertThatSlice(slice).hasAllocationCount(2).hasArrayLoadCount(1);
   }
 
   @Test
@@ -660,8 +656,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countAllocations(slice, false)).as(slice::toString).isEqualTo(2);
-    assertThat(SlicerUtil.countPutfields(slice)).as(slice::toString).isEqualTo(1);
+    assertThatSlice(slice).hasAllocationCount(2).hasPutfieldCount(1);
   }
 
   @Test
@@ -691,8 +686,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countAllocations(slice, false)).isEqualTo(3);
-    assertThat(SlicerUtil.countPutfields(slice)).isEqualTo(2);
+    assertThatSlice(slice).hasAllocationCount(3).hasPutfieldCount(2);
 
     // compute thin slice .. ignore base pointers
     Collection<Statement> computeBackwardSlice =
@@ -703,12 +697,7 @@ public class SlicerTest {
             DataDependenceOptions.NO_BASE_PTRS,
             ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(computeBackwardSlice);
-    assertThat(SlicerUtil.countAllocations(computeBackwardSlice, false))
-        .as(computeBackwardSlice::toString)
-        .isEqualTo(2);
-    assertThat(SlicerUtil.countPutfields(computeBackwardSlice))
-        .as(computeBackwardSlice::toString)
-        .isEqualTo(1);
+    assertThatSlice(computeBackwardSlice).hasAllocationCount(2).hasPutfieldCount(1);
   }
 
   @Test
@@ -736,9 +725,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countAllocations(slice, false)).as(slice::toString).isEqualTo(1);
-    assertThat(SlicerUtil.countPutstatics(slice)).as(slice::toString).isEqualTo(2);
-    assertThat(SlicerUtil.countGetstatics(slice)).as(slice::toString).isEqualTo(2);
+    assertThatSlice(slice).hasAllocationCount(1).hasPutstaticCount(2).hasGetstaticCount(2);
   }
 
   @Test
@@ -766,7 +753,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countAllocations(slice, false)).as(slice::toString).isEqualTo(2);
+    assertThatSlice(slice).hasAllocationCount(2);
   }
 
   @Test
@@ -795,8 +782,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertThat(SlicerUtil.countAllocations(slice, false)).as(slice::toString).isEqualTo(3);
-    assertThat(SlicerUtil.countPutfields(slice)).as(slice::toString).isEqualTo(2);
+    assertThatSlice(slice).hasAllocationCount(3).hasPutfieldCount(2);
   }
 
   @Test
@@ -827,8 +813,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, pcg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     SlicerUtil.dumpSlice(slice);
-    assertThat(countAllocations(slice, false)).isEqualTo(0);
-    assertThat(countPutfields(slice)).isEqualTo(1);
+    assertThatSlice(slice).hasAllocationCount(0).hasPutfieldCount(1);
   }
 
   /**
@@ -886,8 +871,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, pcg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertThat(countAllocations(slice, false)).isEqualTo(1);
-    assertThat(countPutfields(slice)).isEqualTo(1);
+    assertThatSlice(slice).hasAllocationCount(1).hasPutfieldCount(1);
   }
 
   @Test
@@ -914,9 +898,10 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    assertThat(countAllocations(slice, true)).isEqualTo(1);
-    assertThat(countThrows(slice, true)).isEqualTo(1);
-    assertThat(countGetfields(slice, true)).isEqualTo(1);
+    assertThatSlice(slice)
+        .hasAllocationCount(1, true)
+        .hasThrowCount(1, true)
+        .hasGetfieldCount(1, true);
   }
 
   @Test
