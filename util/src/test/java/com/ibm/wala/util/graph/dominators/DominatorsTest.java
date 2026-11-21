@@ -1,6 +1,10 @@
 package com.ibm.wala.util.graph.dominators;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.ibm.wala.util.graph.dominators.DominatorsAssert.assertThat;
+import static com.ibm.wala.util.graph.dominators.DominatorsConditions.dominatedBy;
+import static com.ibm.wala.util.graph.dominators.DominatorsConditions.immediateDominator;
+import static org.assertj.core.api.Assertions.allOf;
+import static org.assertj.core.api.Assertions.not;
 
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import java.util.concurrent.TimeUnit;
@@ -14,18 +18,39 @@ public class DominatorsTest {
   public void wideStarGraphRunsInLinearTime() {
     int n = 20_000;
     SlowSparseNumberedGraph<Integer> g = SlowSparseNumberedGraph.make();
-    Integer root = Integer.valueOf(0);
-    g.addNode(root);
+    g.addNode(0);
     for (int i = 1; i < n; i++) {
-      Integer v = Integer.valueOf(i);
-      g.addNode(v);
-      g.addEdge(root, v);
+      g.addNode(i);
+      g.addEdge(0, i);
     }
 
-    Dominators<Integer> d = Dominators.make(g, root);
+    Dominators<Integer> d = Dominators.make(g, 0);
 
     for (int i = 1; i < n; i++) {
-      assertThat(d.getIdom(Integer.valueOf(i))).isEqualTo(root);
+      assertThat(d).has(immediateDominator(i, 0));
     }
+  }
+
+  @Test
+  public void testDominatorsAssertAndConditions() {
+    SlowSparseNumberedGraph<Integer> g = SlowSparseNumberedGraph.make();
+    g.addNode(0);
+    g.addNode(1);
+    g.addNode(2);
+    g.addEdge(0, 1);
+    g.addEdge(1, 2);
+
+    Dominators<Integer> d = Dominators.make(g, 0);
+
+    assertThat(d)
+        .has(
+            allOf(
+                dominatedBy(2, 1),
+                dominatedBy(2, 0),
+                not(dominatedBy(0, 2)),
+                immediateDominator(2, 1),
+                immediateDominator(1, 0)));
+
+    assertThat(d).dominatorsOf(2).containsExactly(2, 1, 0);
   }
 }

@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.basic;
 
+import static com.ibm.wala.util.graph.dominators.DominatorsAssert.assertThat;
 import static com.ibm.wala.util.intset.BitVectorBaseConditions.bitSet;
 import static com.ibm.wala.util.intset.BitVectorBaseConditions.emptyIntersectionWith;
 import static com.ibm.wala.util.intset.BitVectorBaseConditions.max;
@@ -753,14 +754,12 @@ public class PrimitivesTest extends WalaTestCase {
     // compute dominators
     Dominators<Object> D = Dominators.make(G, nodes[10]);
 
-    // Assert.assertions
-    assertThat(D.dominators(nodes[4]))
-        .toIterable()
+    assertThat(D)
+        .dominatorsOf(nodes[4])
         .containsExactly(nodes[4], nodes[7], nodes[8], nodes[5], nodes[10]);
 
-    assertThat(D.dominatorTree().getSuccNodes(nodes[5])).toIterable().containsExactly(nodes[8]);
-
-    assertThat(D.dominatorTree().getSuccNodeCount(nodes[10])).isEqualTo(5);
+    assertThat(D).dominatorTree().successorsOf(nodes[5]).containsExactly(nodes[8]);
+    assertThat(D).dominatorTree().successorCountOf(nodes[10]).isEqualTo(5);
   }
 
   @Test
