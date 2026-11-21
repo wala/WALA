@@ -61,6 +61,7 @@ import com.ibm.wala.util.intset.IntSet;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -106,7 +107,7 @@ public class SparseNumberedLabeledEdgeManager<T, U>
   }
 
   @Override
-  public Iterator<T> getPredNodes(@Nullable T N, U label) {
+  public Iterator<T> getPredNodes(T N, U label) {
     return getManagerForLabel(label).getPredNodes(N);
   }
 
@@ -116,7 +117,7 @@ public class SparseNumberedLabeledEdgeManager<T, U>
   }
 
   @Override
-  public Iterator<? extends T> getSuccNodes(@Nullable T N, U label) {
+  public Iterator<? extends T> getSuccNodes(T N, U label) {
     return getManagerForLabel(label).getSuccNodes(N);
   }
 
@@ -208,6 +209,9 @@ public class SparseNumberedLabeledEdgeManager<T, U>
 
   @Override
   public Iterator<T> getPredNodes(@Nullable T N) {
+    if (N == null) {
+      return Collections.emptyIterator();
+    }
     Collection<T> preds = HashSetFactory.make();
     for (U label : nodeToPredLabels.get(N)) {
       preds.addAll(Iterator2Collection.toSet(getPredNodes(N, label)));
@@ -226,6 +230,9 @@ public class SparseNumberedLabeledEdgeManager<T, U>
 
   @Override
   public Iterator<T> getSuccNodes(@Nullable T N) {
+    if (N == null) {
+      return Collections.emptyIterator();
+    }
     Collection<T> succs = HashSetFactory.make();
     for (U label : nodeToSuccLabels.get(N)) {
       succs.addAll(Iterator2Collection.toSet(getSuccNodes(N, label)));

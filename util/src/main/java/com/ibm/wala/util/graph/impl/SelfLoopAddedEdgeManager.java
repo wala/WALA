@@ -54,7 +54,7 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
   }
 
   @Override
-  public Iterator<T> getPredNodes(@Nullable T n) {
+  public Iterator<T> getPredNodes(T n) {
     if (original.hasEdge(n, n)) {
       return original.getPredNodes(n);
     } else {
@@ -72,7 +72,7 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
   }
 
   @Override
-  public Iterator<T> getSuccNodes(@Nullable T n) {
+  public Iterator<T> getSuccNodes(T n) {
     if (original.hasEdge(n, n)) {
       return original.getSuccNodes(n);
     } else {

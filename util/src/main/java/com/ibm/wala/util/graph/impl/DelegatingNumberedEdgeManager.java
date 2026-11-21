@@ -61,7 +61,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
   }
 
   @Override
-  public Iterator<T> getPredNodes(@Nullable T N) throws IllegalArgumentException {
+  public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
     checkArgument(N != null, "N cannot be null");
     IntSet pred = N.getPredNumbers();
     Iterator<T> empty = EmptyIterator.instance();
@@ -87,7 +87,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
   }
 
   @Override
-  public Iterator<T> getSuccNodes(@Nullable T N) {
+  public Iterator<T> getSuccNodes(T N) {
     checkArgument(N != null, "N cannot be null");
     IntSet succ = N.getSuccNumbers();
     Iterator<T> empty = EmptyIterator.instance();

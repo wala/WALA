@@ -16,6 +16,21 @@ the `Iterable.iterator()` contract. These changes tighten the nullness
 annotations without adding runtime argument validation.
 See [#2174](https://github.com/wala/WALA/pull/2174).
 
+#### Graph neighbor queries require non-null nodes
+
+**Breaking for nullness-checked code:**
+`com.ibm.wala.util.graph.EdgeManager.getPredNodes(T)` and `getSuccNodes(T)`
+now require non-null node arguments. This contract also applies through
+`Graph` and `NumberedGraph`, and the corresponding signatures in
+implementations such as `AbstractGraph` have been updated. Callers must
+check nullable nodes before querying their neighbors.
+
+The label-specific `getPredNodes(T, U)` and `getSuccNodes(T, U)` overloads in
+`SparseNumberedLabeledEdgeManager` also require non-null nodes. Runtime
+behavior is unchanged: `BasicEdgeManager` and the unlabeled neighbor-query
+overloads in `SparseNumberedLabeledEdgeManager` retain nullable parameters
+and return empty iterators for null nodes.
+
 #### `IVector` and `SparseVector` expose nullable lookup results
 
 **Breaking for nullness-checked code:**
