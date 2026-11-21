@@ -10,9 +10,9 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatObject;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -31,7 +31,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /** Check handling of class constants (test for part of 1.5 support) */
@@ -63,9 +62,7 @@ public class ClassConstantTest extends WalaTestCase {
     // make sure the main method is reached
     MethodReference mainMethodRef =
         MethodReference.findOrCreate(mainClassRef, "main", "([Ljava/lang/String;)V");
-    Set<CGNode> mainMethodNodes = cg.getNodes(mainMethodRef);
-    assertThat(mainMethodNodes).isNotEmpty();
-    CGNode mainMethodNode = mainMethodNodes.iterator().next();
+    CGNode mainMethodNode = assertThat(cg).nodes(mainMethodRef).singleElement().actual();
     // Trace.println("main IR:");
     // Trace.println(mainMethodNode.getIR());
 
@@ -73,10 +70,9 @@ public class ClassConstantTest extends WalaTestCase {
     TypeReference classRef =
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Class");
     MethodReference hashCodeRef = MethodReference.findOrCreate(classRef, "hashCode", "()I");
-    Set<CGNode> hashCodeNodes = cg.getNodes(hashCodeRef);
-    assertThat(hashCodeNodes).isNotEmpty();
+    CGNode hashCodeNode = assertThat(cg).nodes(hashCodeRef).singleElement().actual();
 
     // make sure call to hashCode from main
-    assertThatObject(cg).has(edge(mainMethodNode, hashCodeNodes.iterator().next()));
+    assertThat(cg).has(edge(mainMethodNode, hashCodeNode));
   }
 }

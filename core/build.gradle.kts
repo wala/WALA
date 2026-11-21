@@ -80,7 +80,7 @@ dependencies {
   testFixturesImplementation(libs.ant)
   testFixturesImplementation(libs.junit.platform.engine)
   testFixturesImplementation(libs.junit.platform.launcher)
-  testFixturesImplementation(projects.util)
+  testFixturesApi(testFixtures(projects.util))
   testImplementation(libs.assertj.core)
   testImplementation(libs.json.unit.assertj)
   testImplementation(libs.jspecify)

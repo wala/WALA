@@ -1,5 +1,6 @@
 package com.ibm.wala.util.graph.labeled;
 
+import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -36,7 +37,7 @@ class SparseNumberedLabeledEdgeManagerTest {
 
     assertThatIllegalArgumentException().isThrownBy(() -> edges.addEdge("src", "dst"));
 
-    assertThat(edges.hasEdge("src", "dst")).isFalse();
+    assertThat(edges).doesNotHave(edge("src", "dst"));
   }
 
   @Test
@@ -48,7 +49,7 @@ class SparseNumberedLabeledEdgeManagerTest {
     assertSoftly(softly -> {
       softly.assertThat(edges.getPredNodes(null)).as("getPredNodes(null)").isExhausted();
       softly.assertThat(edges.getSuccNodes(null)).as("getSuccNodes(null)").isExhausted();
-      softly.assertThat(edges.hasEdge(null, "dst")).as("hasEdge(null, dst)").isFalse();
+      softly.assertThat(edges).as("hasEdge(null, dst)").doesNotHave(edge(null, "dst"));
     });
   }
 }

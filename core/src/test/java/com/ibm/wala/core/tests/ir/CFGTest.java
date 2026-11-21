@@ -11,10 +11,10 @@
 package com.ibm.wala.core.tests.ir;
 
 import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
+import static com.ibm.wala.util.graph.GraphAssert.assertThat;
 import static com.ibm.wala.util.intset.IntSetAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatObject;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
@@ -114,7 +114,8 @@ public abstract class CFGTest extends WalaTestCase {
     IR ir = cache.getIR(m);
     System.out.println(ir);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
-    assertThat(controlFlowGraph.getSuccNodeCount(controlFlowGraph.getBlockForInstruction(21)))
+    assertThat(controlFlowGraph)
+        .successorCountOf(controlFlowGraph.getBlockForInstruction(21))
         .isEqualTo(1);
   }
 
@@ -139,16 +140,17 @@ public abstract class CFGTest extends WalaTestCase {
     IAnalysisCacheView cache = makeAnalysisCache();
     IR ir = cache.getIR(m);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
-    assertThat(controlFlowGraph.getSuccNodeCount(controlFlowGraph.getBlockForInstruction(33)))
+    assertThat(controlFlowGraph)
+        .successorCountOf(controlFlowGraph.getBlockForInstruction(33))
         .isEqualTo(1);
   }
 
   public static void testCFG(SSACFG cfg, int[][] assertions) {
     for (int i = 0; i < assertions.length; i++) {
       SSACFG.BasicBlock bb = cfg.getNode(i);
-      assertThat(cfg.getSuccNodeCount(bb)).isEqualTo(assertions[i].length);
+      assertThat(cfg).successorCountOf(bb).isEqualTo(assertions[i].length);
       for (int j = 0; j < assertions[i].length; j++) {
-        assertThatObject(cfg).has(edge(bb, cfg.getNode(assertions[i][j])));
+        assertThat(cfg).has(edge(bb, cfg.getNode(assertions[i][j])));
       }
     }
   }

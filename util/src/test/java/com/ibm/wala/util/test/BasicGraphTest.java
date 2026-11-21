@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.util.test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.ibm.wala.util.graph.GraphAssert.assertThat;
 
 import com.ibm.wala.util.graph.impl.BasicGraph;
 import org.junit.jupiter.api.Test;
@@ -26,8 +26,8 @@ public class BasicGraphTest {
     graph.addNode(root);
     graph.addNode(leaf);
     graph.addEdge(root, leaf);
-    assertThat(graph).containsExactlyInAnyOrder(root, leaf);
-    assertThat(graph.getPredNodes(leaf)).toIterable().containsExactly(root);
-    assertThat(graph.getSuccNodes(root)).toIterable().containsExactly(leaf);
+    assertThat(graph).nodes().containsExactlyInAnyOrder(root, leaf);
+    assertThat(graph).predecessorsOf(leaf).containsExactly(root);
+    assertThat(graph).successorsOf(root).containsExactly(leaf);
   }
 }
