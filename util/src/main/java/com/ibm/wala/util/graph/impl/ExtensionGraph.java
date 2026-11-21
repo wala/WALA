@@ -65,7 +65,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         }
 
         @Override
-        public Iterator<T> getPredNodes(@Nullable T n) {
+        public Iterator<T> getPredNodes(T n) {
           Iterator<T> orig =
               (original.containsNode(n) ? original.getPredNodes(n) : EmptyIterator.<T>instance());
           return new CompoundIterator<>(orig, nodes(n, inEdges));
@@ -79,7 +79,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         }
 
         @Override
-        public Iterator<T> getSuccNodes(@Nullable T n) {
+        public Iterator<T> getSuccNodes(T n) {
           Iterator<T> orig =
               (original.containsNode(n) ? original.getSuccNodes(n) : EmptyIterator.<T>instance());
           return new CompoundIterator<>(orig, nodes(n, outEdges));
@@ -252,7 +252,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
   }
 
   @Override
-  public Iterator<T> getPredNodes(@Nullable T n) {
+  public Iterator<T> getPredNodes(T n) {
     return edgeManager.getPredNodes(n);
   }
 
@@ -267,7 +267,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
   }
 
   @Override
-  public Iterator<T> getSuccNodes(@Nullable T n) {
+  public Iterator<T> getSuccNodes(T n) {
     return edgeManager.getSuccNodes(n);
   }
 

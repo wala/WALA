@@ -101,7 +101,7 @@ public class GraphSlicer {
         new EdgeManager<>() {
 
           @Override
-          public Iterator<T> getPredNodes(@Nullable T n) {
+          public Iterator<T> getPredNodes(T n) {
             return new FilterIterator<>(g.getPredNodes(n), p);
           }
 
@@ -111,7 +111,7 @@ public class GraphSlicer {
           }
 
           @Override
-          public Iterator<T> getSuccNodes(@Nullable T n) {
+          public Iterator<T> getSuccNodes(T n) {
             return new FilterIterator<>(g.getSuccNodes(n), p);
           }
 
@@ -268,7 +268,7 @@ public class GraphSlicer {
 
           @NullUnmarked
           @Override
-          public Iterator<E> getPredNodes(@Nullable E N) {
+          public Iterator<E> getPredNodes(E N) {
             if (!preds.containsKey(N)) {
               setPredNodes(N);
             }
@@ -286,7 +286,7 @@ public class GraphSlicer {
 
           @NullUnmarked
           @Override
-          public Iterator<E> getSuccNodes(@Nullable E N) {
+          public Iterator<E> getSuccNodes(E N) {
             if (!succs.containsKey(N)) {
               setSuccNodes(N);
             }

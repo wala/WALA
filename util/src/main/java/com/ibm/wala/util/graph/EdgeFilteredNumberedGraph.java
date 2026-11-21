@@ -74,7 +74,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
     }
 
     @Override
-    public Iterator<T> getPredNodes(@Nullable T N) {
+    public Iterator<T> getPredNodes(T N) {
       return new NodeIterator(getPredNodeNumbers(N));
     }
 
@@ -84,7 +84,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
     }
 
     @Override
-    public Iterator<T> getSuccNodes(@Nullable T N) {
+    public Iterator<T> getSuccNodes(T N) {
       return new NodeIterator(getSuccNodeNumbers(N));
     }
 

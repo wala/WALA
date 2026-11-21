@@ -58,7 +58,7 @@ public class DelegatingGraph<T> implements Graph<T> {
   }
 
   @Override
-  public Iterator<T> getPredNodes(@Nullable T N) throws IllegalArgumentException {
+  public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
     return delegate.getPredNodes(N);
   }
 
@@ -68,7 +68,7 @@ public class DelegatingGraph<T> implements Graph<T> {
   }
 
   @Override
-  public Iterator<T> getSuccNodes(@Nullable T N) throws IllegalArgumentException {
+  public Iterator<T> getSuccNodes(T N) throws IllegalArgumentException {
     return delegate.getSuccNodes(N);
   }
 

@@ -52,7 +52,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
   }
 
   @Override
-  public Iterator<T> getPredNodes(@Nullable T n) throws IllegalArgumentException {
+  public Iterator<T> getPredNodes(T n) throws IllegalArgumentException {
     checkArgument(n != null, "n cannot be null");
     return getEdgeManager().getPredNodes(n);
   }
@@ -66,7 +66,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
   }
 
   @Override
-  public Iterator<T> getSuccNodes(@Nullable T n) throws IllegalArgumentException {
+  public Iterator<T> getSuccNodes(T n) throws IllegalArgumentException {
     checkArgument(n != null, "n cannot be null");
     return getEdgeManager().getSuccNodes(n);
   }

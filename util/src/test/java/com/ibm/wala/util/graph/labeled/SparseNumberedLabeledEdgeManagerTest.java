@@ -1,5 +1,6 @@
 package com.ibm.wala.util.graph.labeled;
 
+import static com.ibm.wala.util.graph.EdgeManagerAssert.assertThat;
 import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -38,6 +39,24 @@ class SparseNumberedLabeledEdgeManagerTest {
     assertThatIllegalArgumentException().isThrownBy(() -> edges.addEdge("src", "dst"));
 
     assertThat(edges).doesNotHave(edge("src", "dst"));
+  }
+
+  @Test
+  void destinationQueryReturnsSource() {
+    SparseNumberedLabeledEdgeManager<String, String> edges =
+        new SparseNumberedLabeledEdgeManager<>(makeNodeManager());
+    edges.addEdge("src", "dst", "label");
+
+    assertThat(edges).predecessorsOf("dst").containsExactly("src");
+  }
+
+  @Test
+  void sourceQueryReturnsDestination() {
+    SparseNumberedLabeledEdgeManager<String, String> edges =
+        new SparseNumberedLabeledEdgeManager<>(makeNodeManager());
+    edges.addEdge("src", "dst", "label");
+
+    assertThat(edges).successorsOf("src").containsExactly("dst");
   }
 
   @Test
