@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.tests.ptrs;
 
+import static com.ibm.wala.ipa.callgraph.propagation.PointerAnalysisAssert.assertThat;
+import static com.ibm.wala.ipa.callgraph.propagation.PointerAnalysisConditions.mayAlias;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -31,9 +33,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
-import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 
 public class TypeBasedArrayAliasTest extends WalaTestCase {
@@ -59,17 +59,17 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
     CGNode node = findNode(cg, "testMayAlias1");
     PointerKey pk1 = pa.getHeapModel().getPointerKeyForLocal(node, 1);
     PointerKey pk2 = pa.getHeapModel().getPointerKeyForLocal(node, 2);
-    assertThat(pa).has(mayAliased(pk1, pk2));
+    assertThat(pa).has(mayAlias(pk1, pk2));
 
     node = findNode(cg, "testMayAlias2");
     pk1 = pa.getHeapModel().getPointerKeyForLocal(node, 1);
     pk2 = pa.getHeapModel().getPointerKeyForLocal(node, 2);
-    assertThat(pa).has(mayAliased(pk1, pk2));
+    assertThat(pa).has(mayAlias(pk1, pk2));
 
     node = findNode(cg, "testMayAlias3");
     pk1 = pa.getHeapModel().getPointerKeyForLocal(node, 1);
     pk2 = pa.getHeapModel().getPointerKeyForLocal(node, 2);
-    assertThat(pa).has(mayAliased(pk1, pk2));
+    assertThat(pa).has(mayAlias(pk1, pk2));
   }
 
   private static CGNode findNode(CallGraph cg, String methodName) {
@@ -79,28 +79,5 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
       }
     }
     return Assertions.UNREACHABLE("Unexpected: failed to find " + methodName + " node");
-  }
-
-  private static Condition<PointerAnalysis<InstanceKey>> mayAliased(
-      PointerKey pk1, PointerKey pk2) {
-    return new Condition<>(
-        actual -> {
-          OrdinalSet<InstanceKey> ptsTo1 = actual.getPointsToSet(pk1);
-          OrdinalSet<InstanceKey> ptsTo2 = actual.getPointsToSet(pk2);
-          boolean foundIntersection = false;
-          outer:
-          for (InstanceKey i : ptsTo1) {
-            for (InstanceKey j : ptsTo2) {
-              if (i.equals(j)) {
-                foundIntersection = true;
-                break outer;
-              }
-            }
-          }
-          return foundIntersection;
-        },
-        "%s may alias %s",
-        pk1,
-        pk2);
   }
 }
