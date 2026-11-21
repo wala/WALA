@@ -1,5 +1,6 @@
 package com.ibm.wala.core.tests.cha;
 
+import static com.ibm.wala.ipa.cha.ClassHierarchyAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.gson.Gson;
@@ -46,10 +47,10 @@ public class AnalysisScopeTest {
     scope.addInputStreamForJarToScope(
         ClassLoaderReference.Application, new FileInputStream(bcelJarPath.toString()));
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    assertThat(
-            cha.lookupClass(
-                TypeReference.findOrCreate(
-                    ClassLoaderReference.Application, "Lorg/apache/bcel/verifier/Verifier")))
+    assertThat(cha)
+        .lookupClass(
+            TypeReference.findOrCreate(
+                ClassLoaderReference.Application, "Lorg/apache/bcel/verifier/Verifier"))
         .isNotNull();
   }
 
@@ -59,15 +60,14 @@ public class AnalysisScopeTest {
         AnalysisScopeReader.instance.readJavaScope(
             "primordial-base.txt", null, AnalysisScopeTest.class.getClassLoader());
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    assertThat(
-            cha.lookupClass(
-                TypeReference.findOrCreate(
-                    ClassLoaderReference.Application, "Ljava/util/ArrayList")))
+    assertThat(cha)
+        .lookupClass(
+            TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/util/ArrayList"))
         .isNotNull();
-    assertThat(
-            cha.lookupClass(
-                TypeReference.findOrCreate(
-                    ClassLoaderReference.Application, "Ljava/awt/AlphaComposite")))
+    assertThat(cha)
+        .lookupClass(
+            TypeReference.findOrCreate(
+                ClassLoaderReference.Application, "Ljava/awt/AlphaComposite"))
         .isNull();
   }
 

@@ -1,6 +1,9 @@
 package com.ibm.wala.core.tests.cha;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.ibm.wala.ipa.cha.ClassHierarchyAssert.assertThat;
+import static com.ibm.wala.ipa.cha.IClassHierarchyConditions.subclassOf;
+import static org.assertj.core.api.Assertions.allOf;
+import static org.assertj.core.api.Assertions.not;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
@@ -100,9 +103,12 @@ public class ClassHierarchySubclassTest extends WalaTestCase {
     IClass string = cha.lookupClass(TypeReference.JavaLangString);
     IClass thread = cha.lookupClass(TypeReference.JavaLangThread);
     IClass object = cha.lookupClass(TypeReference.JavaLangObject);
-    assertThat(cha.isSubclassOf(string, thread)).isTrue();
-    assertThat(cha.isSubclassOf(string, object)).isTrue();
-    assertThat(cha.isSubclassOf(thread, string)).isFalse();
+    assertThat(cha)
+        .has(
+            allOf(
+                subclassOf(string, thread),
+                subclassOf(string, object),
+                not(subclassOf(thread, string))));
   }
 
   /** Tests the protected constructor that builds a hierarchy for all languages in the scope. */
@@ -111,7 +117,7 @@ public class ClassHierarchySubclassTest extends WalaTestCase {
     AnalysisScope scope = makeScope();
     ClassHierarchy cha =
         new RefinedClassHierarchy(scope, new ClassLoaderFactoryImpl(scope.getExclusions()));
-    assertThat(cha.getNumberOfClasses()).isPositive();
+    assertThat(cha).numberOfClasses().isPositive();
     assertRefined(cha);
   }
 
@@ -122,7 +128,7 @@ public class ClassHierarchySubclassTest extends WalaTestCase {
     ClassHierarchy cha =
         new RefinedClassHierarchy(
             scope, new ClassLoaderFactoryImpl(scope.getExclusions()), JavaLanguage.get());
-    assertThat(cha.getLoader(ClassLoaderReference.Application)).isNotNull();
+    assertThat(cha).loader(ClassLoaderReference.Application).isNotNull();
     assertRefined(cha);
   }
 

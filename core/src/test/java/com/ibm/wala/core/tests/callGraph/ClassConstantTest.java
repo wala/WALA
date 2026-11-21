@@ -11,6 +11,7 @@
 package com.ibm.wala.core.tests.callGraph;
 
 import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
+import static com.ibm.wala.ipa.cha.ClassHierarchyAssert.assertThat;
 import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,7 +50,7 @@ public class ClassConstantTest extends WalaTestCase {
     TypeReference mainClassRef =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, TestConstants.CLASS_CONSTANT_MAIN);
-    assertThat(cha.lookupClass(mainClassRef)).isNotNull();
+    assertThat(cha).lookupClass(mainClassRef).isNotNull();
 
     // make call graph
     Iterable<Entrypoint> entrypoints =

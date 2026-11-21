@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.core.tests.cha;
 
+import static com.ibm.wala.ipa.cha.ClassHierarchyAssert.assertThat;
 import static com.ibm.wala.ipa.cha.IClassHierarchyConditions.implementsInterface;
 import static com.ibm.wala.ipa.cha.IClassHierarchyConditions.isAssignableFrom;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatObject;
 import static org.assertj.core.api.Assertions.not;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -86,7 +86,7 @@ public class InterfaceTest extends WalaTestCase {
     assertThat(prep_stmt).isNotNull();
     assertThat(stmt).isNotNull();
 
-    assertThatObject(cha)
+    assertThat(cha)
         .has(
             allOf(
                 implementsInterface(prep_stmt, stmt),
@@ -105,7 +105,7 @@ public class InterfaceTest extends WalaTestCase {
     IClass cloneableClass = cha.lookupClass(TypeReference.JavaLangCloneable);
     IClass serializableClass = cha.lookupClass(TypeReference.JavaIoSerializable);
 
-    assertThatObject(cha)
+    assertThat(cha)
         .has(
             allOf(
                 implementsInterface(objArrayClass, cloneableClass),
