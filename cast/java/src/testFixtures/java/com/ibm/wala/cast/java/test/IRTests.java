@@ -13,6 +13,7 @@
  */
 package com.ibm.wala.cast.java.test;
 
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -198,7 +199,8 @@ public abstract class IRTests {
     public void check(CallGraph cg) {
       MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
 
-      assertThat(cg.getNodes(mref))
+      assertThat(cg)
+          .nodes(mref)
           .allSatisfy(cgNode -> assertThat(cgNode.getMethod()).isInstanceOf(AstMethod.class))
           .anySatisfy(cgNode -> {
             DebuggingInformation dbg = ((AstMethod) cgNode.getMethod()).debugInfo();
@@ -233,7 +235,8 @@ public abstract class IRTests {
     @Override
     public void check(CallGraph cg) {
       MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
-      assertThat(cg.getNodes(mref))
+      assertThat(cg)
+          .nodes(mref)
           .allSatisfy(cgNode -> assertThat(check(cgNode.getMethod(), cgNode.getIR())).isTrue());
     }
 

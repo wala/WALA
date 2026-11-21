@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -55,6 +56,6 @@ public class FinalizerTest extends WalaTestCase {
     CGNode node = cg.getNodes(m).iterator().next();
 
     // Check it's reachable from root
-    assertThat(cg.getPossibleSites(cg.getFakeRootNode(), node)).hasNext();
+    assertThat(cg).possibleSites(cg.getFakeRootNode(), node).isNotEmpty();
   }
 }

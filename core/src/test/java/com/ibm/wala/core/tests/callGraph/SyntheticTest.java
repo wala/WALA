@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IMethod;
@@ -60,8 +61,8 @@ public class SyntheticTest extends WalaTestCase {
     TypeReference tB =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LmultiTypes/Foo$B");
     MethodReference barB = MethodReference.findOrCreate(tB, "bar", "()V");
-    assertThat(cg.getNodes(barA)).hasSize(1);
-    assertThat(cg.getNodes(barB)).hasSize(1);
+    assertThat(cg).nodes(barA).hasSize(1);
+    assertThat(cg).nodes(barB).hasSize(1);
 
     CGNode root = cg.getFakeRootNode();
     IR ir = root.getIR();

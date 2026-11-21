@@ -1,6 +1,6 @@
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -43,6 +43,6 @@ public class StaticInterfaceMethodTest {
 
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 
-    assertThat(cg.getNodes(staticInterfaceMethodRef)).hasSize(1);
+    assertThat(cg).nodes(staticInterfaceMethodRef).hasSize(1);
   }
 }

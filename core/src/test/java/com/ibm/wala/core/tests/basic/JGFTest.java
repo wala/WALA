@@ -15,6 +15,7 @@ import static net.javacrumbs.jsonunit.core.Option.IGNORING_EXTRA_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.util.graph.GraphAssert;
 import com.ibm.wala.util.graph.JGF;
 import com.ibm.wala.util.graph.NumberedGraph;
 import java.util.Map;
@@ -62,8 +63,8 @@ public class JGFTest {
         .allSatisfy(node -> {
           int number = G.getNumber(node);
           assertThatNodes.node(number + ".metadata.name").isEqualTo(node);
-          assertThat(G.getSuccNodes(node))
-              .toIterable()
+          GraphAssert.assertThat(G)
+              .successorsOf(node)
               .allSatisfy(successor ->
                   assertThatEdges.contains(
                       Map.of("source", "" + number, "target", "" + G.getNumber(successor))));

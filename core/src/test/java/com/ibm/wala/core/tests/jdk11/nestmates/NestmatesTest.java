@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.jdk11.nestmates;
 
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -55,9 +56,9 @@ public class NestmatesTest extends WalaTestCase {
     CGNode t1node = cg.getNodes(t1m).iterator().next();
 
     // Check call from main to Triple()
-    assertThat(cg.getPossibleSites(mNode, t1node)).hasNext();
+    assertThat(cg).possibleSites(mNode, t1node).isNotEmpty();
 
     // check that triple() does not call an accessor method
-    assertThat(cg.getSuccNodes(t1node)).isExhausted();
+    assertThat(cg).successorsOf(t1node).isEmpty();
   }
 }

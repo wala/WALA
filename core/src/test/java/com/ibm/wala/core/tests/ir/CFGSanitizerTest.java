@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.ibm.wala.util.graph.GraphAssert.assertThat;
 
 import com.ibm.wala.cfg.CFGSanitizer;
 import com.ibm.wala.classLoader.IMethod;
@@ -74,7 +74,7 @@ public class CFGSanitizerTest extends WalaTestCase {
       System.out.println(graph);
       BasicBlock exit = ir.getControlFlowGraph().exit();
       if (!exit.equals(ir.getControlFlowGraph().entry())) {
-        assertThat(graph.getPredNodeCount(exit)).isPositive();
+        assertThat(graph).predecessorCountOf(exit).isPositive();
       }
     }
   }

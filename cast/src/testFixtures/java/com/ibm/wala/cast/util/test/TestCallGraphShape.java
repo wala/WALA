@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.util.test;
 
 import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
+import static com.ibm.wala.util.graph.GraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -20,17 +21,14 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.graph.EdgeManager;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 
 public abstract class TestCallGraphShape {
 
@@ -52,13 +50,9 @@ public abstract class TestCallGraphShape {
         SSACFG cfg = N.getIR().getControlFlowGraph();
         for (int i = 0; i < edges.length; i++) {
           SSACFG.BasicBlock bb = cfg.getNode(i);
-          assertThat(cfg.getSuccNodes(bb))
-              .as("basic block %d", i)
-              .toIterable()
-              .hasSameSizeAs(edges[i]);
+          assertThat(cfg).successorsOf(bb).as("basic block %d", i).hasSameSizeAs(edges[i]);
           for (int j = 0; j < edges[i].length; j++) {
-            Assertions.<EdgeManager<ISSABasicBlock>>assertThat(cfg)
-                .has(edge(bb, cfg.getNode(edges[i][j])));
+            assertThat(cfg).has(edge(bb, cfg.getNode(edges[i][j])));
           }
         }
       }

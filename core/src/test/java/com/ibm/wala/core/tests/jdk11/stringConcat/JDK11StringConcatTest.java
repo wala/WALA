@@ -1,5 +1,6 @@
 package com.ibm.wala.core.tests.jdk11.stringConcat;
 
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -46,11 +47,11 @@ public class JDK11StringConcatTest extends WalaTestCase {
     CGNode t1node = cg.getNodes(t1m).iterator().next();
 
     // Check call from main to testConcat()
-    assertThat(cg.getPossibleSites(mnode, t1node)).hasNext();
+    assertThat(cg).possibleSites(mnode, t1node).isNotEmpty();
 
     // For now, we will see no call edges from the testConcat method, as we have not added
     // support for invokedynamic-based string concatenation yet
     // TODO add support and change this assertion
-    assertThat(cg.getSuccNodes(t1node)).isExhausted();
+    assertThat(cg).successorsOf(t1node).isEmpty();
   }
 }
