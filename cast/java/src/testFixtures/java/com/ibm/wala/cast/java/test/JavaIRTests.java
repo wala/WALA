@@ -13,6 +13,7 @@
  */
 package com.ibm.wala.cast.java.test;
 
+import static com.ibm.wala.ipa.cha.ClassHierarchyAssert.assertThat;
 import static com.ibm.wala.ipa.slicer.SlicerUtil.dumpSlice;
 import static com.ibm.wala.ipa.slicer.StatementSliceAssert.assertThatSlice;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -635,16 +636,16 @@ public abstract class JavaIRTests extends IRTests {
     TypeReference topType =
         TypeReference.findOrCreate(
             JavaSourceAnalysisScope.SOURCE, TypeName.findOrCreate("LExclusions"));
-    assertThat(cha.lookupClass(topType)).isNotNull();
+    assertThat(cha).lookupClass(topType).isNotNull();
 
     TypeReference inclType =
         TypeReference.findOrCreate(
             JavaSourceAnalysisScope.SOURCE, TypeName.findOrCreate("LExclusions$Included"));
-    assertThat(cha.lookupClass(inclType)).isNotNull();
+    assertThat(cha).lookupClass(inclType).isNotNull();
 
     TypeReference exclType =
         TypeReference.findOrCreate(
             JavaSourceAnalysisScope.SOURCE, TypeName.findOrCreate("LExclusions$Excluded"));
-    assertThat(cha.lookupClass(exclType)).isNull();
+    assertThat(cha).lookupClass(exclType).isNull();
   }
 }

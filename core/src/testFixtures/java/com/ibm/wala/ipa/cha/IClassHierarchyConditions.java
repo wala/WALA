@@ -14,4 +14,12 @@ public class IClassHierarchyConditions {
     return new Condition<>(
         actual -> actual.isAssignableFrom(c1, c2), "%s is assignable from %s", c1, c2);
   }
+
+  public static Condition<IClassHierarchy> subclassOf(IClass subClass, IClass superClass) {
+    return new Condition<>(
+        actual -> actual.isSubclassOf(subClass, superClass),
+        "%s is subclass of %s",
+        subClass,
+        superClass);
+  }
 }

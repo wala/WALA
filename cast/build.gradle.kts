@@ -78,6 +78,7 @@ dependencies {
   testFixturesImplementation(testFixtures(projects.util))
   testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
+  testImplementation(testFixtures(projects.core))
   xlatorTestSharedLibrary(projects.cast.xlatorTest)
 }
 

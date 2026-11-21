@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.cha;
 
+import static com.ibm.wala.ipa.cha.ClassHierarchyAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
@@ -59,7 +60,7 @@ public class SummaryClassSuperclassOrderingTest extends WalaTestCase {
     IClass sub = synthetic.defineSummaryClassShell(SUB, BASE);
 
     assertThat(sub.getSuperclass()).isSameAs(base);
-    assertThat(cha.getImmediateSubclasses(base)).contains(sub);
+    assertThat(cha).immediateSubclassesOf(base).contains(sub);
   }
 
   /**
@@ -76,7 +77,7 @@ public class SummaryClassSuperclassOrderingTest extends WalaTestCase {
     IClass sub = synthetic.defineSummaryClassShell(SUB, BASE);
     IClass base = synthetic.defineSummaryClassShell(BASE, OBJECT);
 
-    assertThat(cha.getImmediateSubclasses(base)).doesNotContain(sub);
+    assertThat(cha).immediateSubclassesOf(base).doesNotContain(sub);
     // A SummaryClassShell resolves its superclass live, so the IClass itself self-heals to the base
     // once it exists; it is the hierarchy snapshot, not the IClass, that stays stale.
     assertThat(sub.getSuperclass()).isSameAs(base);
