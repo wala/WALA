@@ -116,7 +116,10 @@ public abstract class Dominators<T> {
     };
   }
 
-  /** return the dominator tree, which has an edge from n to n' if n dominates n' */
+  /**
+   * Returns a graph with an edge from each immediate dominator to the node it dominates. Nodes
+   * unreachable from the root are isolated, with no predecessors or successors.
+   */
   public Graph<T> dominatorTree() {
     return new AbstractGraph<>() {
       @Override
@@ -131,32 +134,32 @@ public abstract class Dominators<T> {
 
       private final EdgeManager<T> edges =
           new EdgeManager<>() {
-            private final Map<@Nullable T, Set<T>> nextMap = HashMapFactory.make();
+            private final Map<T, Set<T>> nextMap = HashMapFactory.make();
 
             {
               for (T n : G) {
-                if (n != root) {
-                  T prev = getIdom(n);
-                  Set<T> next = nextMap.get(prev);
-                  if (next == null) nextMap.put(prev, next = HashSetFactory.make(2));
-                  next.add(n);
+                T parent = getIdom(n);
+                if (parent != null) {
+                  nextMap.computeIfAbsent(parent, ignored -> HashSetFactory.make(2)).add(n);
                 }
               }
             }
 
             @Override
-            public Iterator<T> getPredNodes(@Nullable T N) {
-              if (N == root) return EmptyIterator.instance();
-              else return new NonNullSingletonIterator<>(getIdom(N));
+            public Iterator<T> getPredNodes(T n) {
+              T parent = getIdom(n);
+              return parent == null
+                  ? EmptyIterator.instance()
+                  : new NonNullSingletonIterator<>(parent);
             }
 
             @Override
-            public int getPredNodeCount(Object N) {
-              return (N == root) ? 0 : 1;
+            public int getPredNodeCount(T n) {
+              return getIdom(n) == null ? 0 : 1;
             }
 
             @Override
-            public Iterator<T> getSuccNodes(@Nullable Object N) {
+            public Iterator<T> getSuccNodes(Object N) {
               Set<T> successors = nextMap.get(N);
               return successors == null ? EmptyIterator.instance() : successors.iterator();
             }
