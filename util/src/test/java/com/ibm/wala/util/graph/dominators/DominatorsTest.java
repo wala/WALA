@@ -6,6 +6,7 @@ import static com.ibm.wala.util.graph.dominators.DominatorsConditions.immediateD
 import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.not;
 
+import com.ibm.wala.util.graph.GraphAssert;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
@@ -52,5 +53,24 @@ public class DominatorsTest {
                 immediateDominator(1, 0)));
 
     assertThat(d).dominatorsOf(2).containsExactly(2, 1, 0);
+  }
+
+  @Test
+  public void unreachableNodesAreIsolatedInTheDominatorTree() {
+    SlowSparseNumberedGraph<Integer> g = SlowSparseNumberedGraph.make();
+    g.addNode(0);
+    g.addNode(1);
+    g.addNode(2);
+    g.addEdge(0, 1);
+
+    GraphAssert<Integer> tree = assertThat(Dominators.make(g, 0)).dominatorTree();
+
+    tree.predecessorCountOf(2).isZero();
+    tree.predecessorsOf(2).isEmpty();
+    tree.successorsOf(2).isEmpty();
+    tree.predecessorsOf(0).isEmpty();
+    tree.successorsOf(0).containsExactly(1);
+    tree.predecessorCountOf(1).isEqualTo(1);
+    tree.predecessorsOf(1).containsExactly(0);
   }
 }
