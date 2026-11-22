@@ -45,6 +45,8 @@ class IRAssertTest {
     assertThat(ir).instructions().isNotEmpty();
     assertThat(ir).instruction(0).isNotNull();
     assertThat(ir).cfg().nodes().isNotEmpty();
+    assertThat(ir).cfg().entry().isNotNull();
+    assertThat(ir).cfg().exit().isNotNull();
   }
 
   @Test

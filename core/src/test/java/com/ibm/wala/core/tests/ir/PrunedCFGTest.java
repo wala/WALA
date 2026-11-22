@@ -1,6 +1,6 @@
 package com.ibm.wala.core.tests.ir;
 
-import static com.ibm.wala.util.graph.GraphAssert.assertThat;
+import static com.ibm.wala.cfg.MinimalCFGAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IMethod;
@@ -43,9 +43,10 @@ public class PrunedCFGTest extends WalaTestCase {
     assertThat(pruned)
         .nodes()
         .allSatisfy(block -> {
-          assertThat(pruned.getNormalSuccessors(block))
+          assertThat(pruned)
+              .normalSuccessorsOf(block)
               .containsExactlyInAnyOrderElementsOf(cfg.getNormalSuccessors(block));
-          assertThat(pruned.getExceptionalSuccessors(block)).isEmpty();
+          assertThat(pruned).exceptionalSuccessorsOf(block).isEmpty();
         });
   }
 
