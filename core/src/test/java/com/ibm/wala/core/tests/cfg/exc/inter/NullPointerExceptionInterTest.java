@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.cfg.exc.inter;
 
+import static com.ibm.wala.cfg.exc.ExceptionPruningAnalysisConditions.exceptions;
 import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,7 +48,6 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -66,9 +66,6 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   private static CallGraph cg;
 
   private static IAnalysisCacheView cache;
-
-  private static final Condition<ExceptionPruningAnalysis<?, ?>> exceptions =
-      new Condition<>(ExceptionPruningAnalysis::hasExceptions, "has exceptions");
 
   @BeforeAll
   public static void beforeClass() throws Exception {

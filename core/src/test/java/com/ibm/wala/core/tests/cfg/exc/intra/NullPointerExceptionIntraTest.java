@@ -11,6 +11,7 @@
 package com.ibm.wala.core.tests.cfg.exc.intra;
 
 import static com.ibm.wala.cfg.MinimalCFGAssert.assertThat;
+import static com.ibm.wala.cfg.exc.ExceptionPruningAnalysisAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
@@ -115,8 +116,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -152,8 +153,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -189,8 +190,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -227,8 +228,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -264,8 +265,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -301,8 +302,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -340,8 +341,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -381,8 +382,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -422,8 +423,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -463,8 +464,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -504,8 +505,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -545,8 +546,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -586,8 +587,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -627,8 +628,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -666,8 +667,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -703,8 +704,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -742,8 +743,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
@@ -783,8 +784,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      assertThat(intraSSACFG.getCFG()).exit().isEqualTo(ir.getControlFlowGraph().exit());
-      assertThat(intraSSACFG.getCFG()).returnNode().isEqualTo(returnNode);
+      assertThat(intraSSACFG).cfg().exit().isEqualTo(ir.getControlFlowGraph().exit());
+      assertThat(intraSSACFG).cfg().returnNode().isEqualTo(returnNode);
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
