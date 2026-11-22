@@ -11,6 +11,7 @@
 
 package com.ibm.wala.core.tests.shrike;
 
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -178,7 +179,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
           Set<CGNode> nodes = staticCG1.getNodes(calleeRef);
           CGNode callee = assertThat(nodes).singleElement().actual();
 
-          assertThat(staticCG1.getPossibleSites(caller, callee)).hasNext();
+          assertThat(staticCG1).possibleSites(caller, callee).isNotEmpty();
           Pair<CGNode, CGNode> x = Pair.make(caller, callee);
           edges.add(x);
         },

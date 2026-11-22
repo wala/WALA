@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
@@ -68,7 +69,7 @@ public class DefaultMethodsTest extends WalaTestCase {
     CGNode t1node = cg.getNodes(t1m).iterator().next();
 
     // Check call from main to Interface1.silly
-    assertThat(cg.getPossibleSites(mnode, t1node)).hasNext();
+    assertThat(cg).possibleSites(mnode, t1node).isNotEmpty();
 
     // Find node corresponding to Interface2.silly
     TypeReference t2s =
@@ -78,7 +79,7 @@ public class DefaultMethodsTest extends WalaTestCase {
     CGNode t2node = cg.getNodes(t1m).iterator().next();
 
     // Check call from main to Interface2.silly
-    assertThat(cg.getPossibleSites(mnode, t2node)).hasNext();
+    assertThat(cg).possibleSites(mnode, t2node).isNotEmpty();
 
     // Find node corresponding to Test.silly
     TypeReference tts =
@@ -89,7 +90,7 @@ public class DefaultMethodsTest extends WalaTestCase {
     CGNode ttnode = cg.getNodes(ttm).iterator().next();
 
     // Check call from main to Test3.silly
-    assertThat(cg.getPossibleSites(mnode, ttnode)).hasNext();
+    assertThat(cg).possibleSites(mnode, ttnode).isNotEmpty();
 
     // Check that IClass.getAllMethods() returns default methods #219.
     TypeReference test1Type =

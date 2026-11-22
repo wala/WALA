@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.dalvik.test.callGraph;
 
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
@@ -211,7 +212,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
     MethodReference mmr =
         MethodReference.findOrCreate(mainClassRef, "main", "([Ljava/lang/String;)V");
-    assertThat(callGraph.getNodes(mmr)).isNotEmpty();
+    assertThat(callGraph).nodes(mmr).isNotEmpty();
 
     PointerAnalysis<InstanceKey> ptrAnalysis = cgb.getPointerAnalysis();
 

@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
@@ -50,7 +51,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-import org.assertj.core.api.IterableAssert;
+import org.assertj.core.api.AbstractCollectionAssert;
+import org.assertj.core.api.ObjectAssert;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
@@ -555,7 +557,7 @@ public class ReflectionTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr = MethodReference.findOrCreate(tr, "t", "(Ljava/lang/Integer;)V");
     CGNode node = cg.getNode(cg.getClassHierarchy().resolveMethod(mr), Everywhere.EVERYWHERE);
-    assertThat(cg.getSuccNodeCount(node)).isZero();
+    assertThat(cg).successorCountOf(node).isZero();
   }
 
   /**
@@ -575,7 +577,7 @@ public class ReflectionTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr = MethodReference.findOrCreate(tr, "t", "(Ljava/lang/Integer;)V");
     CGNode node = cg.getNode(cg.getClassHierarchy().resolveMethod(mr), Everywhere.EVERYWHERE);
-    assertThat(cg.getSuccNodeCount(node)).isEqualTo(1);
+    assertThat(cg).successorCountOf(node).isEqualTo(1);
     CGNode succ = cg.getSuccNodes(node).next();
     assertThat(succ)
         .hasToString(
@@ -809,8 +811,10 @@ public class ReflectionTest extends WalaTestCase {
     assertThat(cgn).hasSize(1);
   }
 
-  private static @NotNull IterableAssert<CGNode> assertThatSuccNodes(CallGraph cg, IMethod method) {
-    return assertThat(cg.getSuccNodes(cg.getNode(method, Everywhere.EVERYWHERE))).toIterable();
+  private static @NotNull AbstractCollectionAssert<
+          ?, Collection<? extends CGNode>, CGNode, ObjectAssert<CGNode>>
+      assertThatSuccNodes(CallGraph cg, IMethod method) {
+    return assertThat(cg).successorsOf(cg.getNode(method, Everywhere.EVERYWHERE));
   }
 
   private static void nodeNameContainsGetMessage(CGNode node) {

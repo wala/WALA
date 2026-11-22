@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.jdk11.privateInterfaceMethods;
 
+import static com.ibm.wala.ipa.callgraph.CallGraphAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
@@ -70,7 +71,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     CGNode t2node = cg.getNodes(t2m).iterator().next();
 
     // Check call from main to RetT(string)
-    assertThat(cg.getPossibleSites(mnode, t2node)).hasNext();
+    assertThat(cg).possibleSites(mnode, t2node).isNotEmpty();
 
     // Find node corresponding to getT() called by retT() from main
     TypeReference t3s =
@@ -84,7 +85,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     CGNode t3node = cg.getNodes(t3m).iterator().next();
 
     // Check call from RetT to GetT
-    assertThat(cg.getPossibleSites(t2node, t3node)).hasNext();
+    assertThat(cg).possibleSites(t2node, t3node).isNotEmpty();
 
     // check that Iclass.getAllMethods() returns both the default RetT and private GetT
     TypeReference test1Type =
