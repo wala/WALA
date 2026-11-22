@@ -11,6 +11,7 @@
 package com.ibm.wala.util.graph.dominators;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
 
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -86,9 +87,12 @@ public abstract class Dominators<T> {
     return false;
   }
 
-  /** return the immediate dominator of node */
+  /**
+   * Returns the immediate dominator of {@code node}, or {@code null} for the root, an unreachable
+   * node, or a {@code null} argument.
+   */
   public @Nullable T getIdom(@Nullable T node) {
-    return getInfo(node).dominator;
+    return node == null ? null : getDominator(node);
   }
 
   /** return an Iterator over all nodes that dominate node */
@@ -293,11 +297,13 @@ public abstract class Dominators<T> {
       // add "node" to bucket(vertex(semi(node)));
       addToBucket(vertex[getSemi(node)], node);
 
+      // Every node visited in this step has a DFS parent.
+      T parent = castToNonNull(getParent(node));
       // LINK(parent(node), node)
-      LINK(getParent(node), node);
+      LINK(parent, node);
 
       // foreach node2 in bucket(parent(node)) do
-      Iterator<T> bucketEnum = iterateBucket(getParent(node));
+      Iterator<T> bucketEnum = iterateBucket(parent);
       while (bucketEnum.hasNext()) {
         T node2 = bucketEnum.next();
         // LT paper step 3: "delete v from bucket(parent(w))".
@@ -314,7 +320,7 @@ public abstract class Dominators<T> {
         if (getSemi(u) < getSemi(node2)) {
           setDominator(node2, u);
         } else {
-          setDominator(node2, getParent(node));
+          setDominator(node2, parent);
         }
       } // while bucket has more elements
     } // for DFSCounter .. 1
@@ -332,35 +338,32 @@ public abstract class Dominators<T> {
    * @param node the node to evaluate
    * @return the node as described above
    */
-  private @Nullable T EVAL(T node) {
+  private T EVAL(T node) {
     if (DEBUG) {
       System.out.println("  Evaling " + node);
     }
-    if (getAncestor(node) == null) {
+    T ancestor = getAncestor(node);
+    if (ancestor == null) {
       return getLabel(node);
-    } else {
-      compress(node);
-      if (getSemi(getLabel(getAncestor(node))) >= getSemi(getLabel(node))) {
-        return getLabel(node);
-      } else {
-        return getLabel(getAncestor(node));
-      }
     }
+    T ancestorLabel = getLabel(compress(node, ancestor));
+    T label = getLabel(node);
+    return getSemi(ancestorLabel) >= getSemi(label) ? label : ancestorLabel;
   }
 
-  /**
-   * This recursive method performs the path compression
-   *
-   * @param node node of interest
-   */
-  private void compress(@Nullable T node) {
-    if (getAncestor(getAncestor(node)) != null) {
-      compress(getAncestor(node));
-      if (getSemi(getLabel(getAncestor(node))) < getSemi(getLabel(node))) {
-        setLabel(node, getLabel(getAncestor(node)));
-      }
-      setAncestor(node, getAncestor(getAncestor(node)));
+  /** Compresses the path from {@code node} and returns its new ancestor. */
+  private T compress(T node, T ancestor) {
+    T grandparent = getAncestor(ancestor);
+    if (grandparent == null) {
+      return ancestor;
     }
+    T compressedAncestor = compress(ancestor, grandparent);
+    T ancestorLabel = getLabel(ancestor);
+    if (getSemi(ancestorLabel) < getSemi(getLabel(node))) {
+      setLabel(node, ancestorLabel);
+    }
+    setAncestor(node, compressedAncestor);
+    return compressedAncestor;
   }
 
   /**
@@ -371,20 +374,23 @@ public abstract class Dominators<T> {
    * @param node1 a basic node corresponding to the source of the new edge
    * @param node2 a basic node corresponding to the source of the new edge
    */
-  private void LINK(@Nullable T node1, T node2) {
+  private void LINK(T node1, T node2) {
     if (DEBUG) {
       System.out.println("  Linking " + node1 + " with " + node2);
     }
     T s = node2;
-    while (getSemi(getLabel(node2)) < getSemi(getLabel(getChild(s)))) {
-      if (getSize(s) + getSize(getChild(getChild(s))) >= 2 * getSize(getChild(s))) {
-        setAncestor(getChild(s), s);
-        setChild(s, getChild(getChild(s)));
+    T child = getChild(s);
+    while (child != null && getSemi(getLabel(node2)) < getSemi(getLabel(child))) {
+      T grandchild = getChild(child);
+      if (getSize(s) + getSize(grandchild) >= 2 * getSize(child)) {
+        setAncestor(child, s);
+        setChild(s, grandchild);
       } else {
-        setSize(getChild(s), getSize(s));
-        setAncestor(s, getChild(s));
-        s = getChild(s);
+        setSize(child, getSize(s));
+        setAncestor(s, child);
+        s = child;
       }
+      child = getChild(s);
     }
     setLabel(s, getLabel(node2));
     setSize(node1, getSize(node1) + getSize(node2));
@@ -407,10 +413,12 @@ public abstract class Dominators<T> {
     // Visit each node in DFS order, except for the root, which has number 1
     for (int i = 2; i <= reachableNodeCount; i++) {
       T node = vertex[i];
+      // Step 2 assigned a provisional dominator to each non-root reachable node.
+      T dominator = castToNonNull(getDominator(node));
       // if dom(node) != vertex[semi(node)]
-      if (getDominator(node) != vertex[getSemi(node)]) {
+      if (dominator != vertex[getSemi(node)]) {
         // dom(node) = dom(dom(node))
-        setDominator(node, getDominator(getDominator(node)));
+        setDominator(node, getDominator(dominator));
       }
     }
   }
@@ -440,7 +448,7 @@ public abstract class Dominators<T> {
     /*
      * the labels used in the fast union-find structure
      */
-    private @Nullable T label;
+    private T label;
 
     /*
      * ancestor for fast union-find data structure
@@ -457,7 +465,7 @@ public abstract class Dominators<T> {
      */
     private @Nullable T child;
 
-    DominatorInfo(@Nullable T node) {
+    DominatorInfo(T node) {
       semiDominator = 0;
       dominator = null;
       parent = null;
@@ -472,9 +480,9 @@ public abstract class Dominators<T> {
   /*
    * Look-aside table for DominatorInfo objects
    */
-  protected abstract DominatorInfo getInfo(@Nullable T node);
+  protected abstract DominatorInfo getInfo(T node);
 
-  private Iterator<T> iterateBucket(@Nullable T node) {
+  private Iterator<T> iterateBucket(T node) {
     return getInfo(node).bucket.iterator();
   }
 
@@ -482,8 +490,7 @@ public abstract class Dominators<T> {
     getInfo(node).bucket.add(addend);
   }
 
-  private @Nullable T getDominator(@Nullable T node) {
-    assert node != null;
+  private @Nullable T getDominator(T node) {
     return getInfo(node).dominator;
   }
 
@@ -499,20 +506,19 @@ public abstract class Dominators<T> {
     getInfo(node).parent = parent;
   }
 
-  private @Nullable T getAncestor(@Nullable T node) {
+  private @Nullable T getAncestor(T node) {
     return getInfo(node).ancestor;
   }
 
-  private void setAncestor(@Nullable T node, @Nullable T ancestor) {
+  private void setAncestor(T node, T ancestor) {
     getInfo(node).ancestor = ancestor;
   }
 
-  private @Nullable T getLabel(@Nullable T node) {
-    if (node == null) return null;
-    else return getInfo(node).label;
+  private T getLabel(T node) {
+    return getInfo(node).label;
   }
 
-  private void setLabel(@Nullable T node, @Nullable T label) {
+  private void setLabel(T node, T label) {
     getInfo(node).label = label;
   }
 
@@ -521,21 +527,20 @@ public abstract class Dominators<T> {
     else return getInfo(node).size;
   }
 
-  private void setSize(@Nullable T node, int size) {
+  private void setSize(T node, int size) {
     getInfo(node).size = size;
   }
 
-  private @Nullable T getChild(@Nullable T node) {
+  private @Nullable T getChild(T node) {
     return getInfo(node).child;
   }
 
-  private void setChild(@Nullable T node, @Nullable T child) {
+  private void setChild(T node, @Nullable T child) {
     getInfo(node).child = child;
   }
 
-  private int getSemi(@Nullable T node) {
-    if (node == null) return 0;
-    else return getInfo(node).semiDominator;
+  private int getSemi(T node) {
+    return getInfo(node).semiDominator;
   }
 
   private void setSemi(T node, int semi) {

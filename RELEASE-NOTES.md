@@ -111,6 +111,16 @@ that the requested node belongs to the problem's flow graph. `getOut` also
 requires the problem to provide node transfer functions. Code that relied
 on a `null` result or caught `AssertionError` must be updated accordingly.
 
+#### `Dominators.getIdom(null)` returns `null` for both graph implementations
+
+`com.ibm.wala.util.graph.dominators.Dominators.getIdom(null)` now returns
+`null` for both generic and numbered graphs. With JVM assertions enabled,
+the numbered implementation previously threw `AssertionError`.
+
+**Breaking for nullness-checked subclasses.** The protected `getInfo(T)`
+method requires a non-null node. Subclasses must check nullable nodes before
+calling it.
+
 ### Deprecated APIs removed
 
 Deprecated APIs marked for removal since 1.7.2 have now been removed across
