@@ -65,12 +65,10 @@ public class DominatorsTest {
 
     GraphAssert<Integer> tree = assertThat(Dominators.make(g, 0)).dominatorTree();
 
-    tree.predecessorCountOf(2).isZero();
     tree.predecessorsOf(2).isEmpty();
     tree.successorsOf(2).isEmpty();
     tree.predecessorsOf(0).isEmpty();
     tree.successorsOf(0).containsExactly(1);
-    tree.predecessorCountOf(1).isEqualTo(1);
     tree.predecessorsOf(1).containsExactly(0);
   }
 }
