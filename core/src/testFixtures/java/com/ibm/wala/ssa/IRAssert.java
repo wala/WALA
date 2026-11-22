@@ -1,6 +1,6 @@
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.util.graph.GraphAssert;
+import com.ibm.wala.cfg.MinimalCFGAssert;
 import java.util.Arrays;
 import org.assertj.core.annotation.CheckReturnValue;
 import org.assertj.core.api.AbstractObjectAssert;
@@ -36,8 +36,8 @@ public class IRAssert extends AbstractObjectAssert<IRAssert, IR> {
         .as("instructions of %s", actual.getMethod());
   }
 
-  public GraphAssert<ISSABasicBlock> cfg() {
+  public MinimalCFGAssert<ISSABasicBlock> cfg() {
     isNotNull();
-    return GraphAssert.assertThat(actual.getControlFlowGraph());
+    return MinimalCFGAssert.assertThat(actual.getControlFlowGraph());
   }
 }
