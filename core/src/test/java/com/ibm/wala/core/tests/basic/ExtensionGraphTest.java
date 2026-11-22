@@ -13,11 +13,12 @@ package com.ibm.wala.core.tests.basic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.ExtensionGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.SCCIterator;
+import java.util.Set;
+import org.assertj.core.api.IterableAssert;
 import org.junit.jupiter.api.Test;
 
 public class ExtensionGraphTest {
@@ -69,24 +70,28 @@ public class ExtensionGraphTest {
   @Test
   public void testAugment() {
     NumberedGraph<String> base = makeBaseGraph();
-    assertThat(IteratorUtil.count(new SCCIterator<>(base))).isEqualTo(8);
+    checkSCCSize(base, 8);
 
     NumberedGraph<String> x = new ExtensionGraph<>(base);
     augmentA(x);
-    assertThat(IteratorUtil.count(new SCCIterator<>(x))).isEqualTo(5);
-    assertThat(IteratorUtil.count(new SCCIterator<>(base))).isEqualTo(8);
+    checkSCCSize(x, 5);
+    checkSCCSize(base, 8);
 
     NumberedGraph<String> y = new ExtensionGraph<>(x);
     augmentB(y);
-    assertThat(IteratorUtil.count(new SCCIterator<>(y))).isEqualTo(7);
-    assertThat(IteratorUtil.count(new SCCIterator<>(x))).isEqualTo(5);
-    assertThat(IteratorUtil.count(new SCCIterator<>(base))).isEqualTo(8);
+    checkSCCSize(y, 7);
+    checkSCCSize(x, 5);
+    checkSCCSize(base, 8);
 
     NumberedGraph<String> z = new ExtensionGraph<>(y);
     augmentC(z);
-    assertThat(IteratorUtil.count(new SCCIterator<>(z))).isEqualTo(3);
-    assertThat(IteratorUtil.count(new SCCIterator<>(y))).isEqualTo(7);
-    assertThat(IteratorUtil.count(new SCCIterator<>(x))).isEqualTo(5);
-    assertThat(IteratorUtil.count(new SCCIterator<>(base))).isEqualTo(8);
+    checkSCCSize(z, 3);
+    checkSCCSize(y, 7);
+    checkSCCSize(x, 5);
+    checkSCCSize(base, 8);
+  }
+
+  private static IterableAssert<Set<String>> checkSCCSize(NumberedGraph<String> x, int expected) {
+    return assertThat(new SCCIterator<>(x)).toIterable().hasSize(expected);
   }
 }
