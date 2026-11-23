@@ -7,7 +7,7 @@ import java.util.Random;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link Logs#binaryLogUp(int)} and {@link Logs#binaryLogUp(long)}.
+ * Unit tests for the {@code int} and {@code long} overloads of {@code Logs.binaryLogUp}.
  *
  * <p>Both used to count with {@code while ((1 << k) < n) k++;}, which does not terminate for n
  * above 2^30 because a shift distance is taken modulo 32. These cases pin the result, including the
@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
  * doubling reference has the same overflow trap when written carelessly: accumulating in {@code
  * long} and testing {@code p < n} never terminates once p wraps to zero.
  */
+@SuppressWarnings("removal")
 class LogsTest {
 
   /**
