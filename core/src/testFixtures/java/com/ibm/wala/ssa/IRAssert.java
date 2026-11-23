@@ -3,6 +3,7 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.cfg.MinimalCFGAssert;
 import java.util.Arrays;
 import org.assertj.core.annotation.CheckReturnValue;
+import org.assertj.core.api.AbstractIntegerAssert;
 import org.assertj.core.api.AbstractObjectAssert;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ListAssert;
@@ -34,6 +35,19 @@ public class IRAssert extends AbstractObjectAssert<IRAssert, IR> {
     isNotNull();
     return Assertions.assertThat(Arrays.asList(actual.getInstructions()))
         .as("instructions of %s", actual.getMethod());
+  }
+
+  public ListAssert<String> localNames(int instructionIndex, int valueNumber) {
+    isNotNull();
+    String[] names = actual.getLocalNames(instructionIndex, valueNumber);
+    return Assertions.assertThat(names == null ? null : Arrays.asList(names))
+        .as("local names for value %d at instruction %d", valueNumber, instructionIndex);
+  }
+
+  public AbstractIntegerAssert<?> constantInt(int valueNumber) {
+    isNotNull();
+    return Assertions.assertThat(actual.getSymbolTable().getIntValue(valueNumber))
+        .as("constant value %d", valueNumber);
   }
 
   public MinimalCFGAssert<ISSABasicBlock> cfg() {

@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.ir;
 
+import static com.ibm.wala.ssa.IRAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -151,13 +152,13 @@ public class LocalNamesTest extends WalaTestCase {
     options.getSSAOptions().setPiNodePolicy(save);
 
     // v1 should be the parameter "a" at pc 0
-    assertThat(ir.getLocalNames(0, 1)).containsExactly("a");
+    assertThat(ir).localNames(0, 1).containsExactly("a");
 
     // v2 is a compiler-induced temporary
-    assertThat(ir.getLocalNames(2, 2)).isNull();
+    assertThat(ir).localNames(2, 2).isNull();
 
     // at pc 5, v1 should represent the locals "a" and "b"
-    assertThat(ir.getLocalNames(5, 1)).containsExactly("a", "b");
+    assertThat(ir).localNames(5, 1).containsExactly("a", "b");
   }
 
   @Test
@@ -178,12 +179,12 @@ public class LocalNamesTest extends WalaTestCase {
     options.getSSAOptions().setPiNodePolicy(save);
 
     // v1 should be the parameter "a" at pc 0
-    assertThat(ir.getLocalNames(0, 1)).containsExactly("a");
+    assertThat(ir).localNames(0, 1).containsExactly("a");
 
     // v2 is a compiler-induced temporary
-    assertThat(ir.getLocalNames(2, 2)).isNull();
+    assertThat(ir).localNames(2, 2).isNull();
 
     // at pc 5, v1 should represent the locals "a" and "b"
-    assertThat(ir.getLocalNames(5, 1)).containsExactly("a", "b");
+    assertThat(ir).localNames(5, 1).containsExactly("a", "b");
   }
 }
