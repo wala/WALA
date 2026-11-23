@@ -121,6 +121,17 @@ the numbered implementation previously threw `AssertionError`.
 method requires a non-null node. Subclasses must check nullable nodes before
 calling it.
 
+#### `Logs.binaryLogUp` overloads deprecated
+
+The `com.ibm.wala.util.math.Logs.binaryLogUp(int)` and `binaryLogUp(long)`
+methods are now deprecated with `@Deprecated(since = "1.10.0")`. They are not
+used outside WALA's own unit tests and may be removed in a future release.
+
+**Effect for third-party consumers:** if you use either overload outside
+WALA, please
+[let the WALA maintainers know](https://github.com/wala/WALA/issues/new) so
+that we do not remove it in a future release.
+
 ### Deprecated APIs removed
 
 Deprecated APIs marked for removal since 1.7.2 have now been removed across

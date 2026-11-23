@@ -74,7 +74,13 @@ public class Logs {
     return Assertions.UNREACHABLE();
   }
 
-  /** Binary log: finds the smallest power k such that 2^k >= n */
+  /**
+   * Binary log: finds the smallest power k such that 2^k >= n
+   *
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
+   */
+  @Deprecated(since = "1.10.0", forRemoval = true)
   public static int binaryLogUp(int n) {
 
     // Written as a closed form rather than a loop. The obvious loop, `while ((1 << k) < n)`, does
@@ -85,7 +91,13 @@ public class Logs {
     return n <= 1 ? 0 : Integer.SIZE - Integer.numberOfLeadingZeros(n - 1);
   }
 
-  /** Binary log: finds the smallest power k such that 2^k >= n */
+  /**
+   * Binary log: finds the smallest power k such that 2^k >= n
+   *
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
+   */
+  @Deprecated(since = "1.10.0", forRemoval = true)
   public static int binaryLogUp(long n) {
 
     // The same closed form as the int overload, and for the same reason: `1L << k` repeats with a
