@@ -113,7 +113,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG =
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
-    final CGNode callNode = assertThat(cg).nodes(mr).singleElement().actual();
+    final CGNode callNode = assertThat(cg).node(mr).actual();
 
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
@@ -128,7 +128,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
         StringStuff.makeMethodReference(
             "cfg.exc.inter.CallFieldAccess.callDynamicIfException()Lcfg/exc/intra/B");
 
-    final CGNode callNode = assertThat(cg).nodes(mr).singleElement().actual();
+    final CGNode callNode = assertThat(cg).node(mr).actual();
 
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG =
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
@@ -148,7 +148,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG =
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
-    final CGNode callNode = assertThat(cg).nodes(mr).singleElement().actual();
+    final CGNode callNode = assertThat(cg).node(mr).actual();
 
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
@@ -165,7 +165,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG =
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
-    final CGNode callNode = assertThat(cg).nodes(mr).singleElement().actual();
+    final CGNode callNode = assertThat(cg).node(mr).actual();
 
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
@@ -181,7 +181,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG =
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
-    final CGNode callNode = assertThat(cg).nodes(mr).singleElement().actual();
+    final CGNode callNode = assertThat(cg).node(mr).actual();
 
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
@@ -196,7 +196,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
         StringStuff.makeMethodReference(
             "cfg.exc.inter.CallFieldAccess.callDynamicIf2Exception()Lcfg/exc/intra/B");
 
-    final CGNode callNode = assertThat(cg).nodes(mr).singleElement().actual();
+    final CGNode callNode = assertThat(cg).node(mr).actual();
 
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG =
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
@@ -216,7 +216,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG =
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
-    final CGNode callNode = assertThat(cg).nodes(mr).singleElement().actual();
+    final CGNode callNode = assertThat(cg).node(mr).actual();
 
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
@@ -233,7 +233,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG =
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
-    final CGNode callNode = assertThat(cg).nodes(mr).singleElement().actual();
+    final CGNode callNode = assertThat(cg).node(mr).actual();
 
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
@@ -249,7 +249,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG =
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());
 
-    final CGNode callNode = assertThat(cg).nodes(mr).singleElement().actual();
+    final CGNode callNode = assertThat(cg).node(mr).actual();
 
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
@@ -264,7 +264,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
         StringStuff.makeMethodReference(
             "cfg.exc.inter.CallFieldAccess.callDynamicGetException()Lcfg/exc/intra/B");
 
-    final CGNode callNode = assertThat(cg).nodes(mr).singleElement().actual();
+    final CGNode callNode = assertThat(cg).node(mr).actual();
 
     InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> interExplodedCFG =
         NullPointerAnalysis.computeInterprocAnalysis(cg, new NullProgressMonitor());

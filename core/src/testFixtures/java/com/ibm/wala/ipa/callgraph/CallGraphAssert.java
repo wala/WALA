@@ -29,6 +29,11 @@ public class CallGraphAssert extends AbstractGraphAssert<CallGraphAssert, CGNode
     return Assertions.assertThat(actual.getNodes(method));
   }
 
+  public ObjectAssert<CGNode> node(MethodReference method) {
+    isNotNull();
+    return nodes(method).singleElement().as("single node for <%s>", method);
+  }
+
   public IterableAssert<CallSiteReference> possibleSites(CGNode source, CGNode target) {
     isNotNull();
     return Assertions.assertThat(Iterator2Iterable.make(actual.getPossibleSites(source, target)));

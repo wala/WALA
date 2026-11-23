@@ -44,6 +44,7 @@ class CallGraphAssertTest {
         .nodes(targetMethod)
         .containsExactly(target);
     assertThat(callGraph).nodes(missingMethod).isEmpty();
+    assertThat(callGraph).node(targetMethod).isEqualTo(target);
     assertThat(callGraph).possibleSites(predecessor, target).isNotEmpty();
     assertThat(callGraph).predecessorsOf(target).contains(predecessor);
     assertThat(callGraph).successorsOf(predecessor).contains(target);
