@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.ir;
 
+import static com.ibm.wala.ssa.IRAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
@@ -64,8 +65,8 @@ public class MultiNewArrayTest extends WalaTestCase {
       if (instr instanceof SSANewInstruction) {
         System.err.println(instr.toString(ir.getSymbolTable()));
         assertThat(instr.getNumberOfUses()).isEqualTo(2);
-        assertThat(ir.getSymbolTable().getIntValue(instr.getUse(0))).isEqualTo(3);
-        assertThat(ir.getSymbolTable().getIntValue(instr.getUse(1))).isEqualTo(4);
+        assertThat(ir).constantInt(instr.getUse(0)).isEqualTo(3);
+        assertThat(ir).constantInt(instr.getUse(1)).isEqualTo(4);
       }
     }
   }
