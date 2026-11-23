@@ -189,8 +189,7 @@ public class LambdaTest extends WalaTestCase {
 
     Consumer<String> checkCalledFromOneSite =
         klassName -> {
-          CGNode node =
-              assertThat(cg).nodes(getTargetRef.apply(klassName)).singleElement().actual();
+          CGNode node = assertThat(cg).node(getTargetRef.apply(klassName)).actual();
           CGNode pred = assertThat(cg).predecessorsOf(node).singleElement().actual();
           assertThat(cg).possibleSites(pred, node).hasSize(1);
         };

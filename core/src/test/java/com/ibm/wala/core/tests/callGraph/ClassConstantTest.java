@@ -63,7 +63,7 @@ public class ClassConstantTest extends WalaTestCase {
     // make sure the main method is reached
     MethodReference mainMethodRef =
         MethodReference.findOrCreate(mainClassRef, "main", "([Ljava/lang/String;)V");
-    CGNode mainMethodNode = assertThat(cg).nodes(mainMethodRef).singleElement().actual();
+    CGNode mainMethodNode = assertThat(cg).node(mainMethodRef).actual();
     // Trace.println("main IR:");
     // Trace.println(mainMethodNode.getIR());
 
@@ -71,7 +71,7 @@ public class ClassConstantTest extends WalaTestCase {
     TypeReference classRef =
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Class");
     MethodReference hashCodeRef = MethodReference.findOrCreate(classRef, "hashCode", "()I");
-    CGNode hashCodeNode = assertThat(cg).nodes(hashCodeRef).singleElement().actual();
+    CGNode hashCodeNode = assertThat(cg).node(hashCodeRef).actual();
 
     // make sure call to hashCode from main
     assertThat(cg).has(edge(mainMethodNode, hashCodeNode));
