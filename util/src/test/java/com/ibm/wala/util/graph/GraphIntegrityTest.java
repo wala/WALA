@@ -195,6 +195,50 @@ public class GraphIntegrityTest {
   }
 
   @Test
+  public void rejectsSuccessorOmittedFromGraphIterator() {
+    var graph =
+        new IndependentAdjacencyGraph(4, 4) {
+          @Override
+          public Iterator<Node> iterator() {
+            return List.of(NODES.get(0), NODES.get(1), NODES.get(1)).iterator();
+          }
+        };
+    assertThatThrownBy(() -> GraphIntegrity.check(graph))
+        .isInstanceOf(UnsoundGraphException.class)
+        .hasMessageContaining("Node[id=2] is a successor missing from the graph iterator");
+  }
+
+  @Test
+  public void acceptsRepeatedPredecessorWhenAdjacencyMatches() {
+    var graph =
+        new IndependentAdjacencyGraph(2, 2) {
+          @Override
+          public Iterator<Node> getPredNodes(@Nullable Node n) {
+            return n.id() == 1
+                ? List.of(NODES.get(0), NODES.get(0)).iterator()
+                : super.getPredNodes(n);
+          }
+        };
+    assertThatCode(() -> GraphIntegrity.check(graph)).doesNotThrowAnyException();
+  }
+
+  @Test
+  public void repeatedPredecessorDoesNotHideMissingPredecessor() {
+    var graph =
+        new IndependentAdjacencyGraph(130, 2) {
+          @Override
+          public Iterator<Node> getPredNodes(@Nullable Node n) {
+            return n.id() == 1
+                ? List.of(NODES.get(0), NODES.get(0)).iterator()
+                : super.getPredNodes(n);
+          }
+        };
+    assertThatThrownBy(() -> GraphIntegrity.check(graph))
+        .isInstanceOf(UnsoundGraphException.class)
+        .hasMessageContaining("Node[id=1] is a successor of Node[id=2] but inverse doesn't hold");
+  }
+
+  @Test
   public void checksDenseGraphWithoutRepeatedlyScanningInverseAdjacency()
       throws UnsoundGraphException {
     class CountingGraph extends BasicGraph<Integer> {

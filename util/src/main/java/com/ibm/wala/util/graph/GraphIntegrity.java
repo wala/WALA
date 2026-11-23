@@ -14,7 +14,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.graph.traverse.BFSIterator;
@@ -24,7 +23,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /** Utility class to check integrity of a graph data structure. */
 public class GraphIntegrity {
@@ -44,63 +42,70 @@ public class GraphIntegrity {
     checkArgument(G != null, "G is null");
     checkNodeCount(G);
     checkEdges(G);
-    checkEdgeCounts(G);
   }
 
-  private static <T> void checkEdgeCounts(Graph<T> G) throws UnsoundGraphException {
-    for (T N : G) {
-      int count1 = G.getSuccNodeCount(N);
-      int count2 = IteratorUtil.count(G.getSuccNodes(N));
-      if (count1 != count2) {
-        throw new UnsoundGraphException("getSuccNodeCount " + count1 + " is wrong for node " + N);
+  private static <T> void checkEdges(Graph<T> graph) throws UnsoundGraphException {
+    // Transpose the successor relation once. Each entry records whether the corresponding
+    // predecessor has been seen. Discard each incoming adjacency map after checking it.
+    Map<T, Map<T, Boolean>> incoming = HashMapFactory.make();
+    for (T node : graph) {
+      int count = 0;
+      for (T succ : Iterator2Iterable.make(graph.getSuccNodes(node))) {
+        if (!graph.containsNode(succ)) {
+          throw new UnsoundGraphException(
+              succ + " is a successor of " + node + " but is not contained in the graph");
+        }
+        incoming.computeIfAbsent(succ, unused -> HashMapFactory.make()).put(node, false);
+        count++;
       }
-
-      int count3 = G.getPredNodeCount(N);
-      int count4 = IteratorUtil.count(G.getPredNodes(N));
-      if (count3 != count4) {
-        throw new UnsoundGraphException("getPredNodeCount " + count1 + " is wrong for node " + N);
+      int reportedCount = graph.getSuccNodeCount(node);
+      if (count != reportedCount) {
+        throw new UnsoundGraphException(
+            "getSuccNodeCount " + reportedCount + " is wrong for node " + node);
       }
     }
-  }
 
-  private static <T> void checkEdges(Graph<T> G) throws UnsoundGraphException {
-    // Cache inverse lookups separately for each direction and node. Still inspect every reported
-    // neighbor below: hasEdge alone cannot establish consistency of the two adjacency directions.
-    Map<T, Set<T>> successors = HashMapFactory.make();
-    Map<T, Set<T>> predecessors = HashMapFactory.make();
-    for (T N : G) {
-      if (!G.containsNode(N)) {
+    for (T node : graph) {
+      if (!graph.containsNode(node)) {
+        throw new UnsoundGraphException(node + " is not contained in the graph");
+      }
+      Map<T, Boolean> expected = incoming.remove(node);
+      int count = 0;
+      int matched = 0;
+      for (T pred : Iterator2Iterable.make(graph.getPredNodes(node))) {
+        if (!graph.containsNode(pred)) {
+          throw new UnsoundGraphException(
+              pred + " is a predecessor of " + node + " but is not contained in the graph");
+        }
+        Boolean seen = expected == null ? null : expected.replace(pred, true);
+        if (seen == null) {
+          throw new UnsoundGraphException(
+              pred + " is a predecessor of " + node + " but inverse doesn't hold");
+        }
+        if (!seen) {
+          matched++;
+        }
+        count++;
+      }
+      if (expected != null && matched != expected.size()) {
+        for (var edge :
+            expected.entrySet()) { // diff-coverage: ignore -- an unmatched edge must exist
+          if (!edge.getValue()) {
+            throw new UnsoundGraphException(
+                node + " is a successor of " + edge.getKey() + " but inverse doesn't hold");
+          }
+        }
+      }
+      int reportedCount = graph.getPredNodeCount(node);
+      if (count != reportedCount) {
         throw new UnsoundGraphException(
-            N + " is not contained in the the graph " + G.containsNode(N));
+            "getPredNodeCount " + reportedCount + " is wrong for node " + node);
       }
-      for (T pred : Iterator2Iterable.make(G.getPredNodes(N))) {
-        if (!G.containsNode(pred)) {
-          throw new UnsoundGraphException(
-              pred + " is a predecessor of " + N + " but is not contained in the graph");
-        }
-        if (!successors
-            .computeIfAbsent(pred, n -> Iterator2Collection.toSet(G.getSuccNodes(n)))
-            .contains(N)) {
-          // didn't find N
-          G.getPredNodes(N);
-          G.getSuccNodes(pred);
-          throw new UnsoundGraphException(
-              pred + " is a predecessor of " + N + " but inverse doesn't hold");
-        }
-      }
-      for (T succ : Iterator2Iterable.make(G.getSuccNodes(N))) {
-        if (!G.containsNode(succ)) {
-          throw new UnsoundGraphException(
-              succ + " is a successor of " + N + " but is not contained in the graph");
-        }
-        if (!predecessors
-            .computeIfAbsent(succ, n -> Iterator2Collection.toSet(G.getPredNodes(n)))
-            .contains(N)) {
-          // didn't find N
-          throw new UnsoundGraphException(
-              succ + " is a successor of " + N + " but inverse doesn't hold");
-        }
-      }
+    }
+
+    if (!incoming.isEmpty()) {
+      throw new UnsoundGraphException(
+          incoming.keySet().iterator().next() + " is a successor missing from the graph iterator");
     }
   }
 
