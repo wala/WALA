@@ -61,10 +61,13 @@ jobs:
         if: runner.os == 'Linux'
       - name: Build and test using Gradle
         shell: sh
+        # Use the `--max-workers 2` option on Mac since the instances have only 3 vCPUs and 7GB RAM.
+        # Using two workers shortened this step by about nine minutes in a couple of CI trials.
         run: >-
           ${XVFB_RUN}
           ./gradlew
           --scan
+          ${{ runner.os == 'macOS' && '--max-workers=2' || '' }}
           --console=colored "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
           aggregatedJavadocs javadoc build ${OS_SPECIFIC_GRADLE_TASKS} checkGitCleanliness
       - name: Upload test results
