@@ -376,7 +376,7 @@ public class SparseIntSet implements IntSet {
 
       @Override
       public int next() throws NoSuchElementException {
-        if (elements == null) {
+        if (elements == null || i >= size) {
           throw new NoSuchElementException();
         }
         return elements[i++];

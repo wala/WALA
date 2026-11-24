@@ -4,6 +4,22 @@
 
 ### Functionality changes
 
+#### Primitive iterators throw on exhaustion
+
+**Breaking:** `IntIterator.next()` and `LongIterator.next()` now specify
+`NoSuchElementException` when the iteration has no more elements.
+Third-party implementations must honor this exhaustion contract.
+
+The iterators returned by `SparseIntSet`, `SparseLongSet`,
+`BitVectorIntSet`, `SemiSparseMutableIntSet`, and
+`SSASwitchInstruction.iterateLabels()` now follow this contract. Previously,
+some implementations returned sentinel or unused storage values, threw
+unrelated exceptions, or restarted iteration after exhaustion.
+
+Callers that relied on values or other exceptions after exhaustion must
+check `hasNext()` before calling `next()`, or handle
+`NoSuchElementException`.
+
 #### `Iterator2Iterable` requires a non-null iterator
 
 **Breaking for nullness-checked code:** The constructor and `make(Iterator)`

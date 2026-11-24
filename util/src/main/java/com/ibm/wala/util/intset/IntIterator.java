@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.util.NoSuchElementException;
+
 /** a more efficient iterator for sets of integers */
 public interface IntIterator {
 
@@ -20,6 +22,7 @@ public interface IntIterator {
 
   /**
    * @return next integer in the iteration
+   * @throws NoSuchElementException if the iteration has no more elements
    */
   int next();
 }
