@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.util.NoSuchElementException;
+
 /** a more efficient iterator for sets of longs */
 public interface LongIterator {
 
@@ -19,7 +21,8 @@ public interface LongIterator {
   boolean hasNext();
 
   /**
-   * @return next integer in the iteration
+   * @return next long in the iteration
+   * @throws NoSuchElementException if the iteration has no more elements
    */
   long next();
 }
