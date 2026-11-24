@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
@@ -119,6 +120,9 @@ public abstract class AbstractNestedJarFileModule implements Module {
 
       @Override
       public ModuleEntry next() {
+        if (!hasNext()) {
+          throw new NoSuchElementException();
+        }
         ModuleEntry result = new Entry(next);
         advance();
         return result;
