@@ -14,6 +14,7 @@ package com.ibm.wala.ssa;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.ibm.wala.util.intset.IntIterator;
+import java.util.NoSuchElementException;
 
 /** SSA instruction representing a switch statement. */
 public class SSASwitchInstruction extends SSAInstruction {
@@ -110,6 +111,9 @@ public class SSASwitchInstruction extends SSAInstruction {
 
       @Override
       public int next() {
+        if (!hasNext()) {
+          throw new NoSuchElementException();
+        }
         int v = casesAndLabels[i];
         i += 2;
         return v;
