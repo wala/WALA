@@ -20,6 +20,7 @@ import com.ibm.wala.util.debug.Assertions;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
@@ -225,6 +226,9 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     @NullUnmarked
     @Override
     public IntPair next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
       final IntPair result;
       if (nextIndex == smallStore.length) {
         int y = delegateIterator.next();

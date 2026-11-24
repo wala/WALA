@@ -61,6 +61,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /** Call graph utilities */
@@ -264,6 +265,9 @@ public class Util {
 
         @Override
         public Entrypoint next() {
+          if (!hasNext()) {
+            throw new NoSuchElementException();
+          }
           TypeReference T =
               TypeReference.findOrCreate(loaderRef, TypeName.string2TypeName(classNames[index++]));
           MethodReference mainRef =

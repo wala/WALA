@@ -73,7 +73,7 @@ public class ArrayIterator<T> implements Iterator<T> {
 
   @Override
   public T next() throws NoSuchElementException {
-    if (_cnt >= _elts.length) {
+    if (!hasNext() || _cnt >= _elts.length) {
       throw new NoSuchElementException();
     }
     return _elts[_cnt++];
