@@ -1,5 +1,7 @@
 package com.ibm.wala.util.math;
 
+import static com.ibm.wala.util.math.LogsConditions.binaryLogUp;
+import static com.ibm.wala.util.math.LogsConditions.powerOfTwo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -20,6 +22,11 @@ import org.junit.jupiter.api.Test;
  */
 @SuppressWarnings("removal")
 class LogsTest {
+
+  @Test
+  void assertionsAreAvailableAsConditions() {
+    assertThat(16).is(powerOfTwo).has(binaryLogUp(4));
+  }
 
   /**
    * Smallest k with 2^k >= n, by repeated doubling. {@code width} is 32 for the int overload and 64
@@ -48,21 +55,21 @@ class LogsTest {
 
   @Test
   void zeroAndOneNeedNoWidth() {
-    assertThat(Logs.binaryLogUp(0)).isEqualTo(0);
-    assertThat(Logs.binaryLogUp(1)).isEqualTo(0);
-    assertThat(Logs.binaryLogUp(0L)).isEqualTo(0);
-    assertThat(Logs.binaryLogUp(1L)).isEqualTo(0);
+    assertThat(0).has(binaryLogUp(0));
+    assertThat(1).has(binaryLogUp(0));
+    assertThat(0L).has(binaryLogUp(0L));
+    assertThat(1L).has(binaryLogUp(0L));
   }
 
   @Test
   void exactPowersOfTwo() {
     for (int k = 0; k < 31; k++) {
       int n = 1 << k;
-      assertThat(Logs.binaryLogUp(n)).as("2^%d", k).isEqualTo(k);
-      assertThat(Logs.binaryLogUp((long) n)).as("2^%d as long", k).isEqualTo(k);
+      assertThat(n).as("2^%d", k).has(binaryLogUp(k));
+      assertThat((long) n).as("2^%d as long", k).has(binaryLogUp((long) k));
     }
     for (int k = 0; k < 63; k++) {
-      assertThat(Logs.binaryLogUp(1L << k)).as("2^%d as long", k).isEqualTo(k);
+      assertThat(1L << k).as("2^%d as long", k).has(binaryLogUp((long) k));
     }
   }
 
@@ -70,11 +77,11 @@ class LogsTest {
   void justAboveAPowerOfTwo() {
     for (int k = 0; k < 31; k++) {
       int n = (1 << k) + 1;
-      assertThat(Logs.binaryLogUp(n)).as("2^%d + 1", k).isEqualTo(k + 1);
-      assertThat(Logs.binaryLogUp((long) n)).isEqualTo(k + 1);
+      assertThat(n).as("2^%d + 1", k).has(binaryLogUp(k + 1));
+      assertThat((long) n).has(binaryLogUp((long) k + 1));
     }
     for (int k = 0; k < 62; k++) {
-      assertThat(Logs.binaryLogUp((1L << k) + 1)).as("2^%d + 1 as long", k).isEqualTo(k + 1);
+      assertThat((1L << k) + 1).as("2^%d + 1 as long", k).has(binaryLogUp((long) k + 1));
     }
   }
 
@@ -83,28 +90,28 @@ class LogsTest {
     // k starts at 2: 2^1 - 1 is 1, which needs no width at all, so it maps to 0 rather than 1.
     for (int k = 2; k < 31; k++) {
       int n = (1 << k) - 1;
-      assertThat(Logs.binaryLogUp(n)).as("2^%d - 1", k).isEqualTo(k);
+      assertThat(n).as("2^%d - 1", k).has(binaryLogUp(k));
     }
-    assertThat(Logs.binaryLogUp((1 << 1) - 1)).isEqualTo(0);
+    assertThat((1 << 1) - 1).has(binaryLogUp(0));
   }
 
   @Test
   void intValuesAboveTwoToThirtyNoLongerHang() {
     // Every one of these spun forever before the fix.
-    assertThat(Logs.binaryLogUp((1 << 30) + 1)).isEqualTo(31);
-    assertThat(Logs.binaryLogUp(Integer.MAX_VALUE)).isEqualTo(31);
-    assertThat(Logs.binaryLogUp(-1)).isEqualTo(0);
-    assertThat(Logs.binaryLogUp(Integer.MIN_VALUE)).isEqualTo(0);
+    assertThat((1 << 30) + 1).has(binaryLogUp(31));
+    assertThat(Integer.MAX_VALUE).has(binaryLogUp(31));
+    assertThat(-1).has(binaryLogUp(0));
+    assertThat(Integer.MIN_VALUE).has(binaryLogUp(0));
   }
 
   @Test
   void longValuesAboveTwoToSixtyTwoNoLongerHang() {
-    assertThat(Logs.binaryLogUp((1L << 62) + 1)).isEqualTo(63);
+    assertThat((1L << 62) + 1).has(binaryLogUp(63L));
     // 3e9 does not fit an int, so this reaches the long overload; 2^31 is below it, 2^32 above.
-    assertThat(Logs.binaryLogUp(3_000_000_000L)).isEqualTo(32);
-    assertThat(Logs.binaryLogUp(Long.MAX_VALUE)).isEqualTo(63);
-    assertThat(Logs.binaryLogUp(-1L)).isEqualTo(0);
-    assertThat(Logs.binaryLogUp(Long.MIN_VALUE)).isEqualTo(0);
+    assertThat(3_000_000_000L).has(binaryLogUp(32L));
+    assertThat(Long.MAX_VALUE).has(binaryLogUp(63L));
+    assertThat(-1L).has(binaryLogUp(0L));
+    assertThat(Long.MIN_VALUE).has(binaryLogUp(0L));
   }
 
   @Test
@@ -153,10 +160,10 @@ class LogsTest {
   void isPowerOfTwoAndLog2StillAgree() {
     for (int k = 0; k < 31; k++) {
       int n = 1 << k;
-      assertThat(Logs.isPowerOf2(n)).isTrue();
+      assertThat(n).is(powerOfTwo);
       assertThat(Logs.log2(n)).isEqualTo(k);
     }
-    assertThat(Logs.isPowerOf2(0)).isFalse();
-    assertThat(Logs.isPowerOf2(-1)).isFalse();
+    assertThat(0).isNot(powerOfTwo);
+    assertThat(-1).isNot(powerOfTwo);
   }
 }

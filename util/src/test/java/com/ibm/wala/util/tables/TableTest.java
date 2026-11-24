@@ -1,5 +1,6 @@
 package com.ibm.wala.util.tables;
 
+import static com.ibm.wala.util.tables.TableAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
@@ -21,7 +22,7 @@ class TableTest {
     Table<String> table = new Table<>(new String[] {"a", "b"});
     table.addRow(Map.of("a", "x"));
 
-    assertThat(table.row2Map(0)).containsOnly(entry("a", "x"), entry("b", null));
+    assertThat(table).row(0).containsOnly(entry("a", "x"), entry("b", null));
   }
 
   @Test
@@ -31,7 +32,7 @@ class TableTest {
 
     table.removeRow(table.row2Map(0));
 
-    assertThat(table.getNumberOfRows()).isZero();
+    assertThat(table).numberOfRows().isZero();
   }
 
   @Test
