@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.ibm.wala.util.collections.CompoundIntIterator;
 import com.ibm.wala.util.collections.EmptyIntIterator;
 import java.io.Serial;
+import java.util.NoSuchElementException;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
@@ -334,6 +335,9 @@ public final class SemiSparseMutableIntSet implements MutableIntSet {
       @Override
       public int next() {
         int next = densePart.nextSetBit(i + 1);
+        if (next == -1) {
+          throw new NoSuchElementException();
+        }
         i = next;
         return next;
       }

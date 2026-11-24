@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import java.io.Serial;
+import java.util.NoSuchElementException;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
@@ -199,6 +200,9 @@ public final class BitVectorIntSet implements MutableIntSet {
 
       @Override
       public int next() {
+        if (!hasNext()) {
+          throw new NoSuchElementException();
+        }
         count++;
         last = nextSetBit(last) + 1;
         return last - 1;

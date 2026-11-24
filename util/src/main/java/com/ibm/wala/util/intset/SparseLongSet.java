@@ -358,7 +358,7 @@ public class SparseLongSet implements LongSet {
 
       @Override
       public long next() throws NoSuchElementException {
-        if (elements == null) {
+        if (elements == null || i >= size) {
           throw new NoSuchElementException();
         }
         return elements[i++];
