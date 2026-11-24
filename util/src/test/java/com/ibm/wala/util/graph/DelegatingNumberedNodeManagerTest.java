@@ -1,8 +1,7 @@
 package com.ibm.wala.util.graph;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ibm.wala.util.graph.impl.DelegatingNumberedNodeManager;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
@@ -17,8 +16,8 @@ class DelegatingNumberedNodeManagerTest {
     DelegatingNumberedNodeManager<NodeWithNumber> manager = new DelegatingNumberedNodeManager<>();
     Iterator<NodeWithNumber> iterator = manager.iterator();
 
-    assertThrows(NoSuchElementException.class, iterator::next);
-    assertFalse(iterator.hasNext());
+    assertThatThrownBy(iterator::next).isInstanceOf(NoSuchElementException.class);
+    assertThat(iterator).isExhausted();
   }
 
   @Test
@@ -32,9 +31,9 @@ class DelegatingNumberedNodeManagerTest {
     manager.addNode(last);
     Iterator<NodeWithNumber> iterator = manager.iterator();
 
-    assertSame(first, iterator.next());
-    assertSame(last, iterator.next());
-    assertThrows(NoSuchElementException.class, iterator::next);
-    assertFalse(iterator.hasNext());
+    assertThat(iterator.next()).isSameAs(first);
+    assertThat(iterator.next()).isSameAs(last);
+    assertThatThrownBy(iterator::next).isInstanceOf(NoSuchElementException.class);
+    assertThat(iterator).isExhausted();
   }
 }
