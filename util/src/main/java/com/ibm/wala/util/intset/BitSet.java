@@ -14,6 +14,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * A bit set is a set of elements, each of which corresponds to a unique integer from [0,MAX].
@@ -146,6 +147,9 @@ public final class BitSet<T> {
 
       @Override
       public T next() {
+        if (!hasNext()) {
+          throw new NoSuchElementException();
+        }
         T result = map.getMappedObject(nextCounter);
         int start = nextCounter + 1;
         nextCounter = -1;

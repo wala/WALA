@@ -44,6 +44,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /** A dataflow graph implementation specialized for propagation-based pointer analysis */
 public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> {
@@ -379,6 +380,9 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
     @Override
     public AbstractStatement<?, ?> next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
       IntPair p = innerDelegate.next();
       int lhs = p.x();
       int rhs = p.y();
@@ -534,6 +538,9 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
         @Override
         public PointsToSetVariable next() {
+          if (!hasNext()) {
+            throw new NoSuchElementException();
+          }
           PointsToSetVariable result = nextResult;
           advance();
           return result;
@@ -855,6 +862,9 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
         @Override
         public PointsToSetVariable next() {
+          if (!hasNext()) {
+            throw new NoSuchElementException();
+          }
           PointsToSetVariable result = nextResult;
           advance();
           return result;
@@ -905,6 +915,9 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
         @Override
         public PointsToSetVariable next() {
+          if (!hasNext()) {
+            throw new NoSuchElementException();
+          }
           PointsToSetVariable result = nextResult;
           advance();
           return result;

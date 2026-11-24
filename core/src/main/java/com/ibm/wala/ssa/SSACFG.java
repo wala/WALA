@@ -44,6 +44,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -460,6 +461,9 @@ public class SSACFG
 
         @Override
         public SSAInstruction next() {
+          if (!hasNext()) {
+            throw new NoSuchElementException();
+          }
           SSAInstruction i = instructions[start];
           do {
             start++;
@@ -663,6 +667,9 @@ public class SSACFG
 
         @Override
         public TypeReference next() {
+          if (!hasNext()) {
+            throw new NoSuchElementException();
+          }
           return exceptionTypes[next++];
         }
 

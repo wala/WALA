@@ -15,6 +15,7 @@ import com.ibm.wala.util.math.Logs;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Vector;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
@@ -127,9 +128,11 @@ public class TwoLevelVector<T extends @Nullable Object> implements IVector<T>, S
         return inner != null;
       }
 
-      @NullUnmarked
       @Override
       public T next() {
+        if (inner == null) {
+          throw new NoSuchElementException();
+        }
         T result = inner.next();
         if (!inner.hasNext()) {
           inner = null;

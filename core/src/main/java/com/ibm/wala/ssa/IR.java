@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -326,6 +327,9 @@ public abstract class IR implements IRView {
 
     @Override
     public SSAInstruction next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
       SSAInstruction result = currentBlockIterator.next();
       if (!currentBlockIterator.hasNext()) {
         advanceBlock();
@@ -421,6 +425,9 @@ public abstract class IR implements IRView {
 
     @Override
     public SSAInstruction next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
       ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) cfg.getNode(currentBlockIndex);
       SSAInstruction result = bb.getCatchInstruction();
       advanceBlock();
@@ -495,6 +502,9 @@ public abstract class IR implements IRView {
 
     @Override
     public SSAInstruction next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
       SSAInstruction result = instructions[nextIndex];
       advanceIndex(nextIndex + 1);
       return result;
@@ -609,6 +619,9 @@ public abstract class IR implements IRView {
 
       @Override
       public CallSiteReference next() {
+        if (!hasNext()) {
+          throw new NoSuchElementException();
+        }
         int index = callSiteMapping.getRelated(i).max();
         advance();
         return ((SSAAbstractInvokeInstruction) instructions[index]).getCallSite();
