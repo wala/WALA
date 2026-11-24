@@ -1,11 +1,10 @@
 package com.ibm.wala.core.tests.ir;
 
+import static com.ibm.wala.util.intset.PrimitiveIteratorAssertions.assertExhausted;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.ibm.wala.ssa.SSASwitchInstruction;
 import com.ibm.wala.util.intset.IntIterator;
-import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 
 class SSASwitchInstructionTest {
@@ -23,12 +22,5 @@ class SSASwitchInstructionTest {
     assertThat(iterator.next()).isEqualTo(7);
     assertThat(iterator.next()).isEqualTo(8);
     assertExhausted(iterator);
-  }
-
-  private static void assertExhausted(IntIterator iterator) {
-    assertSoftly(softly -> {
-      softly.assertThatThrownBy(iterator::next).isInstanceOf(NoSuchElementException.class);
-      softly.assertThat(iterator.hasNext()).isFalse();
-    });
   }
 }

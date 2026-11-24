@@ -1,9 +1,8 @@
 package com.ibm.wala.util.intset;
 
+import static com.ibm.wala.util.intset.PrimitiveIteratorAssertions.assertExhausted;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 
 class BitVectorIntSetTest {
@@ -23,12 +22,5 @@ class BitVectorIntSetTest {
     assertThat(iterator.next()).isEqualTo(7);
     assertThat(iterator.next()).isEqualTo(65);
     assertExhausted(iterator);
-  }
-
-  private static void assertExhausted(IntIterator iterator) {
-    assertSoftly(softly -> {
-      softly.assertThatThrownBy(iterator::next).isInstanceOf(NoSuchElementException.class);
-      softly.assertThat(iterator.hasNext()).isFalse();
-    });
   }
 }

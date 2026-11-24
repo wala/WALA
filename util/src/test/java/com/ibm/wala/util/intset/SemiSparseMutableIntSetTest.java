@@ -1,8 +1,8 @@
 package com.ibm.wala.util.intset;
 
+import static com.ibm.wala.util.intset.PrimitiveIteratorAssertions.assertExhausted;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,12 +64,5 @@ class SemiSparseMutableIntSetTest {
       result.add(iterator.next());
     }
     return result;
-  }
-
-  private static void assertExhausted(IntIterator iterator) {
-    assertSoftly(softly -> {
-      softly.assertThatThrownBy(iterator::next).isInstanceOf(NoSuchElementException.class);
-      softly.assertThat(iterator.hasNext()).isFalse();
-    });
   }
 }
