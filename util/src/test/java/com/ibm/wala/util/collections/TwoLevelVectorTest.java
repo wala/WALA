@@ -1,10 +1,9 @@
 package com.ibm.wala.util.collections;
 
+import static com.ibm.wala.util.collections.IteratorAssertions.assertExhausted;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
@@ -36,12 +35,5 @@ class TwoLevelVectorTest {
     assertThat(iterator).hasNext();
     assertThat(iterator.next()).isNull();
     assertExhausted(iterator);
-  }
-
-  private static void assertExhausted(Iterator<?> iterator) {
-    assertSoftly(softly -> {
-      softly.assertThatThrownBy(iterator::next).isInstanceOf(NoSuchElementException.class);
-      softly.assertThat(iterator).isExhausted();
-    });
   }
 }

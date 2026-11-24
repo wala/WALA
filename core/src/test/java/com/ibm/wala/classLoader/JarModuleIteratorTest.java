@@ -1,7 +1,7 @@
 package com.ibm.wala.classLoader;
 
+import static com.ibm.wala.util.collections.IteratorAssertions.assertExhausted;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.ibm.wala.util.collections.Iterator2Collection;
 import java.io.ByteArrayInputStream;
@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import org.junit.jupiter.api.Test;
@@ -93,12 +92,5 @@ class JarModuleIteratorTest {
       }
     }
     return bytes.toByteArray();
-  }
-
-  private static void assertExhausted(Iterator<?> iterator) {
-    assertSoftly(softly -> {
-      softly.assertThatThrownBy(iterator::next).isInstanceOf(NoSuchElementException.class);
-      softly.assertThat(iterator).isExhausted();
-    });
   }
 }

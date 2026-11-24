@@ -1,7 +1,7 @@
 package com.ibm.wala.core.tests.ir;
 
+import static com.ibm.wala.util.collections.IteratorAssertions.assertExhausted;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
@@ -20,7 +20,6 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.types.TypeReference;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -155,12 +154,5 @@ class IRIteratorTest {
     SSAOptions options = new SSAOptions();
     options.setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
     return new AnalysisCacheImpl(options).getIR(method);
-  }
-
-  private static void assertExhausted(Iterator<?> iterator) {
-    assertSoftly(softly -> {
-      softly.assertThatThrownBy(iterator::next).isInstanceOf(NoSuchElementException.class);
-      softly.assertThat(iterator).isExhausted();
-    });
   }
 }

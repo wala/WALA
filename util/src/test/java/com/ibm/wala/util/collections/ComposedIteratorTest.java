@@ -1,11 +1,10 @@
 package com.ibm.wala.util.collections;
 
+import static com.ibm.wala.util.collections.IteratorAssertions.assertExhausted;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 
 class ComposedIteratorTest {
@@ -37,12 +36,5 @@ class ComposedIteratorTest {
         return list.iterator();
       }
     };
-  }
-
-  private static void assertExhausted(Iterator<?> iterator) {
-    assertSoftly(softly -> {
-      softly.assertThatThrownBy(iterator::next).isInstanceOf(NoSuchElementException.class);
-      softly.assertThat(iterator).isExhausted();
-    });
   }
 }

@@ -1,10 +1,9 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.ibm.wala.util.collections.IteratorAssertions.assertExhausted;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 
 class PropagationGraphTest {
@@ -90,11 +89,4 @@ class PropagationGraphTest {
   }
 
   private record Key(String name) implements PointerKey {}
-
-  private static void assertExhausted(Iterator<?> iterator) {
-    assertSoftly(softly -> {
-      softly.assertThatThrownBy(iterator::next).isInstanceOf(NoSuchElementException.class);
-      softly.assertThat(iterator).isExhausted();
-    });
-  }
 }
