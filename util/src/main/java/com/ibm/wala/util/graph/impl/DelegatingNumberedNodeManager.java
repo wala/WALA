@@ -19,6 +19,7 @@ import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.IntSet;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
@@ -65,38 +66,34 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
   @Override
   public Iterator<T> iterator() {
     final @Nullable INodeWithNumber[] arr = nodes;
-    return new Iterator<T>() {
-      int nextCounter = -1;
+    return new Iterator<>() {
+      private int nextIndex;
+      private @Nullable INodeWithNumber nextNode = findNextNode();
 
-      {
-        advance();
-      }
-
-      void advance() {
-        for (int i = nextCounter + 1; i < arr.length; i++) {
-          if (arr[i] != null) {
-            nextCounter = i;
-            return;
+      private @Nullable INodeWithNumber findNextNode() {
+        while (nextIndex < arr.length) {
+          INodeWithNumber node = arr[nextIndex++];
+          if (node != null) {
+            return node;
           }
         }
-        nextCounter = -1;
+        return null;
       }
 
       @Override
       public boolean hasNext() {
-        return nextCounter != -1;
+        return nextNode != null;
       }
 
       @Override
-      @SuppressWarnings({"unchecked", "NullAway"}) // to enable JSpecifyExperimental
-      public @Nullable T next() {
-        if (hasNext()) {
-          int r = nextCounter;
-          advance();
-          return (T) arr[r];
-        } else {
-          return null;
+      @SuppressWarnings("unchecked")
+      public T next() {
+        INodeWithNumber node = nextNode;
+        if (node == null) {
+          throw new NoSuchElementException();
         }
+        nextNode = findNextNode();
+        return (T) node;
       }
 
       @Override
