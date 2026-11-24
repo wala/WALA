@@ -1,5 +1,9 @@
 package libmodels;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 public class LibModels {
 
   public static void reachable1() {}
@@ -24,5 +28,23 @@ public class LibModels {
               }
             });
     Thread.setDefaultUncaughtExceptionHandler(new Handler());
+  }
+
+  public static void setStandardStreams() {
+    System.setIn(new ByteArrayInputStream(new byte[0]));
+    System.setOut(new Stdout());
+    System.setErr(new Stderr());
+  }
+
+  private static class Stdout extends PrintStream {
+    Stdout() {
+      super(new ByteArrayOutputStream());
+    }
+  }
+
+  private static class Stderr extends PrintStream {
+    Stderr() {
+      super(new ByteArrayOutputStream());
+    }
   }
 }

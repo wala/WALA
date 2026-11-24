@@ -465,19 +465,19 @@
 				<method name="setErr0"
 					descriptor="(Ljava/io/PrintStream;)V" static="true">
 					<putstatic class="Ljava/lang/System"
-						field="err" fieldType="Ljava/lang/PrintStream"
+						field="err" fieldType="Ljava/io/PrintStream"
 						value="arg0" />
 				</method>
 				<method name="setIn0"
 					descriptor="(Ljava/io/InputStream;)V" static="true">
 					<putstatic class="Ljava/lang/System"
-						field="in" fieldType="Ljava/lang/InputStream"
+						field="in" fieldType="Ljava/io/InputStream"
 						value="arg0" />
 				</method>
 				<method name="setOut0"
 					descriptor="(Ljava/io/PrintStream;)V" static="true">
 					<putstatic class="Ljava/lang/System"
-						field="out" fieldType="Ljava/lang/PrintStream"
+						field="out" fieldType="Ljava/io/PrintStream"
 						value="arg0" />
 				</method>
 			</class>
