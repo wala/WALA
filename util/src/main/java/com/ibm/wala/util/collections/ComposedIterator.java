@@ -11,10 +11,10 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
-import org.jspecify.annotations.NullUnmarked;
+import java.util.NoSuchElementException;
 import org.jspecify.annotations.Nullable;
 
-/** A 2-level iterator. has not been tested yet! */
+/** A two-level iterator. */
 public abstract class ComposedIterator<O, I> implements Iterator<I> {
 
   private final Iterator<O> outer;
@@ -49,9 +49,11 @@ public abstract class ComposedIterator<O, I> implements Iterator<I> {
     return (inner != null);
   }
 
-  @NullUnmarked
   @Override
   public I next() {
+    if (inner == null) {
+      throw new NoSuchElementException();
+    }
     I result = inner.next();
     if (!inner.hasNext()) {
       advanceOuter();
