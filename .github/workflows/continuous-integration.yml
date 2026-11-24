@@ -16,13 +16,15 @@ jobs:
     name: "JDK ${{ matrix.java }} on ${{ matrix.os }}"
     strategy:
       matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+        java: [17]
+        # Only run the macos-latest job on pushes to the master branch, not on
+        # pushes to other branches or PR jobs.  Limit since macos-latest runners
+        # are limited and causing CI job failures
+        exclude: >-
+          ${{ fromJSON(github.event_name == 'push' && github.ref == 'refs/heads/master'
+          && '[]' || '[{"os":"macos-latest"}]') }}
         include:
-          - os: macos-latest
-            java: 17
-          - os: windows-latest
-            java: 17
-          - os: ubuntu-latest
-            java: 17
           - os: ubuntu-latest
             java: 21
           - os: ubuntu-latest
