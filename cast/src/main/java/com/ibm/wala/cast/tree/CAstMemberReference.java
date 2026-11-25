@@ -30,6 +30,7 @@ public interface CAstMemberReference extends CAstReference {
         }
 
         @Override
+        @SuppressWarnings("EqualsHashCode") // identity-based equality
         public int hashCode() {
           return toString().hashCode();
         }

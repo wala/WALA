@@ -152,6 +152,15 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   }
 
   @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof BytecodeClass<?> other) {
+      return getReference().equals(other.getReference());
+    } else {
+      return false;
+    }
+  }
+
+  @Override
   public String toString() {
     return getReference().toString();
   }

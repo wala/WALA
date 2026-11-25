@@ -838,6 +838,15 @@ public class ClassHierarchy implements IClassHierarchy {
     public int hashCode() {
       return klass.hashCode() * 929;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (obj instanceof Node other) {
+        return klass.equals(other.klass);
+      } else {
+        return false;
+      }
+    }
   }
 
   @Override

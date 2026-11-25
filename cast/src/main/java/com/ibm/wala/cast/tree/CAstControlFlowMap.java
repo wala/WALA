@@ -49,6 +49,7 @@ public interface CAstControlFlowMap {
         }
 
         @Override
+        @SuppressWarnings("EqualsHashCode") // identity-based equality
         public int hashCode() {
           return getKind() * toString().hashCode();
         }

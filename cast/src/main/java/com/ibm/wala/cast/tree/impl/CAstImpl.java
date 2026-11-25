@@ -76,6 +76,7 @@ public class CAstImpl implements CAst {
     }
 
     @Override
+    @SuppressWarnings("EqualsHashCode") // AST nodes use identity equality
     public int hashCode() {
       int code = getKind() * (getChildCount() + 13);
       for (int i = 0; i < getChildCount() && i < 15; i++) {
@@ -166,6 +167,7 @@ public class CAstImpl implements CAst {
     }
 
     @Override
+    @SuppressWarnings("EqualsHashCode") // identity-based equality
     public int hashCode() {
       return System.identityHashCode(this) * ((value == null) ? 1 : System.identityHashCode(value));
     }

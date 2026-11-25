@@ -85,6 +85,15 @@ public class JarFileEntry implements ModuleEntry {
   }
 
   @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof JarFileEntry other) {
+      return entryName.equals(other.entryName) && jarFileModule.equals(other.jarFileModule);
+    } else {
+      return false;
+    }
+  }
+
+  @Override
   public String getClassName() {
     return FileSuffixes.stripSuffix(getName());
   }

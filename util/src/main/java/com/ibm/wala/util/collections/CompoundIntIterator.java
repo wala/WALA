@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.IntIterator;
+import org.jspecify.annotations.Nullable;
 
 /** An Iterator which provides a concatenation of two IntIterators. */
 public final class CompoundIntIterator implements IntIterator {
@@ -51,5 +52,10 @@ public final class CompoundIntIterator implements IntIterator {
   @Override
   public int hashCode() throws UnimplementedError {
     return Assertions.UNREACHABLE("define a custom hash code to avoid non-determinism");
+  }
+
+  @Override
+  public boolean equals(@Nullable Object obj) {
+    return obj instanceof CompoundIntIterator other && A.equals(other.A) && B.equals(other.B);
   }
 }
