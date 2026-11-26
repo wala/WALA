@@ -47,12 +47,6 @@ public interface CAstControlFlowMap {
         public String toString() {
           return "EXCEPTION_TO_EXIT";
         }
-
-        @Override
-        @SuppressWarnings("EqualsHashCode") // identity-based equality
-        public int hashCode() {
-          return getKind() * toString().hashCode();
-        }
       };
 
   /**

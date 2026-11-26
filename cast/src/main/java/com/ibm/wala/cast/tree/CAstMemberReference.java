@@ -28,12 +28,6 @@ public interface CAstMemberReference extends CAstReference {
         public String toString() {
           return "Any::FUNCTION CALL";
         }
-
-        @Override
-        @SuppressWarnings("EqualsHashCode") // identity-based equality
-        public int hashCode() {
-          return toString().hashCode();
-        }
       };
 
   String member();
