@@ -1,6 +1,8 @@
 package com.ibm.wala.util.graph;
 
 import static com.ibm.wala.util.collections.IteratorAssertions.assertExhausted;
+import static com.ibm.wala.util.graph.EdgeManagerAssert.assertThat;
+import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
@@ -16,17 +18,17 @@ class SelfLoopAddedEdgeManagerTest {
 
   @Test
   void nullSourceHasNoEdgeToANode() {
-    assertThat(edges.hasEdge(null, "target")).as("edge from null to target").isFalse();
+    assertThat(edges).doesNotHave(edge(null, "target"));
   }
 
   @Test
   void nodeHasNoEdgeToNullDestination() {
-    assertThat(edges.hasEdge("source", null)).as("edge from source to null").isFalse();
+    assertThat(edges).doesNotHave(edge("source", null));
   }
 
   @Test
   void twoNullEndpointsDoNotFormASelfLoop() {
-    assertThat(edges.hasEdge(null, null)).as("edge from null to null").isFalse();
+    assertThat(edges).doesNotHave(edge(null, null));
   }
 
   @Test
@@ -42,30 +44,28 @@ class SelfLoopAddedEdgeManagerTest {
   void equalNodesHaveASyntheticSelfLoop() {
     var numericEdges = new SelfLoopAddedEdgeManager<>(new BasicEdgeManager<BigInteger>());
 
-    assertThat(numericEdges.hasEdge(new BigInteger("128"), new BigInteger("128")))
-        .as("edge between equal nodes")
-        .isTrue();
+    assertThat(numericEdges).has(edge(new BigInteger("128"), new BigInteger("128")));
   }
 
   @Test
   void existingEdgeBetweenDistinctNodesIsReported() {
     edges.addEdge("source", "target");
 
-    assertThat(edges.hasEdge("source", "target")).as("edge from source to target").isTrue();
+    assertThat(edges).has(edge("source", "target"));
   }
 
   @Test
-  void syntheticSelfLoopPrecedesExistingPredecessors() {
+  void predecessorsIncludeSyntheticSelfLoop() {
     edges.addEdge("source", "target");
 
-    assertThat(edges.getPredNodes("target")).toIterable().containsExactly("target", "source");
+    assertThat(edges).predecessorsOf("target").containsExactlyInAnyOrder("target", "source");
   }
 
   @Test
-  void syntheticSelfLoopPrecedesExistingSuccessors() {
+  void successorsIncludeSyntheticSelfLoop() {
     edges.addEdge("source", "target");
 
-    assertThat(edges.getSuccNodes("source")).toIterable().containsExactly("source", "target");
+    assertThat(edges).successorsOf("source").containsExactlyInAnyOrder("source", "target");
   }
 
   @Test
