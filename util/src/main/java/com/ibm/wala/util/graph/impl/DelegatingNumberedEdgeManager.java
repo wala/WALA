@@ -140,7 +140,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
   }
 
   @Override
-  public boolean hasEdge(@Nullable T src, @Nullable T dst) throws IllegalArgumentException {
+  public boolean hasEdge(T src, T dst) throws IllegalArgumentException {
     checkArgument(dst != null, "dst == null");
     return getSuccNodeNumbers(src).contains(dst.getGraphNodeId());
   }

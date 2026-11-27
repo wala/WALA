@@ -129,7 +129,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         }
 
         @Override
-        public boolean hasEdge(@Nullable T src, @Nullable T dst) {
+        public boolean hasEdge(T src, T dst) {
           if (original.hasEdge(src, dst)) return true;
           MutableIntSet outEdgesForSrc = outEdges.get(src);
           return outEdgesForSrc != null && outEdgesForSrc.contains(getNumber(dst));
@@ -312,7 +312,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
   }
 
   @Override
-  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
+  public boolean hasEdge(T src, T dst) {
     return edgeManager.hasEdge(src, dst);
   }
 

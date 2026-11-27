@@ -89,7 +89,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
     }
 
     @Override
-    public boolean hasEdge(@Nullable T src, @Nullable T dst) {
+    public boolean hasEdge(T src, T dst) {
       return delegate.hasEdge(src, dst) && !ignoreEdges.contains(getNumber(src), getNumber(dst));
     }
 
