@@ -94,6 +94,7 @@ tasks.withType<JavaCompile>().configureEach {
           "BareDotMetacharacter",
           "BigDecimalEquals",
           "BigDecimalLiteralDouble",
+          "BootclasspathShadowing",
           "BoxedPrimitiveConstructor",
           "BoxingComparator",
           "BugPatternNaming",

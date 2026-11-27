@@ -74,18 +74,6 @@ public class CAstImpl implements CAst {
     public String toString() {
       return System.identityHashCode(this) + ":" + CAstPrinter.print(this);
     }
-
-    @Override
-    public int hashCode() {
-      int code = getKind() * (getChildCount() + 13);
-      for (int i = 0; i < getChildCount() && i < 15; i++) {
-        if (getChild(i) != null) {
-          code *= getChild(i).getKind();
-        }
-      }
-
-      return code;
-    }
   }
 
   @Override
@@ -163,11 +151,6 @@ public class CAstImpl implements CAst {
     @Override
     public String toString() {
       return "CAstValue: " + value;
-    }
-
-    @Override
-    public int hashCode() {
-      return System.identityHashCode(this) * ((value == null) ? 1 : System.identityHashCode(value));
     }
   }
 

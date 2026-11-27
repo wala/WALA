@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
+import org.jspecify.annotations.Nullable;
 
 /** Abstract base class for implementations of bitvectors */
 @SuppressWarnings("rawtypes")
@@ -76,6 +77,9 @@ public abstract class BitVectorBase<T extends BitVectorBase> implements Cloneabl
     }
     return h;
   }
+
+  @Override
+  public abstract boolean equals(@Nullable Object other);
 
   /** How many bits are set? */
   public final int populationCount() {

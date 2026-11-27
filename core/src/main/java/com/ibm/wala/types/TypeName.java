@@ -101,6 +101,15 @@ public final class TypeName implements Serializable {
   }
 
   @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof TypeName other) {
+      return key.equals(other.key);
+    } else {
+      return false;
+    }
+  }
+
+  @Override
   public String toString() {
     return key.toString();
   }

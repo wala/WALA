@@ -67,6 +67,11 @@ public class InstanceOfPiPolicy implements SSAPiNodePolicy {
   }
 
   @Override
+  public boolean equals(Object other) {
+    return other instanceof InstanceOfPiPolicy;
+  }
+
+  @Override
   public Pair<Integer, SSAInstruction> getPi(
       SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
     return null;

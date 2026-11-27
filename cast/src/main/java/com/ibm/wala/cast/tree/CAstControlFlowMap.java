@@ -47,11 +47,6 @@ public interface CAstControlFlowMap {
         public String toString() {
           return "EXCEPTION_TO_EXIT";
         }
-
-        @Override
-        public int hashCode() {
-          return getKind() * toString().hashCode();
-        }
       };
 
   /**
