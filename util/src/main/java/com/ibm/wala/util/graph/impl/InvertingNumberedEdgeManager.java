@@ -15,7 +15,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.intset.IntSet;
 import java.util.Iterator;
-import org.jspecify.annotations.Nullable;
 
 /** An edge manager that reverses the edges in a graph */
 public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
@@ -58,7 +57,7 @@ public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
   }
 
   @Override
-  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
+  public boolean hasEdge(T src, T dst) {
     return original.hasEdge(dst, src);
   }
 

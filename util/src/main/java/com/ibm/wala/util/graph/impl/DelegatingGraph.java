@@ -15,7 +15,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.ibm.wala.util.graph.Graph;
 import java.util.Iterator;
 import java.util.stream.Stream;
-import org.jspecify.annotations.Nullable;
 
 /** A utility class. */
 public class DelegatingGraph<T> implements Graph<T> {
@@ -73,7 +72,7 @@ public class DelegatingGraph<T> implements Graph<T> {
   }
 
   @Override
-  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
+  public boolean hasEdge(T src, T dst) {
     return delegate.hasEdge(src, dst);
   }
 

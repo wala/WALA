@@ -15,7 +15,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.util.Iterator;
 import java.util.stream.Stream;
-import org.jspecify.annotations.Nullable;
 
 /** Basic functionality for a {@link Graph} that delegates node and edge management. */
 public abstract class AbstractGraph<T> implements Graph<T> {
@@ -87,7 +86,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
   }
 
   @Override
-  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
+  public boolean hasEdge(T src, T dst) {
     checkArgument(src != null, "src is null");
     checkArgument(dst != null, "dst is null");
     return getEdgeManager().hasEdge(src, dst);

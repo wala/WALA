@@ -30,7 +30,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import org.jspecify.annotations.NullUnmarked;
-import org.jspecify.annotations.Nullable;
 
 /** Utilities related to simple graph subset operations. */
 public class GraphSlicer {
@@ -145,8 +144,7 @@ public class GraphSlicer {
           }
 
           @Override
-          @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
-          public boolean hasEdge(@Nullable T src, @Nullable T dst) {
+          public boolean hasEdge(T src, T dst) {
             return g.hasEdge(src, dst) && p.test(src) && p.test(dst);
           }
         };
@@ -293,7 +291,7 @@ public class GraphSlicer {
 
           @NullUnmarked
           @Override
-          public boolean hasEdge(@Nullable E src, @Nullable E dst) {
+          public boolean hasEdge(E src, E dst) {
             if (!preds.containsKey(dst)) {
               setPredNodes(dst);
             }

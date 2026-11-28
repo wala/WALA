@@ -70,6 +70,18 @@ nullable nodes before calling these methods.
 If the wrapped graph reports no edge to a null destination,
 `ExtensionGraph.hasEdge` also reports no edge.
 
+#### `EdgeManager.hasEdge` requires non-null endpoints
+
+**Breaking for nullness-checked code:**
+`com.ibm.wala.util.graph.EdgeManager.hasEdge(T, T)` requires non-null source
+and destination nodes. The requirement also applies through `Graph`,
+`NumberedGraph`, and updated overrides such as `AbstractGraph.hasEdge`.
+Check nullable endpoints before calling `hasEdge`.
+
+This is a change to the nullness annotations. Code that calls
+`BasicEdgeManager.hasEdge` through the concrete type can pass nullable
+endpoints.
+
 #### `IVector` and `SparseVector` expose nullable lookup results
 
 **Breaking for nullness-checked code:**

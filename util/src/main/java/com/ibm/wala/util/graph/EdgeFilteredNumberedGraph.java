@@ -17,7 +17,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import java.util.Iterator;
-import org.jspecify.annotations.Nullable;
 
 /** View of a {@link NumberedGraph} in which some edges have been filtered out */
 public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
@@ -89,7 +88,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
     }
 
     @Override
-    public boolean hasEdge(@Nullable T src, @Nullable T dst) {
+    public boolean hasEdge(T src, T dst) {
       return delegate.hasEdge(src, dst) && !ignoreEdges.contains(getNumber(src), getNumber(dst));
     }
 
