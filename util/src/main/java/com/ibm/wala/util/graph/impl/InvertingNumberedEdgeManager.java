@@ -58,7 +58,7 @@ public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
   }
 
   @Override
-  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
+  public boolean hasEdge(T src, T dst) {
     return original.hasEdge(dst, src);
   }
 

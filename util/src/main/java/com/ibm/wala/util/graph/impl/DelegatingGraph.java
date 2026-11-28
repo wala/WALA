@@ -73,7 +73,7 @@ public class DelegatingGraph<T> implements Graph<T> {
   }
 
   @Override
-  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
+  public boolean hasEdge(T src, T dst) {
     return delegate.hasEdge(src, dst);
   }
 

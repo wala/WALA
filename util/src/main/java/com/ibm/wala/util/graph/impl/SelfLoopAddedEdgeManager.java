@@ -107,7 +107,7 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
 
   /** Returns {@code true} for equal non-null endpoints and delegates other lookups. */
   @Override
-  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
+  public boolean hasEdge(T src, T dst) {
     return (src != null && src.equals(dst)) || original.hasEdge(src, dst);
   }
 }

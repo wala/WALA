@@ -11,7 +11,6 @@
 package com.ibm.wala.util.graph;
 
 import java.util.Iterator;
-import org.jspecify.annotations.Nullable;
 
 /**
  * An object which manages edges in a directed graph.
@@ -62,5 +61,5 @@ public interface EdgeManager<T> {
 
   void removeOutgoingEdges(T node) throws UnsupportedOperationException;
 
-  boolean hasEdge(@Nullable T src, @Nullable T dst);
+  boolean hasEdge(T src, T dst);
 }
