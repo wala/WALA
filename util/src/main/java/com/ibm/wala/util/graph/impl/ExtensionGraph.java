@@ -11,6 +11,7 @@
 
 package com.ibm.wala.util.graph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.ibm.wala.util.intset.IntSetUtil.make;
 
 import com.ibm.wala.util.collections.CompoundIterator;
@@ -132,11 +133,12 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         public boolean hasEdge(T src, T dst) {
           if (original.hasEdge(src, dst)) return true;
           MutableIntSet outEdgesForSrc = outEdges.get(src);
-          return outEdgesForSrc != null && outEdgesForSrc.contains(getNumber(dst));
+          return outEdgesForSrc != null && dst != null && outEdgesForSrc.contains(getNumber(dst));
         }
 
         @Override
-        public IntSet getSuccNodeNumbers(@Nullable T node) {
+        public IntSet getSuccNodeNumbers(T node) {
+          checkArgument(node != null, "n cannot be null");
           if (original.containsNode(node)) {
             if (outEdges.containsKey(node)) {
               MutableIntSet x = IntSetUtil.makeMutableCopy(original.getSuccNodeNumbers(node));
@@ -155,7 +157,8 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         }
 
         @Override
-        public IntSet getPredNodeNumbers(@Nullable T node) {
+        public IntSet getPredNodeNumbers(T node) {
+          checkArgument(node != null, "n cannot be null");
           if (original.containsNode(node)) {
             if (inEdges.containsKey(node)) {
               MutableIntSet x = IntSetUtil.makeMutableCopy(original.getPredNodeNumbers(node));
@@ -206,16 +209,20 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
   }
 
   @Override
-  public boolean containsNode(@Nullable T n) {
+  public boolean containsNode(T n) {
     return original.containsNode(n) || additionalNodes.containsNode(n);
   }
 
+  /**
+   * @throws IllegalArgumentException if {@code node} is null
+   */
   @Override
-  public int getNumber(@Nullable T N) {
-    if (original.containsNode(N)) {
-      return original.getNumber(N);
+  public int getNumber(@Nullable T node) {
+    checkArgument(node != null, "n cannot be null");
+    if (original.containsNode(node)) {
+      return original.getNumber(node);
     } else {
-      return additionalNodes.getNumber(N) + original.getMaxNumber() + 1;
+      return additionalNodes.getNumber(node) + original.getMaxNumber() + 1;
     }
   }
 
@@ -261,8 +268,11 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
     return edgeManager.getPredNodeCount(n);
   }
 
+  /**
+   * @throws IllegalArgumentException if {@code node} is null
+   */
   @Override
-  public IntSet getPredNodeNumbers(@Nullable T node) {
+  public IntSet getPredNodeNumbers(T node) {
     return edgeManager.getPredNodeNumbers(node);
   }
 
@@ -276,8 +286,11 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
     return edgeManager.getSuccNodeCount(N);
   }
 
+  /**
+   * @throws IllegalArgumentException if {@code node} is null
+   */
   @Override
-  public IntSet getSuccNodeNumbers(@Nullable T node) {
+  public IntSet getSuccNodeNumbers(T node) {
     return edgeManager.getSuccNodeNumbers(node);
   }
 

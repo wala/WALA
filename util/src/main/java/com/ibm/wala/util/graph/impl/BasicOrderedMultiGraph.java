@@ -59,7 +59,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
   }
 
   @Override
-  public boolean containsNode(@Nullable T N) {
+  public boolean containsNode(T N) {
     return delegate.containsNode(N);
   }
 

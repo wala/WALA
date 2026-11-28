@@ -264,18 +264,21 @@ public class SparseNumberedLabeledEdgeManager<T, U>
   }
 
   @Override
-  public IntSet getPredNodeNumbers(@Nullable T node, U label) throws IllegalArgumentException {
+  public IntSet getPredNodeNumbers(T node, U label) throws IllegalArgumentException {
     return getManagerForLabel(label).getPredNodeNumbers(node);
   }
 
   @Override
-  public IntSet getSuccNodeNumbers(@Nullable T node, U label) throws IllegalArgumentException {
+  public IntSet getSuccNodeNumbers(T node, U label) throws IllegalArgumentException {
     return getManagerForLabel(label).getSuccNodeNumbers(node);
   }
 
   @Override
   public IntSet getPredNodeNumbers(@Nullable T node) {
     BitVectorIntSet preds = new BitVectorIntSet();
+    if (node == null) {
+      return preds;
+    }
 
     for (U label : nodeToPredLabels.get(node)) {
       preds.addAll(getPredNodeNumbers(node, label));
@@ -287,6 +290,9 @@ public class SparseNumberedLabeledEdgeManager<T, U>
   @Override
   public IntSet getSuccNodeNumbers(@Nullable T node) {
     BitVectorIntSet succs = new BitVectorIntSet();
+    if (node == null) {
+      return succs;
+    }
 
     for (U label : nodeToSuccLabels.get(node)) {
       succs.addAll(getSuccNodeNumbers(node, label));

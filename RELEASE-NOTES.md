@@ -47,6 +47,29 @@ behavior is unchanged: `BasicEdgeManager` and the unlabeled neighbor-query
 overloads in `SparseNumberedLabeledEdgeManager` retain nullable parameters
 and return empty iterators for null nodes.
 
+`com.ibm.wala.util.graph.NumberedEdgeManager.getPredNodeNumbers(T)` and
+`getSuccNodeNumbers(T)` also require non-null nodes. This applies through
+`NumberedGraph` and the updated overrides, including the label-specific
+overloads in `SparseNumberedLabeledEdgeManager`. The unlabeled overloads on
+that concrete class accept null and return empty sets.
+
+#### `NodeManager.containsNode` requires a non-null node
+
+**Breaking for nullness-checked code:**
+`com.ibm.wala.util.graph.NodeManager.containsNode(T)` requires a non-null
+node. The requirement also applies through `Graph`, `NumberedGraph`, and
+updated overrides such as `AbstractGraph.containsNode`. Check a nullable
+node before testing membership. Calls through the concrete types
+`BasicNodeManager` and `SlowNumberedNodeManager` accept nullable nodes.
+
+**Breaking:** `ExtensionGraph.getNumber(T)`, `getPredNodeNumbers(T)`, and
+`getSuccNodeNumbers(T)` throw `IllegalArgumentException` for a null node,
+including when the wrapped graph accepts a null membership query. Check
+nullable nodes before calling these methods.
+
+If the wrapped graph reports no edge to a null destination,
+`ExtensionGraph.hasEdge` also reports no edge.
+
 #### `EdgeManager.hasEdge` requires non-null endpoints
 
 **Breaking for nullness-checked code:**

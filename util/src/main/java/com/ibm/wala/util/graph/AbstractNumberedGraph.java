@@ -57,13 +57,13 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T>
   }
 
   @Override
-  public IntSet getPredNodeNumbers(@Nullable T node) throws IllegalArgumentException {
+  public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
     assert getEdgeManager() != null;
     return getEdgeManager().getPredNodeNumbers(node);
   }
 
   @Override
-  public IntSet getSuccNodeNumbers(@Nullable T node) throws IllegalArgumentException {
+  public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
     return getEdgeManager().getSuccNodeNumbers(node);
   }
 }

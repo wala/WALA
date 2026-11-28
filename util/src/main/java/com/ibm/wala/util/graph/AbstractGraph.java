@@ -15,7 +15,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.util.Iterator;
 import java.util.stream.Stream;
-import org.jspecify.annotations.Nullable;
 
 /** Basic functionality for a {@link Graph} that delegates node and edge management. */
 public abstract class AbstractGraph<T> implements Graph<T> {
@@ -158,7 +157,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
   }
 
   @Override
-  public boolean containsNode(@Nullable T n) {
+  public boolean containsNode(T n) {
     checkArgument(n != null, "n cannot be null");
     return getNodeManager().containsNode(n);
   }

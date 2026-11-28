@@ -17,7 +17,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import java.util.Iterator;
-import org.jspecify.annotations.Nullable;
 
 /** View of a {@link NumberedGraph} in which some edges have been filtered out */
 public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
@@ -94,7 +93,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
     }
 
     @Override
-    public IntSet getPredNodeNumbers(@Nullable T node) {
+    public IntSet getPredNodeNumbers(T node) {
       return getFilteredNodeNumbers(
           node, delegate.getPredNodeNumbers(node), Direction.PREDECESSORS);
     }
@@ -119,7 +118,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
      * @param direction whether {@code s} holds successors or predecessors of {@code node}
      * @return the numbers of the neighbors whose edge with {@code node} is not ignored
      */
-    private IntSet getFilteredNodeNumbers(@Nullable T node, IntSet s, Direction direction) {
+    private IntSet getFilteredNodeNumbers(T node, IntSet s, Direction direction) {
       int x = getNumber(node);
       MutableIntSet result = MutableSparseIntSet.makeEmpty();
       for (IntIterator it = s.intIterator(); it.hasNext(); ) {
@@ -137,7 +136,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
     }
 
     @Override
-    public IntSet getSuccNodeNumbers(@Nullable T node) {
+    public IntSet getSuccNodeNumbers(T node) {
       return getFilteredNodeNumbers(node, delegate.getSuccNodeNumbers(node), Direction.SUCCESSORS);
     }
 
