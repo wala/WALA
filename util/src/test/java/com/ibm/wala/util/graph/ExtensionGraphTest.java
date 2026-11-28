@@ -3,9 +3,10 @@ package com.ibm.wala.util.graph;
 import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
 import static com.ibm.wala.util.graph.GraphAssert.assertThat;
 import static com.ibm.wala.util.intset.IntSetAssert.assertThat;
+import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.Assertions.not;
 
 import com.ibm.wala.util.graph.impl.ExtensionGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
@@ -49,10 +50,9 @@ class ExtensionGraphTest {
     original.addNode("target");
     original.addEdge("source", "target");
 
-    assertAll(
-        () -> assertThat(graph.getNumber("source")).as("number of source").isEqualTo(0),
-        () -> assertThat(graph.getPredNodeNumbers("target")).containsExactly(0),
-        () -> assertThat(graph.getSuccNodeNumbers("source")).containsExactly(1));
+    assertThat(graph.getNumber("source")).as("number of source").isEqualTo(0);
+    assertThat(graph.getPredNodeNumbers("target")).containsExactly(0);
+    assertThat(graph.getSuccNodeNumbers("source")).containsExactly(1);
   }
 
   @Test
@@ -62,10 +62,12 @@ class ExtensionGraphTest {
     graph.addNode("source");
     graph.addEdge("source", "target");
 
-    assertAll(
-        () -> assertThat(graph).doesNotHave(edge("source", null)),
-        () -> assertThat(graph).has(edge("source", "target")),
-        () -> assertThat(graph).doesNotHave(edge("source", "other")),
-        () -> assertThat(graph).doesNotHave(edge("target", "source")));
+    assertThat(graph)
+        .has(
+            allOf(
+                not(edge("source", null)),
+                edge("source", "target"),
+                not(edge("source", "other")),
+                not(edge("target", "source"))));
   }
 }
