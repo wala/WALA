@@ -4,40 +4,31 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.ibm.wala.util.graph.EdgeManager;
 import java.util.Iterator;
-import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
 public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
-  private class PrependItterator implements Iterator<T> {
-    private boolean usedFirst = false;
+  private class PrependIterator implements Iterator<T> {
     private final Iterator<T> original;
     private @Nullable T first;
 
-    private PrependItterator(Iterator<T> original, @Nullable T first) {
+    private PrependIterator(Iterator<T> original, T first) {
       this.original = original;
       this.first = first;
     }
 
     @Override
     public boolean hasNext() {
-      if (!usedFirst) {
-        return true;
-      } else {
-        return original.hasNext();
-      }
+      return first != null || original.hasNext();
     }
 
     @Override
-    @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
-    public @Nullable T next() {
-      if (!usedFirst) {
-        T tmp = first;
+    public T next() {
+      T next = first;
+      if (next != null) {
         first = null;
-        usedFirst = true;
-        return tmp;
-      } else {
-        return original.next();
+        return next;
       }
+      return original.next();
     }
 
     @Override
@@ -58,7 +49,7 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
     if (original.hasEdge(n, n)) {
       return original.getPredNodes(n);
     } else {
-      return new PrependItterator(original.getPredNodes(n), n);
+      return new PrependIterator(original.getPredNodes(n), n);
     }
   }
 
@@ -76,7 +67,7 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
     if (original.hasEdge(n, n)) {
       return original.getSuccNodes(n);
     } else {
-      return new PrependItterator(original.getSuccNodes(n), n);
+      return new PrependIterator(original.getSuccNodes(n), n);
     }
   }
 
@@ -114,13 +105,9 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
     original.removeOutgoingEdges(node);
   }
 
-  @NullUnmarked
+  /** Returns {@code true} for equal non-null endpoints and delegates other lookups. */
   @Override
   public boolean hasEdge(@Nullable T src, @Nullable T dst) {
-    if (src.equals(dst)) {
-      return true;
-    } else {
-      return original.hasEdge(src, dst);
-    }
+    return (src != null && src.equals(dst)) || original.hasEdge(src, dst);
   }
 }
