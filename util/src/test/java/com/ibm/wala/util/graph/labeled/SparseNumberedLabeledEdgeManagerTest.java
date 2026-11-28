@@ -2,6 +2,7 @@ package com.ibm.wala.util.graph.labeled;
 
 import static com.ibm.wala.util.graph.EdgeManagerAssert.assertThat;
 import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
+import static com.ibm.wala.util.intset.IntSetAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
@@ -47,6 +48,7 @@ class SparseNumberedLabeledEdgeManagerTest {
     edges.addEdge("src", "dst", "label");
 
     assertThat(edges).predecessorsOf("dst").containsExactly("src");
+    assertThat(edges.getPredNodeNumbers("dst")).containsExactly(0);
   }
 
   @Test
@@ -56,6 +58,7 @@ class SparseNumberedLabeledEdgeManagerTest {
     edges.addEdge("src", "dst", "label");
 
     assertThat(edges).successorsOf("src").containsExactly("dst");
+    assertThat(edges.getSuccNodeNumbers("src")).containsExactly(1);
   }
 
   @Test
@@ -66,6 +69,8 @@ class SparseNumberedLabeledEdgeManagerTest {
 
     assertThat(edges).predecessorsOf(null).as("getPredNodes(null)").isEmpty();
     assertThat(edges).successorsOf(null).as("getSuccNodes(null)").isEmpty();
+    assertThat(edges.getPredNodeNumbers(null)).as("getPredNodeNumbers(null)").isEmpty();
+    assertThat(edges.getSuccNodeNumbers(null)).as("getSuccNodeNumbers(null)").isEmpty();
     assertThat(edges).as("hasEdge(null, dst)").doesNotHave(edge(null, "dst"));
   }
 }

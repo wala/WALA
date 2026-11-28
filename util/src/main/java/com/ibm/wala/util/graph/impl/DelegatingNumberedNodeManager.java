@@ -175,7 +175,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
   }
 
   @Override
-  public boolean containsNode(@Nullable T n) {
+  public boolean containsNode(T n) {
     checkArgument(n != null, "n is null");
     int number = n.getGraphNodeId();
     if (number == -1) {

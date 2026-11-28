@@ -13,7 +13,6 @@ package com.ibm.wala.util.graph;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Stream;
-import org.jspecify.annotations.Nullable;
 
 /**
  * An object which tracks graph nodes.
@@ -52,5 +51,5 @@ public interface NodeManager<T> extends Iterable<T> {
   /**
    * @return true iff the graph contains the specified node
    */
-  boolean containsNode(@Nullable T n);
+  boolean containsNode(T n);
 }

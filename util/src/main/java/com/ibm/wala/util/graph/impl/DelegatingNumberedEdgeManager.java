@@ -69,7 +69,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
   }
 
   @Override
-  public IntSet getPredNodeNumbers(@Nullable T node) {
+  public IntSet getPredNodeNumbers(T node) {
     checkArgument(node != null, "N cannot be null");
     IntSet pred = node.getPredNumbers();
     return (pred == null) ? new SparseIntSet() : pred;

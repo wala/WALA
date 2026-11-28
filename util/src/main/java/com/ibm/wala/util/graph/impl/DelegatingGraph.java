@@ -38,7 +38,7 @@ public class DelegatingGraph<T> implements Graph<T> {
   }
 
   @Override
-  public boolean containsNode(@Nullable T N) {
+  public boolean containsNode(T N) {
     return delegate.containsNode(N);
   }
 

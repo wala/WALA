@@ -158,7 +158,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
   }
 
   @Override
-  public boolean containsNode(@Nullable T n) {
+  public boolean containsNode(T n) {
     checkArgument(n != null, "n cannot be null");
     return getNodeManager().containsNode(n);
   }

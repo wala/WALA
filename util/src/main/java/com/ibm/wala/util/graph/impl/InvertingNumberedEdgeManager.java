@@ -78,12 +78,12 @@ public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
   }
 
   @Override
-  public IntSet getSuccNodeNumbers(@Nullable T node) throws IllegalArgumentException {
+  public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
     return original.getPredNodeNumbers(node);
   }
 
   @Override
-  public IntSet getPredNodeNumbers(@Nullable T node) throws IllegalArgumentException {
+  public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
     return original.getSuccNodeNumbers(node);
   }
 }

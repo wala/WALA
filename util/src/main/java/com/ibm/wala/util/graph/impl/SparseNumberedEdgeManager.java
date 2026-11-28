@@ -119,7 +119,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   @Override
-  public IntSet getSuccNodeNumbers(@Nullable T node) throws IllegalArgumentException {
+  public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
     if (nodeManager.getNumber(node) < 0) {
       throw new IllegalArgumentException("Node not in graph " + node);
     }
@@ -132,7 +132,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   @Override
-  public IntSet getPredNodeNumbers(@Nullable T node) throws IllegalArgumentException {
+  public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
     if (nodeManager.getNumber(node) < 0) {
       throw new IllegalArgumentException("Node not in graph " + node);
     }

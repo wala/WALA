@@ -92,8 +92,7 @@ public class GraphSlicer {
           }
 
           @Override
-          @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
-          public boolean containsNode(@Nullable T n) {
+          public boolean containsNode(T n) {
             return p.test(n) && g.containsNode(n);
           }
         };
@@ -187,8 +186,7 @@ public class GraphSlicer {
           }
 
           @Override
-          @SuppressWarnings("NullAway") // to enable JSpecifyExperimental
-          public boolean containsNode(@Nullable E N) {
+          public boolean containsNode(E N) {
             return G.containsNode(N) && fmember.test(N);
           }
 
